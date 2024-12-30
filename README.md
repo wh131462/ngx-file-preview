@@ -1,27 +1,113 @@
-# CorePreview
+# NGX File Preview
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.11.
+一个功能强大的 Angular 文件预览组件库,支持多种文件格式的预览,提供灵活的自定义选项。
 
-## Development server
+## 特性
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- 🎯 支持多种文件格式预览 (图片、PDF、PPT、Word、文本、视频等)
+- 🎨 提供默认样式,也支持完全自定义
+- 💪 支持指令和组件两种使用方式
+- 🚀 轻量级,易于集成
+- 📱 响应式设计,支持移动端
+- ⌨️ 支持键盘快捷操作
 
-## Code scaffolding
+## 安装
+```bash
+npm install ngx-file-preview --save
+```
+## 字体文件导入
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+为了确保组件库中的图标和字体样式正常显示，请在 `angular.json` 文件中进行必要的配置。以下是一个示例：
 
-## Build
+在 `angular.json` 文件中，找到 `styles` 数组，并添加字体文件路径,在 `scripts` 数组中添加颜色字体文件脚本路径：
+```json
+"styles": [
+  "node_modules/ngx-file-preview/assets/icon/font/iconfont.css",
+],
+"scripts": [
+  "node_modules/ngx-file-preview/assets/icon/color/iconfont.js"
+]
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+## 使用方法
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 1. 指令方式
+```typescript
+import { PreviewDirective } from 'ngx-file-preview';
+@Component({
+imports: [PreviewDirective]
+})
+```
+```html
+<div [corePreview]="files">预览文件</div>
+```
 
-## Running end-to-end tests
+### 2. 组件方式
+```typescript
+import { PreviewComponent } from 'ngx-file-preview';
+@Component({
+imports: [PreviewComponent]
+})
+```
+```html
+<!-- 使用默认模板 -->
+<ngx-file-preview [files]="files"></ngx-file-preview>
+<!-- 使用自定义模板 -->
+<ngx-file-preview [files]="files">
+<ng-template #itemTemplate let-file let-index="index">
+<!-- 自定义文件项模板 -->
+</ng-template>
+</ngx-file-preview>
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
 
-## Further help
+## 文件配置
+```typescript
+interface PreviewFile {
+url: string; // 文件URL
+type: PreviewType; // 文件类型
+name: string; // 文件名
+size?: number; // 文件大小
+lastModified?: number;// 最后修改时间
+}
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+支持的文件类型:
+- image (图片)
+- pdf 
+- ppt
+- word
+- txt (文本)
+- video (视频)
+- excel
+- audio
+- zip
+- other
+
+## 开发指南
+
+1. 克隆项目
+```bash
+git clone https://github.com/wh131462/ngx-file-preview.git
+```
+2. 安装依赖
+```bash
+npm install
+```
+3. 启动开发服务器
+```bash
+npm run start
+```
+4. 构建库
+```bash
+npm run build
+```
+
+## 贡献指南
+
+欢迎提交 Issue 和 Pull Request 来帮助改进这个项目!
+
+## License
+
+MIT
