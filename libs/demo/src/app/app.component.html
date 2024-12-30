@@ -1,0 +1,28 @@
+<p [corePreview]="files">预览文件</p>
+
+<!-- 使用默认模板 -->
+<ngx-file-preview [files]="files"></ngx-file-preview>
+
+<!-- 使用自定义模板 -->
+<ngx-file-preview [files]="files">
+  <ng-template #itemTemplate let-file let-index="index" let-isActive="isActive" let-preview="preview">
+    <div class="custom-file-item"
+         [class.active]="isActive"
+         (click)="preview(file, index)">
+      <div class="custom-icon">
+        <preview-icon [svg]="file.type" [size]="'32px'"></preview-icon>
+      </div>
+      <div class="custom-info">
+        <h3>{{ file.name }}</h3>
+        <p>
+          <span>{{ PreviewTypeEnum[file.type] }}</span>
+          <span>{{ formatFileSize(file.size) }}</span>
+        </p>
+      </div>
+      <button class="custom-preview-btn">预览</button>
+    </div>
+  </ng-template>
+</ngx-file-preview>
+
+<!-- 预览蒙版 -->
+<ngx-file-preview-modal></ngx-file-preview-modal>

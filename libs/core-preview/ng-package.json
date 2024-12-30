@@ -1,0 +1,10 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ngx-file-preview",
+  "assets": [
+    "src/assets"
+  ],
+  "lib": {
+    "entryFile": "src/index.ts"
+  }
+}

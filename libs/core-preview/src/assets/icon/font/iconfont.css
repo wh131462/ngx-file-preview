@@ -1,0 +1,99 @@
+@font-face {
+  font-family: "ngx-file-preview"; /* Project id 4798386 */
+  src: url('iconfont.woff2') format('woff2'),
+       url('iconfont.woff') format('woff'),
+       url('iconfont.ttf') format('truetype');
+}
+
+.ngx-file-preview {
+  font-family: "ngx-file-preview" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.cp-download:before {
+  content: "\e605";
+}
+
+.cp-close:before {
+  content: "\e644";
+}
+
+.cp-reset:before {
+  content: "\e604";
+}
+
+.cp-play:before {
+  content: "\e62a";
+}
+
+.cp-fast-backward:before {
+  content: "\e62c";
+}
+
+.cp-fast-forward:before {
+  content: "\e62d";
+}
+
+.cp-mute:before {
+  content: "\e62e";
+}
+
+.cp-volume:before {
+  content: "\e62f";
+}
+
+.cp-lightness:before {
+  content: "\e662";
+}
+
+.cp-fullscreen:before {
+  content: "\e626";
+}
+
+.cp-pause:before {
+  content: "\e628";
+}
+
+.cp-pip:before {
+  content: "\e816";
+}
+
+.cp-forward15s:before {
+  content: "\e7bf";
+}
+
+.cp-back15s:before {
+  content: "\e7ad";
+}
+
+.cp-rotate-90:before {
+  content: "\e762";
+}
+
+.cp-rotate90:before {
+  content: "\e764";
+}
+
+.cp-zoom-out:before {
+  content: "\e645";
+}
+
+.cp-zoom-in:before {
+  content: "\e647";
+}
+
+.cp-previous:before {
+  content: "\e632";
+}
+
+.cp-next:before {
+  content: "\e633";
+}
+
+.cp-slide-show:before {
+  content: "\ec83";
+}
+

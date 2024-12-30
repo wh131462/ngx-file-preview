@@ -1,0 +1,86 @@
+{
+  "id": "4798817",
+  "name": "ngx-file-preview-color",
+  "font_family": "ngx-file-preview",
+  "css_prefix_text": "cp-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "16102756",
+      "name": "明细下载",
+      "font_class": "download",
+      "unicode": "e6c6",
+      "unicode_decimal": 59078
+    },
+    {
+      "icon_id": "41105353",
+      "name": "folder icon-7",
+      "font_class": "ppt",
+      "unicode": "e904",
+      "unicode_decimal": 59652
+    },
+    {
+      "icon_id": "41105354",
+      "name": "folder icon-9",
+      "font_class": "word",
+      "unicode": "e902",
+      "unicode_decimal": 59650
+    },
+    {
+      "icon_id": "41105355",
+      "name": "folder icon-8",
+      "font_class": "excel",
+      "unicode": "e907",
+      "unicode_decimal": 59655
+    },
+    {
+      "icon_id": "41105356",
+      "name": "folder icon-4",
+      "font_class": "txt",
+      "unicode": "e903",
+      "unicode_decimal": 59651
+    },
+    {
+      "icon_id": "41105357",
+      "name": "folder icon-6",
+      "font_class": "unknown",
+      "unicode": "e901",
+      "unicode_decimal": 59649
+    },
+    {
+      "icon_id": "41105358",
+      "name": "folder icon-2",
+      "font_class": "video",
+      "unicode": "e900",
+      "unicode_decimal": 59648
+    },
+    {
+      "icon_id": "41105359",
+      "name": "folder icon-5",
+      "font_class": "zip",
+      "unicode": "e908",
+      "unicode_decimal": 59656
+    },
+    {
+      "icon_id": "41105360",
+      "name": "folder icon-1",
+      "font_class": "image",
+      "unicode": "e909",
+      "unicode_decimal": 59657
+    },
+    {
+      "icon_id": "41105361",
+      "name": "folder icon-3",
+      "font_class": "audio",
+      "unicode": "e905",
+      "unicode_decimal": 59653
+    },
+    {
+      "icon_id": "41105362",
+      "name": "folder icon",
+      "font_class": "pdf",
+      "unicode": "e906",
+      "unicode_decimal": 59654
+    }
+  ]
+}
