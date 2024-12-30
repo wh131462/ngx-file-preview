@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -17,7 +17,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
         </div>
         <div class="right-controls">
           <button (click)="toggleWrap()">
-            <preview-icon [name]="isWrapped ? 'unwrap' : 'wrap'"></preview-icon>
+            <preview-icon [name]="isWrapped ? 'nowrap' : 'wrap'"></preview-icon>
           </button>
           <button (click)="adjustFontSize(1)">
             <preview-icon name="zoom-in"></preview-icon>
@@ -32,8 +32,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       </div>
 
       <div class="content-container" [class.wrap]="isWrapped">
-        <pre [style.fontSize.px]="fontSize">{{ content }}</pre>
-
+        <pre [style.font-size.px]="fontSize">{{ content }}</pre>
         <div class="loading-overlay" *ngIf="isLoading">
           <div class="spinner"></div>
           <span>加载中...</span>
@@ -42,13 +41,14 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
     </div>
   `,
   styles: [`
-    :host{
-        display: block;
-        width: 100%;
-        height: 100%;
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
+
     .text-container {
-      width:  100%;
+      width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -63,6 +63,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       justify-content: space-between;
       align-items: center;
       padding: 0 20px;
+      padding-right: 64px;
       border-bottom: 1px solid #404040;
 
       .filename {
@@ -75,15 +76,29 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
         gap: 10px;
 
         button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
           background: transparent;
           border: 1px solid rgba(255,255,255,0.2);
           color: white;
-          padding: 5px 10px;
+          padding: 6px;
           border-radius: 4px;
           cursor: pointer;
+          transition: all 0.2s ease;
 
           &:hover {
             background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+          }
+
+          &:active {
+            transform: scale(0.95);
+          }
+
+          preview-icon {
+            width: 16px;
+            height: 16px;
           }
         }
       }
@@ -148,7 +163,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextPreviewComponent implements OnInit {
+export class TextPreviewComponent implements OnInit, OnDestroy {
   @Input() file!: PreviewFile;
 
   content = '';
@@ -156,7 +171,10 @@ export class TextPreviewComponent implements OnInit {
   isWrapped = false;
   fontSize = 14;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadContent();
@@ -164,24 +182,31 @@ export class TextPreviewComponent implements OnInit {
 
   private async loadContent() {
     try {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+
       const response = await firstValueFrom(
         this.http.get(this.file.url, { responseType: 'text' })
       );
+      
       this.content = response || '文件内容为空';
     } catch (error) {
       this.content = '文件加载失败';
       console.error('Failed to load text file:', error);
     } finally {
       this.isLoading = false;
+      this.cdr.markForCheck();
     }
   }
 
   toggleWrap() {
     this.isWrapped = !this.isWrapped;
+    this.cdr.markForCheck();
   }
 
   adjustFontSize(delta: number) {
     this.fontSize = Math.min(Math.max(this.fontSize + delta, 10), 24);
+    this.cdr.markForCheck();
   }
 
   toggleFullscreen() {
@@ -190,5 +215,9 @@ export class TextPreviewComponent implements OnInit {
     } else {
       document.exitFullscreen();
     }
+  }
+
+  ngOnDestroy() {
+    // 清理工作
   }
 }

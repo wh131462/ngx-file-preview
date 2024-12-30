@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ContentChild, TemplateRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ContentChild, TemplateRef, ViewChildren, QueryList, ElementRef, AfterViewInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PreviewFile, PreviewTypeEnum} from '../../types/preview.types';
+import {PreviewFile, PreviewTypeEnum, PreviewType} from '../../types/preview.types';
 import {PreviewService} from '../../services/preview.service';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewDirective} from "../../directives/preview.directive";
@@ -16,6 +16,15 @@ import {PreviewUtils} from "../../utils/preview.utils";
   ],
   template: `
     <div class="preview-list">
+      <!-- 隐藏的预览触发器 -->
+      <div style="display: none">
+        <div *ngFor="let file of files; let i = index"
+             [ngxFilePreview]="file"
+             [attr.data-index]="i"
+             #previewTrigger>
+        </div>
+      </div>
+
       <ng-content></ng-content>
       <div class="file-list-header">
         <span>文件列表</span>
@@ -31,7 +40,7 @@ import {PreviewUtils} from "../../utils/preview.utils";
                 $implicit: file,
                 index: i,
                 isActive: i === index,
-                preview: previewFile.bind(this)
+                preview: triggerPreview.bind(this,i)
               }"
             ></ng-container>
           </ng-container>
@@ -40,7 +49,7 @@ import {PreviewUtils} from "../../utils/preview.utils";
           <ng-template #defaultTemplate>
             <div class="file-item"
                  (click)="index=i"
-                 [corePreview]="file"
+                 [ngxFilePreview]="file"
                  [class.active]="i === index">
               <span class="file-icon">
                 <preview-icon [size]="40" [svg]="file.type"></preview-icon>
@@ -159,34 +168,50 @@ import {PreviewUtils} from "../../utils/preview.utils";
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PreviewComponent {
+export class PreviewComponent implements AfterViewInit {
   @Input() files?: PreviewFile[];
   @Input() index = 0;
   @Output() fileSelect = new EventEmitter<PreviewFile>();
 
-  // 接收自定义模板
   @ContentChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChildren('previewTrigger') previewTriggers!: QueryList<ElementRef>;
 
   protected readonly PreviewTypeEnum = PreviewTypeEnum;
 
   constructor(private previewService: PreviewService) {}
+
+  ngAfterViewInit() {
+    // 初始化时确保所有触发器都已创建
+    this.previewTriggers.changes.subscribe(() => {
+      // 触发器列表更新时的处理
+    });
+  }
+
+  selectAndPreview(index: number) {
+    this.index = index;
+    this.triggerPreview(index);
+  }
+
+  triggerPreview(index: number) {
+    if (this.files?.[index]) {
+      this.fileSelect.emit(this.files[index]);
+      // 手动触发隐藏元素的点击事件
+      const triggerElement = this.previewTriggers.get(index)?.nativeElement;
+      if (triggerElement) {
+        triggerElement.click();
+      }
+    }
+  }
 
   formatFileSize(size?: number): string {
     return PreviewUtils.formatFileSize(size);
   }
 
   formatDate(timestamp: number): string {
-    return new Date(timestamp).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return new Date(timestamp).toLocaleDateString();
   }
 
-  previewFile(file: PreviewFile, index: number) {
-    this.fileSelect.emit(file);
-    this.previewService.open({files: this.files || [], index});
+  getFileTypeText(type: PreviewType): string {
+    return PreviewTypeEnum[type] || PreviewTypeEnum.unknown;
   }
 }

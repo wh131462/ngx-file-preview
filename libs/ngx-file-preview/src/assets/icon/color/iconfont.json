@@ -1,8 +1,8 @@
 {
   "id": "4798817",
   "name": "ngx-file-preview-color",
-  "font_family": "ngx-file-preview",
-  "css_prefix_text": "cp-",
+  "font_family": "NGX-FILE-PREVIEW",
+  "css_prefix_text": "nfp-",
   "description": "",
   "glyphs": [
     {

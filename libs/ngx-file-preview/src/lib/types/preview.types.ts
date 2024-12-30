@@ -4,10 +4,12 @@ export interface PreviewFile {
   type: PreviewType;
   size?: number;
   lastModified?: number;
+  coverUrl?: string;
 }
 
 export type PreviewType = 'image' | 'audio' | 'video' | 'pdf' | 'ppt' | 'word' | 'excel' | 'txt' | 'zip' | 'unknown';
-export const PreviewTypeEnum:Record<PreviewType, string> = {
+
+export const PreviewTypeEnum: Record<PreviewType, string> = {
   audio: "音频文件",
   excel: "Excel文档",
   image: "图片文件",
@@ -18,7 +20,8 @@ export const PreviewTypeEnum:Record<PreviewType, string> = {
   video: "视频文件",
   word: "WORD文档",
   zip: "压缩文件"
-}
+};
+
 export interface PreviewOptions {
   files: PreviewFile[];
   index?: number;

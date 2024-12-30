@@ -1,6 +1,11 @@
 import { PreviewFile, PreviewType } from '../types/preview.types';
 
 export class PreviewUtils {
+  private static readonly VIDEO_EXTENSIONS = [
+    'mp4', 'webm', 'ogg', 'mov', 'm3u8', 'm3u', 'ts',
+    'avi', 'wmv', 'flv', 'mkv', '3gp'
+  ];
+
   static getFileName(url: string): string {
     try {
       const urlObj = new URL(url);
@@ -85,5 +90,16 @@ export class PreviewUtils {
     const type = this.detectFileType(url);
 
     return { url, name, type };
+  }
+
+  static getPreviewType(filename: string): PreviewType {
+    const ext = filename.split('.').pop()?.toLowerCase() || '';
+    
+    if (this.VIDEO_EXTENSIONS.includes(ext) || filename.includes('video/') || 
+        filename.includes('application/x-mpegURL') || filename.includes('application/vnd.apple.mpegurl')) {
+      return 'video';
+    }
+
+    return this.getTypeByExtension(ext);
   }
 }

@@ -5,12 +5,12 @@ import {CommonModule} from "@angular/common";
   selector: "preview-icon",
   template: `
     <ng-container *ngIf="name">
-      <i class="core-font-icon ngx-file-preview" [class]="'cp-'+name" [style.width]="size" [style.font-size]="size"
+      <i class="core-font-icon NGX-FILE-PREVIEW" [class]="'nfp-'+name" [style.width]="size" [style.font-size]="size"
          [style.color]="color"></i>
     </ng-container>
     <ng-container *ngIf="svg">
       <svg class="core-svg-icon" [style.width]="size" [style.height]="size" aria-hidden="true">
-        <use [attr.xlink:href]="'#cp-' + svg">"></use>
+        <use [attr.xlink:href]="'#nfp-' + svg">"></use>
       </svg>
     </ng-container>
   `,

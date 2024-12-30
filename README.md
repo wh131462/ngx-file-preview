@@ -40,7 +40,7 @@ imports: [PreviewDirective]
 })
 ```
 ```html
-<div [corePreview]="files">预览文件</div>
+<div [ngxFilePreview]="files">预览文件</div>
 ```
 
 ### 2. 组件方式

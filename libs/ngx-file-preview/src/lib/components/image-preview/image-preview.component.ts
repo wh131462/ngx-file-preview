@@ -181,14 +181,15 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
   }
 
   rotate(angle: number) {
-    const newRotation = (this.rotation + angle) % 360;
+    this.rotation += angle;
 
     if (this.imageWidth && this.imageHeight && this.imageWrapper?.nativeElement) {
       const wrapper = this.imageWrapper.nativeElement;
       const wrapperWidth = wrapper.clientWidth;
       const wrapperHeight = wrapper.clientHeight;
 
-      const rad = Math.abs((newRotation % 180) * Math.PI / 180);
+      const displayRotation = Math.abs(this.rotation % 360);
+      const rad = (displayRotation % 180) * Math.PI / 180;
       const rotatedWidth = Math.abs(this.imageWidth * Math.cos(rad) + this.imageHeight * Math.sin(rad));
       const rotatedHeight = Math.abs(this.imageWidth * Math.sin(rad) + this.imageHeight * Math.cos(rad));
 
@@ -201,7 +202,6 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
       this.translateY = 0;
     }
 
-    this.rotation = newRotation;
     this.updateTransformStyle();
   }
 

@@ -1,10 +1,31 @@
 {
   "id": "4798386",
   "name": "ngx-file-preview",
-  "font_family": "ngx-file-preview",
-  "css_prefix_text": "cp-",
+  "font_family": "NGX-FILE-PREVIEW",
+  "css_prefix_text": "nfp-",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "1029",
+      "name": "music",
+      "font_class": "music",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "26848467",
+      "name": "nowrap",
+      "font_class": "nowrap",
+      "unicode": "e868",
+      "unicode_decimal": 59496
+    },
+    {
+      "icon_id": "40352956",
+      "name": "wrap",
+      "font_class": "wrap",
+      "unicode": "e7eb",
+      "unicode_decimal": 59371
+    },
     {
       "icon_id": "15053390",
       "name": "下载",

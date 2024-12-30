@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ViewEncapsulation, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PreviewService } from '../../services/preview.service';
 import { ImagePreviewComponent } from '../image-preview/image-preview.component';
@@ -10,6 +10,9 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
 import { WordPreviewComponent } from '../word-preview/word-preview.component';
 import { ExcelPreviewComponent } from '../excel-preview/excel-preview.component';
 import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
+import { Subscription } from 'rxjs';
+import { PreviewFile } from '../../types/preview.types';
+import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
 
 @Component({
   selector: 'ngx-file-preview-modal',
@@ -24,97 +27,114 @@ import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
     PreviewIconComponent,
     WordPreviewComponent,
     ExcelPreviewComponent,
-    PptPreviewComponent
+    PptPreviewComponent,
+    AudioPreviewComponent
   ],
   template: `
-    <div class="preview-modal" *ngIf="isVisible">
-      <div class="preview-header" [class.has-multiple]="hasMultipleFiles">
-        <div class="header-left" *ngIf="hasMultipleFiles">
-          <span class="file-name">{{ currentFile?.name }}</span>
-          <span class="file-index">{{ getCurrentFileInfo() }}</span>
-        </div>
-        <div class="header-right">
-          <preview-icon name="close" (click)="close()"></preview-icon>
-        </div>
-      </div>
-
-      <div class="preview-content">
-        <div class="nav-button prev"
-             *ngIf="canShowPrevious()"
-             (click)="previous()">
-          <preview-icon name="previous"></preview-icon>
+    <div class="preview-modal-overlay" *ngIf="isVisible" (click)="close()">
+      <div class="preview-modal-content" (click)="$event.stopPropagation()">
+        <div class="preview-header" [class.has-multiple]="hasMultipleFiles">
+          <div class="header-left" *ngIf="hasMultipleFiles">
+            <span class="file-name">{{ currentFile?.name }}</span>
+            <span class="file-index">{{ getCurrentFileInfo() }}</span>
+          </div>
+          <div class="header-right">
+            <preview-icon name="close" (click)="close()"></preview-icon>
+          </div>
         </div>
 
-        <ng-container [ngSwitch]="currentFile?.type">
-          <core-image-preview
-            *ngSwitchCase="'image'"
-            [file]="currentFile!"
-          ></core-image-preview>
-
-          <core-video-preview
-            *ngSwitchCase="'video'"
-            [file]="currentFile!"
-          ></core-video-preview>
-
-          <core-pdf-preview
-            *ngSwitchCase="'pdf'"
-            [file]="currentFile!"
-          ></core-pdf-preview>
-
-          <core-word-preview
-            *ngSwitchCase="'word'"
-            [file]="currentFile!"
-          ></core-word-preview>
-
-          <core-excel-preview
-            *ngSwitchCase="'excel'"
-            [file]="currentFile!"
-          ></core-excel-preview>
-
-          <core-ppt-preview
-            *ngSwitchCase="'ppt'"
-            [file]="currentFile!"
-          ></core-ppt-preview>
-
-          <core-text-preview
-            *ngSwitchCase="'txt'"
-            [file]="currentFile!"
-          ></core-text-preview>
-
-          <core-archive-preview
-            *ngSwitchCase="'zip'"
-            [file]="currentFile!"
-          ></core-archive-preview>
-
-          <div *ngSwitchCase="'audio'" class="audio-preview">
-            <audio controls [src]="currentFile!.url"></audio>
+        <div class="preview-content">
+          <div class="nav-button prev"
+               *ngIf="canShowPrevious()"
+               (click)="previous()">
+            <preview-icon name="previous"></preview-icon>
           </div>
 
-          <div *ngSwitchCase="'unknown'" class="unknown-preview">
-            <div class="unknown-message">
-              <preview-icon name="unknown"></preview-icon>
-              <p>暂不支持该文件类型的预览</p>
+          <ng-container [ngSwitch]="currentFile?.type">
+            <core-image-preview
+              *ngSwitchCase="'image'"
+              [file]="currentFile!"
+            ></core-image-preview>
+
+            <core-video-preview
+              *ngSwitchCase="'video'"
+              [file]="currentFile!"
+            ></core-video-preview>
+
+            <core-pdf-preview
+              *ngSwitchCase="'pdf'"
+              [file]="currentFile!"
+            ></core-pdf-preview>
+
+            <core-word-preview
+              *ngSwitchCase="'word'"
+              [file]="currentFile!"
+            ></core-word-preview>
+
+            <core-excel-preview
+              *ngSwitchCase="'excel'"
+              [file]="currentFile!"
+            ></core-excel-preview>
+
+            <core-ppt-preview
+              *ngSwitchCase="'ppt'"
+              [file]="currentFile!"
+            ></core-ppt-preview>
+
+            <core-text-preview
+              *ngSwitchCase="'txt'"
+              [file]="currentFile!"
+            ></core-text-preview>
+
+            <core-archive-preview
+              *ngSwitchCase="'zip'"
+              [file]="currentFile!"
+            ></core-archive-preview>
+
+            <core-audio-preview
+              *ngSwitchCase="'audio'"
+              [file]="currentFile!"
+            ></core-audio-preview>
+
+            <div *ngSwitchCase="'unknown'" class="unknown-preview">
+              <div class="unknown-message">
+                <preview-icon [size]="72" svg="unknown"></preview-icon>
+                <p>暂不支持该文件类型的预览</p>
+              </div>
             </div>
-          </div>
-        </ng-container>
+          </ng-container>
 
-        <div class="nav-button next"
-             *ngIf="canShowNext()"
-             (click)="next()">
-          <preview-icon [size]="24" name="next"></preview-icon>
+          <div class="nav-button next"
+               *ngIf="canShowNext()"
+               (click)="next()">
+            <preview-icon [size]="24" name="next"></preview-icon>
+          </div>
         </div>
       </div>
     </div>
   `,
   styles: [`
-    .preview-modal {
+    :host {
+      display: contents;
+    }
+
+    .preview-modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      width:  100%;
-      height:  100%;
+      width: 100vw;
+      height: 100vh;
       background: rgba(0, 0, 0, 0.85);
       z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .preview-modal-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
     }
@@ -129,21 +149,11 @@ import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      z-index: 1;
 
       &.has-multiple {
         justify-content: space-between;
         background: rgba(0, 0, 0, 0.65);
         backdrop-filter: blur(8px);
-      }
-
-      &:not(.has-multiple) {
-        background: none;
-        pointer-events: none;
-
-        .header-right {
-          pointer-events: auto;
-        }
       }
 
       .header-left {
@@ -174,6 +184,8 @@ import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
           cursor: pointer;
           opacity: 0.8;
           transition: opacity 0.2s;
+          z-index: 1;
+
 
           &:hover {
             opacity: 1;
@@ -189,24 +201,22 @@ import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 0;
     }
 
     .nav-button {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      border: none;
-      color: white;
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
-      z-index: 2;
+      cursor: pointer;
+      transition: background-color 0.3s;
 
       &:hover {
         background: rgba(255, 255, 255, 0.2);
@@ -221,33 +231,11 @@ import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
       }
     }
 
-    .action-button {
-      background: transparent;
-      border: none;
-      color: white;
-      padding: 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-
-      span {
-        font-size: 16px;
-        line-height: 1;
-      }
-    }
-
-    .unknown-preview {
+    .unknown-preview,
+    .audio-preview {
       color: white;
       text-align: center;
+      padding: 24px;
 
       .unknown-message {
         display: flex;
@@ -256,33 +244,46 @@ import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
         gap: 16px;
       }
     }
-
-    .audio-preview {
-      padding: 24px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-    }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
-export class PreviewModalComponent {
-  currentState = this.previewService.previewStateSubject;
-
-  get isVisible() {
-    return this.currentState.getValue().isVisible;
-  }
-
-  get currentFile() {
-    return this.currentState.getValue().currentFile;
-  }
+export class PreviewModalComponent implements OnInit, OnDestroy {
+  isVisible = false;
+  currentFile?: PreviewFile;
+  private subscription?: Subscription;
+  private state$ = this.previewService.previewState$;
 
   constructor(
     private previewService: PreviewService,
     private cdr: ChangeDetectorRef
-  ) {
-    this.currentState.subscribe(() => {
+  ) {}
+
+  ngOnInit() {
+    this.subscription = this.state$.subscribe(state => {
+      this.isVisible = state.isVisible;
+      this.currentFile = state.currentFile;
       this.cdr.markForCheck();
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'Escape':
+        this.close();
+        break;
+      case 'ArrowLeft':
+        this.previous();
+        break;
+      case 'ArrowRight':
+        this.next();
+        break;
+    }
   }
 
   close() {
@@ -298,11 +299,13 @@ export class PreviewModalComponent {
   }
 
   canShowPrevious(): boolean {
-    return this.currentState.getValue().currentIndex > 0;
+    const state = this.previewService.previewStateSubject.getValue();
+    return state.currentIndex > 0;
   }
 
   canShowNext(): boolean {
-    return this.currentState.getValue().currentIndex < this.currentState.getValue().files.length - 1;
+    const state = this.previewService.previewStateSubject.getValue();
+    return state.currentIndex < state.files.length - 1;
   }
 
   getCurrentFileInfo(): string {
@@ -311,6 +314,7 @@ export class PreviewModalComponent {
   }
 
   get hasMultipleFiles(): boolean {
-    return (this.previewService.previewStateSubject.getValue().files?.length || 0) > 1;
+    const state = this.previewService.previewStateSubject.getValue();
+    return (state.files?.length || 0) > 1;
   }
 }

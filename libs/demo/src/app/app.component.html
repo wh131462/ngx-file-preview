@@ -1,4 +1,4 @@
-<p [corePreview]="files">预览文件</p>
+<p [ngxFilePreview]="files">预览文件</p>
 
 <!-- 使用默认模板 -->
 <ngx-file-preview [files]="files"></ngx-file-preview>
@@ -19,7 +19,7 @@
           <span>{{ formatFileSize(file.size) }}</span>
         </p>
       </div>
-      <button class="custom-preview-btn">预览</button>
+      <button class="custom-preview-btn" (click)="preview(file, index)">预览</button>
     </div>
   </ng-template>
 </ngx-file-preview>

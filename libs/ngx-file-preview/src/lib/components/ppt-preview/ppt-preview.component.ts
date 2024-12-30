@@ -1,80 +1,104 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PreviewBaseComponent } from '../base/preview-base.component';
-import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'core-ppt-preview',
   standalone: true,
-  imports: [CommonModule, PreviewIconComponent],
+  imports: [CommonModule],
   template: `
-    <div class="preview-container ppt-preview">
-      <iframe
-        *ngIf="!isLoading"
-        [src]="getPreviewUrl()"
-        frameborder="0"
-        width="100%"
-        height="100%"
-        (load)="onLoadComplete()"
-        (error)="handleError($event)"
-      ></iframe>
-
-      <div class="loading-wrapper" *ngIf="isLoading">
-        <span class="loading-icon">⌛</span>
-      </div>
-
-      <div class="toolbar">
-        <button class="tool-button" (click)="previousSlide()">
-          <preview-icon name="previous"></preview-icon>
-        </button>
-        <button class="tool-button" (click)="nextSlide()">
-          <preview-icon name="next"></preview-icon>
-        </button>
-        <button class="tool-button" (click)="startSlideshow()">
-          <preview-icon name="slide-show"></preview-icon>
-        </button>
-        <button class="tool-button" (click)="download()">
-          <preview-icon svg="download"></preview-icon>
-        </button>
+    <div class="ppt-container">
+      <ng-container *ngIf="previewUrl">
+        <iframe
+          [src]="previewUrl"
+          frameborder="0"
+          width="100%"
+          height="100%"
+          allowfullscreen>
+        </iframe>
+      </ng-container>
+      <div *ngIf="isLoading" class="loading-overlay">
+        <div class="loading-spinner"></div>
       </div>
     </div>
   `,
-  styleUrls: ['../../styles/_preview-base.scss'],
   styles: [`
-     :host{
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
-    .ppt-preview {
+    .ppt-container {
+      width: 100%;
+      height: 100%;
       background: #1a1a1a;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-      iframe {
-        border: none;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
-      }
+    iframe {
+      background: white;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(26, 26, 26, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid transparent;
+      border-top-color: #177ddc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PptPreviewComponent extends PreviewBaseComponent {
-  getPreviewUrl() {
-    return `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(this.file.url)}`;
+  previewUrl: SafeResourceUrl | null = null;
+
+  constructor(private sanitizer: DomSanitizer) {
+    super();
   }
 
-  previousSlide() {
-    // 实现上一页功能
+   async handleFile() {
+    this.isLoading = true;
+
+    try {
+      // 使用 Office Online Viewer 或其他在线预览服务
+      const viewerUrl = this.getViewerUrl(this.file.url);
+      this.previewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(viewerUrl);
+    } catch (error) {
+      console.error('PPT预览失败:', error);
+      this.handleError(error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
-  nextSlide() {
-    // 实现下一页功能
-  }
+  private getViewerUrl(fileUrl: string): string {
+    // 1. 如果是本地部署的预览服务
+    if (fileUrl.startsWith('http://localhost') || fileUrl.startsWith('https://localhost')) {
+      return `${fileUrl}?preview=true`;
+    }
 
-  startSlideshow() {
-    // 开始放映
-  }
+    // 2. 使用 Office Online Viewer
+    const encodedUrl = encodeURIComponent(fileUrl);
+    return `https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}`;
 
-  download() {
-    window.open(this.file.url, '_blank');
+    // 3. 或者使用 Google Docs Viewer
+    // return `https://docs.google.com/viewer?url=${encodedUrl}&embedded=true`;
   }
 }

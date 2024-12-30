@@ -1,25 +1,37 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  AfterViewInit, Input
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PreviewFile} from '../../types/preview.types';
+import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import Hls from 'hls.js';
+import {PreviewFile} from '../../types/preview.types';
 
 @Component({
   selector: 'core-video-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
-    <div class="video-container" [class.pip-mode]="isPiPMode">
-      <video #videoElement
-             [src]="file.url"
+    <div class="video-container" #videoContainer [class.pip-mode]="isPiPMode">
+      <video #videoPlayer
+             (loadeddata)="onVideoLoad()"
+             (error)="handleError($event)"
              (timeupdate)="onTimeUpdate()"
-             (loadedmetadata)="onMetadataLoaded()"
              (click)="togglePlay()">
       </video>
 
       <div class="controls" [class.visible]="isControlsVisible" (mouseover)="showControls()"
            (mouseleave)="hideControls()">
         <!-- 进度条 -->
-        <div class="progress-bar" (click)="seek($event)">
+        <div class="progress-bar"
+             (mousedown)="startDragging($event)">
           <div class="progress" [style.width.%]="progress"></div>
         </div>
 
@@ -36,15 +48,33 @@ import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
               <preview-icon [color]="'#FFFFFF'" name="forward15s"></preview-icon>
             </button>
             <span class="time">
-              {{ currentTime | number:'1.0-0' }} / {{ duration | number:'1.0-0' }}
+              {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
             </span>
           </div>
 
           <!-- 右侧控制按钮 -->
           <div class="right-controls">
+            <!-- 倍速控制 -->
+            <div class="speed-control"
+                 (mouseenter)="showSpeedControl = true"
+                 (mouseleave)="showSpeedControl = false">
+              <button>
+                {{ playbackSpeed }}x
+              </button>
+              <div class="speed-options" *ngIf="showSpeedControl">
+                <button *ngFor="let speed of playbackSpeeds"
+                        (click)="setPlaybackSpeed(speed)"
+                        [class.active]="playbackSpeed === speed">
+                  {{ speed }}x
+                </button>
+              </div>
+            </div>
+
             <!-- 亮度控制 -->
-            <div class="control-group">
-              <button (click)="toggleBrightnessControl()">
+            <div class="control-group"
+                 (mouseenter)="showBrightnessControl = true"
+                 (mouseleave)="showBrightnessControl = false">
+              <button (click)="cycleBrightness()">
                 <preview-icon [name]="'lightness'"></preview-icon>
               </button>
               <div class="slider-container" *ngIf="showBrightnessControl">
@@ -57,9 +87,11 @@ import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
             </div>
 
             <!-- 音量控制 -->
-            <div class="control-group">
-              <button (click)="toggleVolumeControl()">
-                <preview-icon [name]="isMuted? 'mute' : 'volume'"></preview-icon>
+            <div class="control-group"
+                 (mouseenter)="showVolumeControl = true"
+                 (mouseleave)="showVolumeControl = false">
+              <button (click)="cycleVolume()">
+                <preview-icon [name]="getVolumeIcon()"></preview-icon>
               </button>
               <div class="slider-container" *ngIf="showVolumeControl">
                 <input type="range"
@@ -82,141 +114,19 @@ import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
       </div>
     </div>
   `,
-  styles: [`
-     :host{
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
-    .video-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: black;
-      position: relative;
-    }
-
-    .pip-mode {
-      width: 400px;
-      height: 225px;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 1000;
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .controls {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-      padding: 20px;
-      opacity: 0;
-      transition: opacity 0.3s;
-
-      &.visible {
-        opacity: 1;
-      }
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      cursor: pointer;
-      margin-bottom: 10px;
-
-      .progress {
-        height: 100%;
-        background: #ff0000;
-      }
-    }
-
-    .bottom-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .left-controls, .right-controls {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    button {
-      background: transparent;
-      border: none;
-      color: white;
-      cursor: pointer;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 16px;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-    }
-
-    .time {
-      color: white;
-      font-size: 14px;
-    }
-
-    .control-group {
-      position: relative;
-
-      .slider-container {
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
-        padding: 10px;
-        border-radius: 4px;
-
-        input {
-          width: 100px;
-          -webkit-appearance: none;
-          height: 4px;
-          background: rgba(255, 255, 255, 0.2);
-          outline: none;
-
-          &::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 12px;
-            height: 12px;
-            background: white;
-            border-radius: 50%;
-            cursor: pointer;
-          }
-        }
-      }
-    }
-  `],
+  styleUrls: ["video-preview.component.scss", '../../styles/_preview-base.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoPreviewComponent {
-  @Input() file!: PreviewFile;
-  @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
-
+export class VideoPreviewComponent extends PreviewBaseComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoContainer') videoContainer!: ElementRef<HTMLDivElement>;
+  private hls?: Hls;
   isPlaying = false;
   currentTime = 0;
   duration = 0;
   progress = 0;
   volume = 1;
+  previousVolume = 1;
   brightness = 100;
   isPiPMode = false;
   isControlsVisible = true;
@@ -224,80 +134,88 @@ export class VideoPreviewComponent {
   showBrightnessControl = false;
   controlsTimeout: any;
   isMuted = false;
+  playbackSpeed = 1;
+  playbackSpeeds = [0.75, 1, 1.5, 2.0, 3.0, 5.0];
+  showSpeedControl = false;
+  isDragging = false;
 
   constructor(private cdr: ChangeDetectorRef) {
+    super();
+  }
+
+  ngOnInit() {
+    this.isLoading = true;
+    this.cdr.markForCheck();
+  }
+
+  ngAfterViewInit() {
+    this.setupVideo();
+  }
+
+  onVideoLoad() {
+    this.isLoading = false;
+    this.duration = this.videoPlayer.nativeElement.duration;
+    this.cdr.markForCheck();
+  }
+
+  private setupVideo() {
+    const video = this.videoPlayer.nativeElement;
+    const url = this.file.url;
+
+    if (this.isHLSVideo(url)) {
+      this.setupHLS(video, url);
+    } else {
+      // 对于普通视频，直接设置 src
+      video.src = url;
+    }
   }
 
   // 播放控制
   togglePlay() {
-    if (this.videoElement.nativeElement.paused) {
-      this.videoElement.nativeElement.play();
+    if (this.videoPlayer.nativeElement.paused) {
+      this.videoPlayer.nativeElement.play();
       this.isPlaying = true;
     } else {
-      this.videoElement.nativeElement.pause();
+      this.videoPlayer.nativeElement.pause();
       this.isPlaying = false;
     }
-    this.cdr.markForCheck();
   }
 
-  // 快进快退
-  skip(seconds: number) {
-    this.videoElement.nativeElement.currentTime += seconds;
+  private isHLSVideo(url: string): boolean {
+    return url.toLowerCase().includes('.m3u8') ||
+      url.includes('application/x-mpegURL') ||
+      url.includes('application/vnd.apple.mpegurl');
   }
 
   // 进度更新
   onTimeUpdate() {
-    const video = this.videoElement.nativeElement;
+    const video = this.videoPlayer.nativeElement;
     this.currentTime = video.currentTime;
     this.progress = (video.currentTime / video.duration) * 100;
-    this.cdr.markForCheck();
-  }
-
-  // 元数据加载完成
-  onMetadataLoaded() {
-    this.duration = this.videoElement.nativeElement.duration;
-    this.cdr.markForCheck();
-  }
-
-  // 跳转播放
-  seek(event: MouseEvent) {
-    const video = this.videoElement.nativeElement;
-    const rect = (event.target as HTMLElement).getBoundingClientRect();
-    const pos = (event.clientX - rect.left) / rect.width;
-    video.currentTime = pos * video.duration;
-  }
-
-  // 音量控制
-  toggleVolumeControl() {
-    this.showVolumeControl = !this.showVolumeControl;
-    this.showBrightnessControl = false;
-    this.cdr.markForCheck();
   }
 
   adjustVolume(event: Event) {
     const value = +(event.target as HTMLInputElement).value;
     this.volume = value / 100;
-    this.videoElement.nativeElement.volume = this.volume;
-  }
-
-  // 亮度控制
-  toggleBrightnessControl() {
-    this.showBrightnessControl = !this.showBrightnessControl;
-    this.showVolumeControl = false;
+    this.isMuted = this.volume === 0;
+    if (this.volume > 0) {
+      this.previousVolume = this.volume;
+    }
+    this.videoPlayer.nativeElement.volume = this.volume;
     this.cdr.markForCheck();
   }
-
   adjustBrightness(event: Event) {
     const value = +(event.target as HTMLInputElement).value;
     this.brightness = value;
-    this.videoElement.nativeElement.style.filter = `brightness(${value}%)`;
+    this.videoPlayer.nativeElement.style.filter = `brightness(${this.brightness}%)`;
+    this.cdr.markForCheck();
   }
 
   // 画中画模式
   async togglePip() {
     if (!document.pictureInPictureElement) {
       try {
-        await this.videoElement.nativeElement.requestPictureInPicture();
+        await this.videoPlayer.nativeElement.requestPictureInPicture();
         this.isPiPMode = true;
       } catch (error) {
         console.error('画中画模式不支持:', error);
@@ -306,13 +224,44 @@ export class VideoPreviewComponent {
       await document.exitPictureInPicture();
       this.isPiPMode = false;
     }
-    this.cdr.markForCheck();
   }
 
-  // 全屏模式
+  private setupHLS(video: HTMLVideoElement, url: string) {
+    if (Hls.isSupported()) {
+      this.hls = new Hls({
+        debug: false,
+        enableWorker: true,
+        // 添加一些 HLS 配置以确保更好的兼容性
+        capLevelToPlayerSize: true,
+        startLevel: -1,
+        abrMaxWithRealBitrate: true
+      });
+
+      this.hls.loadSource(url);
+      this.hls.attachMedia(video);
+
+      this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        // 清单解析完成后，尝试播放
+        video.play().catch(() => {
+          console.log('Autoplay prevented');
+        });
+      });
+
+      this.hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          console.error('HLS error:', data);
+          this.handleError(new Error('视频加载失败'));
+        }
+      });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Safari 原生支持
+      video.src = url;
+    }
+  }
   toggleFullscreen() {
+    const video = this.videoContainer.nativeElement;
     if (!document.fullscreenElement) {
-      this.videoElement.nativeElement.requestFullscreen();
+      video.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
@@ -333,19 +282,120 @@ export class VideoPreviewComponent {
     }, 2000);
   }
 
-  // 静音控制
-  toggleMute() {
-    this.isMuted = !this.isMuted;
-    this.videoElement.nativeElement.muted = this.isMuted;
-  }
-
   // 后退15秒
   back15s() {
-    this.videoElement.nativeElement.currentTime -= 15;
+    this.videoPlayer.nativeElement.currentTime -= 15;
   }
 
   // 前进15秒
   forward15s() {
-    this.videoElement.nativeElement.currentTime += 15;
+    this.videoPlayer.nativeElement.currentTime += 15;
+  }
+
+  ngOnDestroy() {
+    if (this.hls) {
+      this.hls.destroy();
+    }
+  }
+
+  // 跳转播放
+  seek(event: MouseEvent) {
+    const progressBar = event.currentTarget as HTMLElement;
+    const rect = progressBar.getBoundingClientRect();
+    const pos = (event.clientX - rect.left) / rect.width;
+    if (pos >= 0 && pos <= 1) { // 确保在有效范围内
+      const video = this.videoPlayer.nativeElement;
+      video.currentTime = pos * video.duration;
+      this.progress = pos * 100;
+      this.cdr.markForCheck();
+    }
+  }
+
+  // 进度条拖动
+  startDragging(event: MouseEvent) {
+    this.isDragging = true;
+    this.seek(event);
+    // 添加全局鼠标事件监听
+    document.addEventListener('mousemove', this.onGlobalDrag);
+    document.addEventListener('mouseup', this.stopDragging);
+  }
+
+  private onGlobalDrag = (event: MouseEvent) => {
+    if (this.isDragging) {
+      const progressBar = this.videoPlayer.nativeElement.parentElement?.querySelector('.progress-bar');
+      if (progressBar) {
+        const rect = progressBar.getBoundingClientRect();
+        const pos = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+        const video = this.videoPlayer.nativeElement;
+        video.currentTime = pos * video.duration;
+        this.progress = pos * 100;
+        this.cdr.markForCheck();
+      }
+    }
+  }
+
+  stopDragging = () => {
+    if (this.isDragging) {
+      this.isDragging = false;
+      // 移除全局事件监听
+      document.removeEventListener('mousemove', this.onGlobalDrag);
+      document.removeEventListener('mouseup', this.stopDragging);
+    }
+  }
+
+  // 音量控制
+  cycleVolume() {
+    if (this.volume > 0) {
+      this.previousVolume = this.volume;
+      this.volume = 0;
+      this.isMuted = true;
+    } else {
+      this.volume = this.previousVolume;
+      this.isMuted = false;
+    }
+    this.videoPlayer.nativeElement.volume = this.volume;
+    this.cdr.markForCheck();
+  }
+
+  getVolumeIcon(): string {
+    if (this.volume === 0) return 'mute';
+    return 'volume';
+  }
+
+  // 亮度控制
+  cycleBrightness() {
+    const levels = [0, 100,200];
+    const currentIndex = levels.indexOf(this.brightness);
+    const nextIndex = (currentIndex + 1) % levels.length;
+    this.brightness = levels[nextIndex];
+    this.videoPlayer.nativeElement.style.filter = `brightness(${this.brightness}%)`;
+    this.cdr.markForCheck();
+  }
+
+  // 倍速控制
+  toggleSpeedControl() {
+    this.showSpeedControl = !this.showSpeedControl;
+    this.showVolumeControl = false;
+    this.showBrightnessControl = false;
+    this.cdr.markForCheck();
+  }
+
+  setPlaybackSpeed(speed: number) {
+    this.playbackSpeed = speed;
+    this.videoPlayer.nativeElement.playbackRate = speed;
+    this.showSpeedControl = false;
+    this.cdr.markForCheck();
+  }
+
+  formatTime(seconds: number): string {
+    if (!seconds) return '00:00:00';
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return [hours, minutes, secs]
+      .map(val => val.toString().padStart(2, '0'))
+      .join(':');
   }
 }

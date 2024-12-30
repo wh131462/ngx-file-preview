@@ -17,7 +17,7 @@ interface ArchiveInfo {
     <div class="archive-container">
       <div class="archive-info">
         <div class="icon">
-          <preview-icon [name]="file.type" [size]="48"></preview-icon>
+          <preview-icon [svg]="'zip'" [size]="48"></preview-icon>
         </div>
         <div class="details">
           <h2>{{ file.name }}</h2>
@@ -30,11 +30,12 @@ interface ArchiveInfo {
     </div>
   `,
   styles: [`
-     :host{
-        display: block;
-        width: 100%;
-        height: 100%;
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
+
     .archive-container {
       width: 100%;
       height: 100%;
@@ -42,9 +43,7 @@ interface ArchiveInfo {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px;
-      background: #f5f5f5;
-      gap: 30px;
+      background: #1a1a1a;
     }
 
     .archive-info {
@@ -54,7 +53,7 @@ interface ArchiveInfo {
       background: white;
       padding: 30px;
       border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       max-width: 500px;
       width: 100%;
 

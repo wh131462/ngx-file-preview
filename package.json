@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "prestart": "npm run build",
-    "start": "ng serve --port 3333",
+    "start": "ng serve --port 3333 -o --host 0.0.0.0",
     "build": "ng build ngx-file-preview",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -19,10 +19,11 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
+    "hls.js": "^1.4.12",
+    "ng2-pdf-viewer": "^10.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.3",
-    "ng2-pdf-viewer": "^10.0.0"
+    "zone.js": "~0.14.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.11",

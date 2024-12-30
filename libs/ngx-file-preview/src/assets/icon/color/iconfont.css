@@ -1,57 +1,57 @@
 @font-face {
-  font-family: "ngx-file-preview"; /* Project id 4798817 */
-  src: url('iconfont.svg?t=1735553000895#ngx-file-preview') format('svg');
+  font-family: "NGX-FILE-PREVIEW"; /* Project id 4798817 */
+  src: url('iconfont.svg?t=1735569144532#NGX-FILE-PREVIEW') format('svg');
 }
 
-.ngx-file-preview {
-  font-family: "ngx-file-preview" !important;
+.NGX-FILE-PREVIEW {
+  font-family: "NGX-FILE-PREVIEW" !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.cp-download:before {
+.nfp-download:before {
   content: "\e6c6";
 }
 
-.cp-ppt:before {
+.nfp-ppt:before {
   content: "\e904";
 }
 
-.cp-word:before {
+.nfp-word:before {
   content: "\e902";
 }
 
-.cp-excel:before {
+.nfp-excel:before {
   content: "\e907";
 }
 
-.cp-txt:before {
+.nfp-txt:before {
   content: "\e903";
 }
 
-.cp-unknown:before {
+.nfp-unknown:before {
   content: "\e901";
 }
 
-.cp-video:before {
+.nfp-video:before {
   content: "\e900";
 }
 
-.cp-zip:before {
+.nfp-zip:before {
   content: "\e908";
 }
 
-.cp-image:before {
+.nfp-image:before {
   content: "\e909";
 }
 
-.cp-audio:before {
+.nfp-audio:before {
   content: "\e905";
 }
 
-.cp-pdf:before {
+.nfp-pdf:before {
   content: "\e906";
 }
 
