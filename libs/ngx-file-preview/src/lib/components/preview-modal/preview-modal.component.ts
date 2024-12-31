@@ -1,17 +1,25 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ViewEncapsulation, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PreviewService } from '../../services/preview.service';
-import { ImagePreviewComponent } from '../image-preview/image-preview.component';
-import { VideoPreviewComponent } from '../video-preview/video-preview.component';
-import { PdfPreviewComponent } from '../pdf-preview/pdf-preview.component';
-import { TextPreviewComponent } from '../text-preview/text-preview.component';
-import { ArchivePreviewComponent } from '../archive-preview/archive-preview.component';
-import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
-import { WordPreviewComponent } from '../word-preview/word-preview.component';
-import { ExcelPreviewComponent } from '../excel-preview/excel-preview.component';
-import { PptPreviewComponent } from '../ppt-preview/ppt-preview.component';
-import { Subscription } from 'rxjs';
-import { PreviewFile } from '../../types/preview.types';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  OnInit,
+  OnDestroy,
+  ViewEncapsulation,
+  HostListener
+} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {PreviewService} from '../../services/preview.service';
+import {ImagePreviewComponent} from '../image-preview/image-preview.component';
+import {VideoPreviewComponent} from '../video-preview/video-preview.component';
+import {PdfPreviewComponent} from '../pdf-preview/pdf-preview.component';
+import {TextPreviewComponent} from '../text-preview/text-preview.component';
+import {ArchivePreviewComponent} from '../archive-preview/archive-preview.component';
+import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import {WordPreviewComponent} from '../word-preview/word-preview.component';
+import {ExcelPreviewComponent} from '../excel-preview/excel-preview.component';
+import {PptPreviewComponent} from '../ppt-preview/ppt-preview.component';
+import {Subscription} from 'rxjs';
+import {PreviewFile} from '../../types/preview.types';
 import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
 
 @Component({
@@ -33,7 +41,7 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
   template: `
     <div class="preview-modal-overlay" *ngIf="isVisible" (click)="close()">
       <div class="preview-modal-content" (click)="$event.stopPropagation()">
-        <div class="preview-header" [class.has-multiple]="hasMultipleFiles">
+        <div class="preview-modal-content-header" [class.has-multiple]="hasMultipleFiles">
           <div class="header-left" *ngIf="hasMultipleFiles">
             <span class="file-name">{{ currentFile?.name }}</span>
             <span class="file-index">{{ getCurrentFileInfo() }}</span>
@@ -43,7 +51,7 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
           </div>
         </div>
 
-        <div class="preview-content">
+        <div class="preview-modal-content-content">
           <div class="nav-button prev"
                *ngIf="canShowPrevious()"
                (click)="previous()">
@@ -139,7 +147,7 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
       flex-direction: column;
     }
 
-    .preview-header {
+    .preview-modal-content-header {
       position: absolute;
       top: 0;
       left: 0;
@@ -194,7 +202,7 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
       }
     }
 
-    .preview-content {
+    .preview-modal-content-content {
       flex: 1;
       position: relative;
       overflow: hidden;
@@ -231,8 +239,7 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
       }
     }
 
-    .unknown-preview,
-    .audio-preview {
+    .unknown-preview {
       color: white;
       text-align: center;
       padding: 24px;
@@ -243,6 +250,10 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
         align-items: center;
         gap: 16px;
       }
+    }
+
+    body:has(.preview-modal-overlay) {
+      overflow: hidden;
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -257,7 +268,8 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
   constructor(
     private previewService: PreviewService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.subscription = this.state$.subscribe(state => {

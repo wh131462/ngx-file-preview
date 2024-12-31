@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnChanges,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
@@ -9,7 +17,7 @@ import {renderAsync} from 'docx-preview';
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
-    <div class="word-container">
+    <div class="word-container" #container>
       <div class="toolbar">
         <div class="left-controls">
           <button class="tool-btn" (click)="zoomOut()">
@@ -27,7 +35,7 @@ import {renderAsync} from 'docx-preview';
         </div>
       </div>
 
-      <div #container class="preview-container">
+      <div class="preview-container">
         <div #content class="preview-content" [style.transform]="'scale(' + scale + ')'">
         </div>
       </div>
@@ -38,80 +46,192 @@ import {renderAsync} from 'docx-preview';
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     .word-container {
       width: 100%;
       height: 100%;
       background: #1a1a1a;
       display: flex;
       flex-direction: column;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     .toolbar {
       height: 48px;
-      background: rgba(26, 26, 26, 0.9);
+      min-height: 48px;
+      background: #262626;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 16px;
-      z-index: 1;
+      padding: 0 52px 0 16px;
+      border-bottom: 1px solid #303030;
+      gap: 16px;
     }
 
-    .left-controls, .right-controls {
+    .left-controls {
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .preview-container {
+      flex: 1;
+      overflow: auto;
+      background: #262626;
+      display: flex;
+      justify-content: center;
+
+      &::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #1a1a1a;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #404040;
+        border: 2px solid #1a1a1a;
+        border-radius: 6px;
+
+        &:hover {
+          background: #505050;
+        }
+      }
+    }
+
+    .preview-content {
+      background: white;
+      border-radius: 2px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      transform-origin: top center;
+      width: 816px;
+      min-height: 1056px;
+
+      :host ::ng-deep {
+        font-family: 'Calibri', 'Arial', sans-serif;
+        font-size: 11pt;
+        line-height: 1.5;
+        color: #333;
+
+        h1, h2, h3, h4, h5, h6 {
+          margin-top: 1.5em;
+          margin-bottom: 0.5em;
+          font-weight: 500;
+          color: #000;
+        }
+
+        h1 { font-size: 24pt; }
+        h2 { font-size: 18pt; }
+        h3 { font-size: 14pt; }
+        h4 { font-size: 12pt; }
+
+        p {
+          margin: 0 0 8pt;
+          text-align: justify;
+        }
+
+        ul, ol {
+          margin: 0 0 8pt 40px;
+          padding: 0;
+        }
+
+        img {
+          max-width: 100%;
+          height: auto;
+          margin: 8pt 0;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 12pt 0;
+
+          td, th {
+            border: 1px solid #d1d1d1;
+            padding: 6pt 8pt;
+            vertical-align: top;
+          }
+
+          th {
+            background: #f8f8f8;
+            font-weight: bold;
+          }
+
+          tr:nth-child(even) {
+            background: #fafafa;
+          }
+        }
+
+        a {
+          color: #0563c1;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
+        blockquote {
+          margin: 12pt 0;
+          padding: 8pt 16pt;
+          border-left: 4px solid #e0e0e0;
+          background: #f8f8f8;
+          font-style: italic;
+        }
+
+        pre, code {
+          font-family: 'Consolas', monospace;
+          background: #f5f5f5;
+          padding: 2pt 4pt;
+          border-radius: 2px;
+        }
+
+        pre {
+          padding: 8pt 12pt;
+          margin: 12pt 0;
+          overflow-x: auto;
+        }
+      }
     }
 
     .tool-btn {
       background: transparent;
       border: none;
       color: rgba(255, 255, 255, 0.85);
-      padding: 8px;
+      width: 32px;
+      height: 32px;
+      padding: 0;
       cursor: pointer;
       border-radius: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s;
+      transition: all 0.2s;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.1);
+        background: #303030;
         color: #177ddc;
       }
     }
 
     .zoom-text {
       color: rgba(255, 255, 255, 0.85);
-      font-size: 14px;
+      font-size: 13px;
       min-width: 48px;
       text-align: center;
     }
 
-    .preview-container {
-      flex: 1;
-      overflow: auto;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .preview-content {
-      background: white;
-      padding: 40px;
-      border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      transform-origin: top center;
-      max-width: 800px;
-      width: 100%;
-      min-height: 1000px;
-    }
-
     .loading-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      inset: 0;
       background: rgba(26, 26, 26, 0.8);
       display: flex;
       align-items: center;
@@ -121,7 +241,7 @@ import {renderAsync} from 'docx-preview';
     .loading-spinner {
       width: 40px;
       height: 40px;
-      border: 3px solid transparent;
+      border: 3px solid #262626;
       border-top-color: #177ddc;
       border-radius: 50%;
       animation: spin 1s linear infinite;
@@ -138,7 +258,7 @@ import {renderAsync} from 'docx-preview';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WordPreviewComponent extends PreviewBaseComponent {
+export class WordPreviewComponent extends PreviewBaseComponent implements OnChanges {
   @ViewChild('container') container!: ElementRef<HTMLDivElement>;
   @ViewChild('content') content!: ElementRef<HTMLDivElement>;
 
@@ -151,6 +271,12 @@ export class WordPreviewComponent extends PreviewBaseComponent {
     super();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['file'] && this.file) {
+      this.handleFile();
+    }
+  }
+
   async handleFile() {
     this.isLoading = true;
     try {
@@ -158,7 +284,7 @@ export class WordPreviewComponent extends PreviewBaseComponent {
       const arrayBuffer = await response.arrayBuffer();
 
       await renderAsync(arrayBuffer, this.content.nativeElement, this.content.nativeElement, {
-        className: 'docx-viewer',
+        className: 'docx-preview',
         inWrapper: false,
         ignoreWidth: false,
         ignoreHeight: false,
@@ -190,9 +316,8 @@ export class WordPreviewComponent extends PreviewBaseComponent {
   }
 
   toggleFullscreen() {
-    const elem = this.container.nativeElement;
     if (!document.fullscreenElement) {
-      elem.requestFullscreen();
+      document.documentElement.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
