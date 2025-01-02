@@ -5,24 +5,24 @@
 ## 预览效果
 
 ### 默认列表视图
-![默认列表视图](./src/assets/readme/default-list.png)
+![默认列表视图](assets/readme/default-list.png)
 
 ### 自定义模板
-![自定义模板](./src/assets/readme/custom-template.png)
+![自定义模板](assets/readme/custom-template.png)
 
 ### 各类型文件预览效果
 
 | 文件类型 | 预览效果                                 |
 |---------|--------------------------------------|
-| 图片预览 | ![图片预览](./src/assets/readme/img.png) |
-| 视频预览 | ![视频预览](./src/assets/readme/video.png)     |
-| 音频预览 | ![音频预览](./src/assets/readme/audio.png)     |
-| PPT预览 | ![PPT预览](./src/assets/readme/ppt.png)      |
-| Word预览 | ![Word预览](./src/assets/readme/word.png)    |
-| Excel预览 | ![Excel预览](./src/assets/readme/excel.png)  |
-| 文本预览 | ![文本预览](./src/assets/readme/text.png)      |
-| 压缩包预览 | ![压缩包预览](./src/assets/readme/zip.png)      |
-| 未知类型 | ![未知类型](./src/assets/readme/unknown.png)   |
+| 图片预览 | ![图片预览](assets/readme/img.png) |
+| 视频预览 | ![视频预览](assets/readme/video.png)     |
+| 音频预览 | ![音频预览](assets/readme/audio.png)     |
+| PPT预览 | ![PPT预览](assets/readme/ppt.png)      |
+| Word预览 | ![Word预览](assets/readme/word.png)    |
+| Excel预览 | ![Excel预览](assets/readme/excel.png)  |
+| 文本预览 | ![文本预览](assets/readme/text.png)      |
+| 压缩包预览 | ![压缩包预览](assets/readme/zip.png)      |
+| 未知类型 | ![未知类型](assets/readme/unknown.png)   |
 
 ## 特性
 
@@ -35,7 +35,7 @@
 
 ## 安装
 ```bash
-npm install ngx-file-preview --save
+npm install @eternalheart/ngx-file-preview --save docx-preview hls.js ng2-pdf-viewer pptx-preview xlsx
 ```
 
 ## 配置
@@ -52,10 +52,10 @@ npm install ngx-file-preview --save
         "build": {
           "options": {
             "styles": [
-              "node_modules/ngx-file-preview/assets/icon/font/iconfont.css"
+              "node_modules/@eternalheart/ngx-file-preview/assets/icon/font/iconfont.css"
             ],
             "scripts": [
-              "node_modules/ngx-file-preview/assets/icon/color/iconfont.js"
+              "node_modules/@eternalheart/ngx-file-preview/assets/icon/color/iconfont.js"
             ]
           }
         }
@@ -81,7 +81,6 @@ import {
   imports: [
     PreviewDirective,
     PreviewComponent,
-    PreviewModalComponent
   ]
 })
 ```
@@ -93,7 +92,7 @@ import {
 最简单的使用方式，直接在元素上添加指令：
 
 ```typescript
-import { PreviewDirective } from 'ngx-file-preview';
+import { PreviewDirective } from '@eternalheart/ngx-file-preview';
 
 @Component({
   imports: [PreviewDirective],
@@ -120,7 +119,7 @@ export class YourComponent {
 #### 使用默认列表模板：
 
 ```typescript
-import { PreviewComponent } from 'ngx-file-preview';
+import { PreviewComponent } from '@eternalheart/ngx-file-preview';
 
 @Component({
   imports: [PreviewComponent],

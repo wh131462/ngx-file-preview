@@ -1,12 +1,56 @@
 {
-  "name": "ngx-file-preview",
-  "version": "0.0.1",
+  "name": "@eternalheart/ngx-file-preview",
+  "version": "1.0.0",
+  "description": "A powerful Angular file preview component library supporting multiple file formats including images, videos, PDFs, Office documents, text files and more.",
+  "keywords": [
+    "angular",
+    "file-preview",
+    "document-preview",
+    "preview",
+    "viewer",
+    "pdf-viewer",
+    "image-viewer",
+    "video-player",
+    "audio-player",
+    "office-viewer",
+    "word-viewer",
+    "excel-viewer",
+    "ppt-viewer",
+    "text-viewer",
+    "file-viewer",
+    "document-viewer",
+    "media-player",
+    "file-browser",
+    "typescript",
+    "angular-component",
+    "ngx"
+  ],
+  "author": {
+    "name": "wh131462",
+    "email": "wh131462@gmail.com",
+    "url": "https://github.com/wh131462"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wh131462/ngx-file-preview"
+  },
+  "bugs": {
+    "url": "https://github.com/wh131462/ngx-file-preview/issues"
+  },
+  "homepage": "https://github.com/wh131462/ngx-file-preview#readme",
+  "license": "MIT",
   "peerDependencies": {
+    "docx-preview": "^0.3.3",
+    "hls.js": "^1.4.12",
     "ng2-pdf-viewer": "^10.0.0",
-    "hls.js": "^1.4.12"
+    "pptx-preview": "^1.0.1",
+    "xlsx": "^0.18.5"
   },
   "dependencies": {
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -2,7 +2,8 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/ngx-file-preview",
   "assets": [
-    "src/assets"
+    "src/assets",
+    "README.md"
   ],
   "lib": {
     "entryFile": "src/index.ts"

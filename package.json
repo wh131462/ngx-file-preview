@@ -1,14 +1,17 @@
 {
-  "name": "ngx-file-preview",
+  "name": "@eternalheart/ngx-file-preview",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "prestart": "npm run build",
     "start": "ng serve --port 3333 -o --host 0.0.0.0",
+    "prebuild": "node scripts/copy.js ./README.md libs/ngx-file-preview/",
     "build": "ng build ngx-file-preview",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "pub": "cd libs/ngx-file-preview && yarn version && cd ../../ && npm run build && pwd && cd dist/ngx-file-preview && npm publish --registry https://registry.npmjs.com"
   },
+  "packageManager": "yarn@1.22.22",
   "private": true,
   "dependencies": {
     "@angular/animations": "^17.3.0",
