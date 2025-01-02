@@ -42,81 +42,88 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
   ],
   template: `
     <div class="preview-modal-overlay" *ngIf="isVisible" (click)="close()">
-      <div class="preview-modal-content" (click)="$event.stopPropagation()">
-        <div class="preview-modal-content-header" [class.has-multiple]="hasMultipleFiles">
-          <div class="header-left" *ngIf="hasMultipleFiles">
+      <div class="preview-modal-content"
+           (click)="$event.stopPropagation()"
+           (mousemove)="handleMouseMove()"
+           (mouseleave)="hideControls()">
+        <div class="preview-modal-header" [class.has-multiple]="hasMultipleFiles">
+          <div class="header-left">
             <span class="file-name">{{ currentFile?.name }}</span>
-            <span class="file-index">{{ getCurrentFileInfo() }}</span>
+            <span class="file-index" *ngIf="hasMultipleFiles">{{ getCurrentFileInfo() }}</span>
           </div>
           <div class="header-right">
             <preview-icon name="close" (click)="close()"></preview-icon>
           </div>
         </div>
 
-        <div class="preview-modal-content-content">
-          <div class="nav-button prev"
-               *ngIf="canShowPrevious()"
-               (click)="previous()">
-            <preview-icon name="previous"></preview-icon>
+        <div class="preview-modal-body">
+          <button class="nav-button prev"
+                  *ngIf="canShowPrevious()"
+                  [class.visible]="isControlsVisible"
+                  (click)="previous()">
+            <preview-icon [size]="36" name="previous"></preview-icon>
+          </button>
+
+          <div class="preview-content">
+            <ng-container [ngSwitch]="currentFile?.type">
+              <fp-image-preview
+                *ngSwitchCase="'image'"
+                [file]="currentFile!"
+              ></fp-image-preview>
+
+              <fp-video-preview
+                *ngSwitchCase="'video'"
+                [file]="currentFile!"
+              ></fp-video-preview>
+
+              <fp-pdf-preview
+                *ngSwitchCase="'pdf'"
+                [file]="currentFile!"
+              ></fp-pdf-preview>
+
+              <fp-word-preview
+                *ngSwitchCase="'word'"
+                [file]="currentFile!"
+              ></fp-word-preview>
+
+              <fp-excel-preview
+                *ngSwitchCase="'excel'"
+                [file]="currentFile!"
+              ></fp-excel-preview>
+
+              <fp-ppt-preview
+                *ngSwitchCase="'ppt'"
+                [file]="currentFile!"
+              ></fp-ppt-preview>
+
+              <fp-text-preview
+                *ngSwitchCase="'txt'"
+                [file]="currentFile!"
+              ></fp-text-preview>
+
+              <fp-archive-preview
+                *ngSwitchCase="'zip'"
+                [file]="currentFile!"
+              ></fp-archive-preview>
+
+              <fp-audio-preview
+                *ngSwitchCase="'audio'"
+                [file]="currentFile!"
+              ></fp-audio-preview>
+
+              <fp-unknown-preview
+                *ngSwitchCase="'unknown'"
+                [file]="currentFile!">
+              </fp-unknown-preview>
+            </ng-container>
           </div>
 
-          <ng-container [ngSwitch]="currentFile?.type">
-            <fp-image-preview
-              *ngSwitchCase="'image'"
-              [file]="currentFile!"
-            ></fp-image-preview>
-
-            <fp-video-preview
-              *ngSwitchCase="'video'"
-              [file]="currentFile!"
-            ></fp-video-preview>
-
-            <fp-pdf-preview
-              *ngSwitchCase="'pdf'"
-              [file]="currentFile!"
-            ></fp-pdf-preview>
-
-            <fp-word-preview
-              *ngSwitchCase="'word'"
-              [file]="currentFile!"
-            ></fp-word-preview>
-
-            <fp-excel-preview
-              *ngSwitchCase="'excel'"
-              [file]="currentFile!"
-            ></fp-excel-preview>
-
-            <fp-ppt-preview
-              *ngSwitchCase="'ppt'"
-              [file]="currentFile!"
-            ></fp-ppt-preview>
-
-            <fp-text-preview
-              *ngSwitchCase="'txt'"
-              [file]="currentFile!"
-            ></fp-text-preview>
-
-            <fp-archive-preview
-              *ngSwitchCase="'zip'"
-              [file]="currentFile!"
-            ></fp-archive-preview>
-
-            <fp-audio-preview
-              *ngSwitchCase="'audio'"
-              [file]="currentFile!"
-            ></fp-audio-preview>
-
-            <fp-unknown-preview
-              *ngSwitchCase="'unknown'"
-              [file]="currentFile!">
-            </fp-unknown-preview>
-          </ng-container>
-
-          <div class="nav-button next"
-               *ngIf="canShowNext()"
-               (click)="next()">
-            <preview-icon [size]="24" name="next"></preview-icon>
-          </div>
+          <button class="nav-button next"
+                  *ngIf="canShowNext()"
+                  [class.visible]="isControlsVisible"
+                  (click)="next()">
+            <preview-icon [size]="36" name="next"></preview-icon>
+          </button>
         </div>
       </div>
     </div>
@@ -132,7 +139,7 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       z-index: 1000;
       display: flex;
       justify-content: center;
@@ -147,65 +154,75 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
       flex-direction: column;
     }
 
-    .preview-modal-content-header {
+    .preview-modal-header {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      height: 56px;
-      padding: 0 24px;
+      height: 44px;
+      padding: 0 16px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      opacity: 0.8;
+      transition: opacity 0.3s;
 
-      &.has-multiple {
-        justify-content: space-between;
-        background: rgba(0, 0, 0, 0.65);
-        backdrop-filter: blur(8px);
+      &:hover {
+        opacity: 1;
       }
 
       .header-left {
         display: flex;
         align-items: center;
-        gap: 12px;
-        color: white;
+        gap: 8px;
 
         .file-name {
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 500;
+          max-width: 500px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: rgba(255, 255, 255, 0.9);
         }
 
         .file-index {
-          font-size: 14px;
-          opacity: 0.7;
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.6);
         }
       }
 
-      .header-right {
-        display: flex;
-        align-items: center;
+      .header-right preview-icon {
+        width: 20px;
+        height: 20px;
+        color: rgba(255, 255, 255, 0.8);
+        cursor: pointer;
+        transition: all 0.2s;
 
-        preview-icon {
-          width: 24px;
-          height: 24px;
+        &:hover {
           color: white;
-          cursor: pointer;
-          opacity: 0.8;
-          transition: opacity 0.2s;
-          z-index: 1;
-
-
-          &:hover {
-            opacity: 1;
-          }
+          transform: scale(1.1);
         }
       }
     }
 
-    .preview-modal-content-content {
+    .preview-modal-body {
       flex: 1;
+      display: flex;
+      align-items: center;
       position: relative;
       overflow: hidden;
+      margin-top: 44px;
+    }
+
+    .preview-content {
+      flex: 1;
+      height: 100%;
+      width: 100%;
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -215,32 +232,59 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: transparent;
+      border: none;
+      padding: 8px;
+      color: rgba(255, 255, 255, 0.5);
       cursor: pointer;
-      transition: background-color 0.3s;
+      z-index: 5;
+      transition: all 0.3s;
+      opacity: 0;
+      pointer-events: none;
+
+      &.visible {
+        opacity: 0.8;
+        pointer-events: auto;
+      }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        transform: translateY(-50%) scale(1.1);
       }
 
       &.prev {
-        left: 24px;
+        left: 16px;
       }
 
       &.next {
-        right: 24px;
+        right: 16px;
+      }
+
+      preview-icon {
+        display: block;
+        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
       }
     }
 
     body:has(.preview-modal-overlay) {
       overflow: hidden;
+    }
+
+    :host ::ng-deep {
+      fp-image-preview,
+      fp-video-preview,
+      fp-pdf-preview,
+      fp-word-preview,
+      fp-excel-preview,
+      fp-ppt-preview,
+      fp-text-preview,
+      fp-archive-preview,
+      fp-audio-preview,
+      fp-unknown-preview {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
     }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -251,6 +295,9 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
   currentFile?: PreviewFile;
   private subscription?: Subscription;
   private state$ = this.previewService.previewState$;
+  isControlsVisible = true;
+  private controlsTimeout?: number;
+  private readonly HIDE_DELAY = 2000;
 
   constructor(
     private previewService: PreviewService,
@@ -268,6 +315,9 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription?.unsubscribe();
+    if (this.controlsTimeout) {
+      window.clearTimeout(this.controlsTimeout);
+    }
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -315,5 +365,27 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
   get hasMultipleFiles(): boolean {
     const state = this.previewService.previewStateSubject.getValue();
     return (state.files?.length || 0) > 1;
+  }
+
+  handleMouseMove() {
+    this.isControlsVisible = true;
+    this.cdr.markForCheck();
+
+    if (this.controlsTimeout) {
+      window.clearTimeout(this.controlsTimeout);
+    }
+
+    this.controlsTimeout = window.setTimeout(() => {
+      this.hideControls();
+    }, this.HIDE_DELAY);
+  }
+
+  hideControls() {
+    this.isControlsVisible = false;
+    this.cdr.markForCheck();
+
+    if (this.controlsTimeout) {
+      window.clearTimeout(this.controlsTimeout);
+    }
   }
 }

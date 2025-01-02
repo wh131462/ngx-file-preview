@@ -102,4 +102,67 @@ export class PreviewUtils {
 
     return this.getTypeByExtension(ext);
   }
+
+  static getFileType(file: File): PreviewType {
+    // 首先检查 MIME 类型
+    const mimeType = file.type.toLowerCase();
+    
+    if (mimeType.startsWith('image/')) return 'image';
+    if (mimeType.startsWith('video/')) return 'video';
+    if (mimeType.startsWith('audio/')) return 'audio';
+    
+    // 检查文件扩展名
+    const extension = file.name.split('.').pop()?.toLowerCase();
+    return this.getFileTypeFromExtension(extension);
+  }
+
+  static getFileTypeFromUrl(url: string): PreviewType {
+    try {
+      const extension = url.split('.').pop()?.toLowerCase();
+      return this.getFileTypeFromExtension(extension);
+    } catch {
+      return 'unknown';
+    }
+  }
+
+  private static getFileTypeFromExtension(extension?: string): PreviewType {
+    if (!extension) return 'unknown';
+
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+      case 'bmp':
+      case 'webp':
+        return 'image';
+      case 'mp4':
+      case 'webm':
+      case 'ogg':
+        return 'video';
+      case 'mp3':
+      case 'wav':
+        return 'audio';
+      case 'pdf':
+        return 'pdf';
+      case 'ppt':
+      case 'pptx':
+        return 'ppt';
+      case 'doc':
+      case 'docx':
+        return 'word';
+      case 'xls':
+      case 'xlsx':
+        return 'excel';
+      case 'txt':
+      case 'md':
+        return 'txt';
+      case 'zip':
+      case 'rar':
+      case '7z':
+        return 'zip';
+      default:
+        return 'unknown';
+    }
+  }
 }

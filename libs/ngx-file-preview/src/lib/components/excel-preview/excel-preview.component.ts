@@ -116,7 +116,7 @@ interface TableData {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 52px 0 16px;
+      padding: 0 16px;
       border-bottom: 1px solid #303030;
       gap: 16px;
     }
@@ -368,7 +368,7 @@ interface TableData {
       cursor: pointer;
       padding: 4px;
       border-radius: 4px;
-      
+
       &:hover {
         background: #303030;
         color: #177ddc;
@@ -609,7 +609,7 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
     if (event.ctrlKey || event.metaKey) {
       event.preventDefault();
       const delta = event.deltaY || event.detail || 0;
-      
+
       if (delta < 0) {
         this.zoomIn();
       } else {
@@ -621,14 +621,14 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
   private applyZoom() {
     if (this.tableWrapper) {
       const wrapper = this.tableWrapper.nativeElement;
-      
+
       // 保存当前滚动位置的相对百分比
       const scrollLeftPercent = wrapper.scrollLeft / (wrapper.scrollWidth - wrapper.clientWidth);
       const scrollTopPercent = wrapper.scrollTop / (wrapper.scrollHeight - wrapper.clientHeight);
-      
+
       // 应用缩放
       wrapper.style.transform = `scale(${this.scale})`;
-      
+
       // 在下一个事件循环中恢复滚动位置
       setTimeout(() => {
         wrapper.scrollLeft = scrollLeftPercent * (wrapper.scrollWidth - wrapper.clientWidth);
@@ -646,7 +646,7 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
         this.resetZoom();
       }
     };
-    
+
     document.addEventListener('keydown', this.keydownListener);
   }
 

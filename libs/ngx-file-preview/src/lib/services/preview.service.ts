@@ -1,120 +1,119 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  Injectable,
+  ComponentRef,
+  Type,
+  ApplicationRef,
+  createComponent,
+  EnvironmentInjector,
+  inject
+} from '@angular/core';
 import { PreviewFile, PreviewOptions } from '../types/preview.types';
+import { BehaviorSubject } from 'rxjs';
+import { PreviewModalComponent } from '../components/preview-modal/preview-modal.component';
 
 export interface PreviewState {
   isVisible: boolean;
   currentFile?: PreviewFile;
-  files: PreviewFile[];
   currentIndex: number;
-  zoom: number;
+  files: PreviewFile[];
 }
-
-export const INITIAL_PREVIEW_STATE: PreviewState = {
-  isVisible: false,
-  files: [],
-  currentIndex: 0,
-  zoom: 1
-};
 
 @Injectable({
   providedIn: 'root'
 })
 export class PreviewService {
-  previewStateSubject = new BehaviorSubject<PreviewState>(INITIAL_PREVIEW_STATE);
-  previewState$ = this.previewStateSubject.asObservable();
+  private modalRef?: ComponentRef<PreviewModalComponent>;
+  private appRef = inject(ApplicationRef);
+  private injector = inject(EnvironmentInjector);
+
+  // 预览状态管理
+  private readonly initialState: PreviewState = {
+    isVisible: false,
+    currentIndex: 0,
+    files: []
+  };
+
+  readonly previewStateSubject = new BehaviorSubject<PreviewState>(this.initialState);
+  readonly previewState$ = this.previewStateSubject.asObservable();
 
   open(options: PreviewOptions) {
     const { files, index = 0 } = options;
-    
-    // 确保文件数组有效
-    if (!files || files.length === 0) {
-      console.warn('No files provided for preview');
+
+    // 如果模态框已存在，更新状态即可
+    if (this.modalRef) {
+      this.updatePreviewState(true, files, index);
       return;
     }
 
-    // 更新预览状态
-    this.previewStateSubject.next({
-      isVisible: true,
-      currentFile: files[index],
-      files,
-      currentIndex: index,
-      zoom: 1
-    });
+    try {
+      // 创建模态框组件
+      this.modalRef = createComponent(PreviewModalComponent as Type<PreviewModalComponent>, {
+        environmentInjector: this.injector
+      });
+
+      // 将模态框添加到 body
+      document.body.appendChild(this.modalRef.location.nativeElement);
+
+      // 手动触发变更检测
+      this.modalRef.changeDetectorRef.detectChanges();
+
+      // 更新预览状态
+      this.updatePreviewState(true, files, index);
+
+      // 将组件添加到 ApplicationRef
+      this.appRef.attachView(this.modalRef.hostView);
+    } catch (error) {
+      console.error('Error creating preview modal:', error);
+      this.cleanupModal();
+    }
   }
 
   close() {
-    // 检查是否处于全屏状态
-    if (document.fullscreenElement) {
-      // 退出全屏
-      document.exitFullscreen().then(() => {
-        this.updatePreviewState(false);
-      }).catch(err => {
-        console.error('退出全屏失败:', err);
-        // 即使退出全屏失败，也要关闭预览
-        this.updatePreviewState(false);
-      });
-    } else {
-      this.updatePreviewState(false);
-    }
-  }
-
-  private updatePreviewState(isVisible: boolean) {
-    const state = this.previewStateSubject.getValue();
-    this.previewStateSubject.next({
-      ...state,
-      isVisible,
-      zoom: 1
-    });
-  }
-
-  next() {
-    const state = this.previewStateSubject.getValue();
-    if (state.currentIndex < state.files.length - 1) {
-      this.updateCurrentFile(state.currentIndex + 1);
-    }
+    this.updatePreviewState(false, [], 0);
+    this.cleanupModal();
   }
 
   previous() {
     const state = this.previewStateSubject.getValue();
-    if (state.currentIndex > 0) {
-      this.updateCurrentFile(state.currentIndex - 1);
-    }
+    const newIndex = Math.max(0, state.currentIndex - 1);
+    this.updatePreviewState(true, state.files, newIndex);
   }
 
-  zoom(delta: number) {
+  next() {
     const state = this.previewStateSubject.getValue();
-    const newZoom = Math.max(0.1, Math.min(5, state.zoom * (delta > 0 ? 1.1 : 0.9)));
-
-    this.previewStateSubject.next({
-      ...state,
-      zoom: newZoom
-    });
+    const newIndex = Math.min(state.files.length - 1, state.currentIndex + 1);
+    this.updatePreviewState(true, state.files, newIndex);
   }
 
-  resetZoom() {
-    const state = this.previewStateSubject.getValue();
+  private updatePreviewState(isVisible: boolean, files: PreviewFile[], index: number) {
+    const currentFile = files[index];
     this.previewStateSubject.next({
-      ...state,
-      zoom: 1
-    });
-  }
-
-  toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  }
-
-  private updateCurrentFile(index: number) {
-    const state = this.previewStateSubject.getValue();
-    this.previewStateSubject.next({
-      ...state,
-      currentFile: state.files[index],
+      isVisible,
+      currentFile,
       currentIndex: index,
-      zoom: 1 // 重置缩放
+      files
     });
+  }
+
+  private cleanupModal() {
+    if (!this.modalRef) return;
+
+    try {
+      // 从 DOM 中移除模态框
+      const element = this.modalRef.location.nativeElement;
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+
+      // 从 ApplicationRef 中分离视图
+      this.appRef.detachView(this.modalRef.hostView);
+
+      // 销毁组件
+      this.modalRef.destroy();
+    } catch (error) {
+      console.error('Error cleaning up modal:', error);
+    } finally {
+      this.modalRef = undefined;
+    }
   }
 }

@@ -75,7 +75,7 @@ import { init } from 'pptx-preview';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 52px 0 16px;
+      padding: 0 16px;
       border-bottom: 1px solid #303030;
       gap: 16px;
     }

@@ -33,13 +33,13 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
         </div>
       </div>
 
-      <div class="content-container" 
+      <div class="content-container"
            [class.wrap]="isWrapped"
            (wheel)="handleWheel($event)">
         <div class="content-wrapper" [class.wrap]="isWrapped">
           <pre [style.transform]="'scale(' + scale + ')'"
                [style.transform-origin]="'left top'"
-               [class.wrap]="isWrapped">{{ content }}</pre>
+          >{{ content }}</pre>
         </div>
         <div class="loading-overlay" *ngIf="isLoading">
           <div class="spinner"></div>
@@ -73,7 +73,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 52px 0 16px;
+      padding: 0 16px;
       border-bottom: 1px solid #303030;
       gap: 16px;
     }
@@ -112,7 +112,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       cursor: pointer;
       padding: 4px;
       border-radius: 4px;
-      
+
       &:hover {
         background: #303030;
         color: #177ddc;
@@ -124,6 +124,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       overflow: auto;
       position: relative;
       background: #1e1e1e;
+      padding: 16px;
 
       &.wrap {
         overflow-x: hidden;
@@ -247,7 +248,7 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
         this.resetZoom();
       }
     };
-    
+
     document.addEventListener('keydown', this.keydownListener);
   }
 
@@ -261,7 +262,7 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
     if (event.ctrlKey || event.metaKey) {
       event.preventDefault();
       const delta = event.deltaY || event.detail || 0;
-      
+
       if (delta < 0) {
         this.zoomIn();
       } else {
