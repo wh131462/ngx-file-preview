@@ -51,68 +51,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       </div>
     </div>
   `,
-  styles: [`
-    :host{
-        display: block;
-        width: 100%;
-        height: 100%;
-    }
-    .pdf-container {
-      width:  100%;
-      height:  100%;
-      display: flex;
-      flex-direction: column;
-      background: #525659;
-    }
-
-    .toolbar {
-      height: 50px;
-      background: #2c2c2c;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-      color: white;
-      user-select: none;
-
-      .left-controls,
-      .right-controls {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-      }
-
-      .control {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover:not(:disabled) {
-          background: rgba(255,255,255,0.1);
-        }
-
-        &:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-      }
-
-    }
-
-    .viewer-container {
-      flex: 1;
-      overflow: auto;
-      position: relative;
-
-      ::ng-deep {
-        .page {
-          margin: 10px auto;
-          box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
-      }
-    }
-  `],
+  styleUrls:["../../styles/_theme.scss","./pdf-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PdfPreviewComponent {

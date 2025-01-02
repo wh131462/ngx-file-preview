@@ -116,7 +116,7 @@ import {PreviewFile} from '../../types/preview.types';
       </div>
     </div>
   `,
-  styleUrls: ["video-preview.component.scss", '../../styles/_preview-base.scss'],
+  styleUrls: ["../../styles/_theme.scss","video-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoPreviewComponent extends PreviewBaseComponent implements OnInit, AfterViewInit, OnDestroy {

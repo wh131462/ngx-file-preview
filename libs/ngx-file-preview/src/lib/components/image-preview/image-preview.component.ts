@@ -16,7 +16,7 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
-    <div class="preview-container image-preview"
+    <div class="image-preview"
          (mousedown)="startDrag($event)"
          (mousemove)="onDrag($event)"
          (mouseup)="stopDrag()"
@@ -75,7 +75,6 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
     </div>
   `,
   styleUrls: [
-    '../../styles/_preview-base.scss',
     './image-preview.component.scss'
   ],
   changeDetection: ChangeDetectionStrategy.OnPush

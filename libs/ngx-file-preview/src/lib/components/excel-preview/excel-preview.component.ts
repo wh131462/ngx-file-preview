@@ -1,12 +1,13 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, OnChanges,
+  ElementRef,
+  OnChanges,
+  OnDestroy,
   SimpleChanges,
-  ViewChild,
-  AfterViewInit,
-  OnDestroy
+  ViewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
@@ -66,25 +67,25 @@ interface TableData {
                 <col *ngFor="let i of extraColumns" class="data-col">
               </colgroup>
               <thead>
-                <tr>
-                  <th class="corner-cell"></th>
-                  <th *ngFor="let header of tableData.headers; let i = index">
-                    {{ getColumnName(i) }}
-                  </th>
-                  <th *ngFor="let i of extraColumns;let j=index" class="empty-column">
-                    {{ getColumnName(tableData.headers.length + j) }}
-                  </th>
-                </tr>
+              <tr>
+                <th class="corner-cell"></th>
+                <th *ngFor="let header of tableData.headers; let i = index">
+                  {{ getColumnName(i) }}
+                </th>
+                <th *ngFor="let i of extraColumns;let j=index" class="empty-column">
+                  {{ getColumnName(tableData.headers.length + j) }}
+                </th>
+              </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let row of visibleRows; let rowIndex = index">
-                  <td class="row-header">{{ getRowNumber(rowIndex) }}</td>
-                  <td *ngFor="let cell of row; let colIndex = index"
-                      [class.empty-cell]="!cell && cell !== 0">
-                    {{ cell }}
-                  </td>
-                  <td *ngFor="let i of extraColumns" class="empty-cell"></td>
-                </tr>
+              <tr *ngFor="let row of visibleRows; let rowIndex = index">
+                <td class="row-header">{{ getRowNumber(rowIndex) }}</td>
+                <td *ngFor="let cell of row; let colIndex = index"
+                    [class.empty-cell]="!cell && cell !== 0">
+                  {{ cell }}
+                </td>
+                <td *ngFor="let i of extraColumns" class="empty-cell"></td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -92,316 +93,7 @@ interface TableData {
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .excel-container {
-      width: 100%;
-      height: 100%;
-      background: #1a1a1a;
-      display: flex;
-      flex-direction: column;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .toolbar {
-      height: 48px;
-      min-height: 48px;
-      background: #262626;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 16px;
-      border-bottom: 1px solid #303030;
-      gap: 16px;
-    }
-
-    .left-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sheet-controls {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 1px;
-      overflow-x: auto;
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-
-    .sheet-btn {
-      background: #1a1a1a;
-      border: none;
-      color: rgba(255, 255, 255, 0.85);
-      padding: 6px 16px;
-      font-size: 13px;
-      cursor: pointer;
-      white-space: nowrap;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      position: relative;
-
-      &:hover {
-        background: #303030;
-      }
-
-      &.active {
-        background: #262626;
-        color: #177ddc;
-
-        &::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: #177ddc;
-        }
-      }
-    }
-
-    .preview-container {
-      flex: 1;
-      position: relative;
-      background: #262626;
-      display: flex;
-      height: 100%;
-      flex-direction: column;
-    }
-
-    .preview-content {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      background: #262626;
-      overflow: hidden;
-
-      .table-wrapper {
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        cursor: default;
-        transform-origin: 0 0;
-
-        &.dragging {
-          cursor: grab;
-          user-select: none;
-
-          * {
-            cursor: grab;
-            user-select: none;
-          }
-        }
-
-        &::-webkit-scrollbar {
-          width: 12px;
-          height: 12px;
-        }
-
-        &::-webkit-scrollbar-track {
-          background: #1a1a1a;
-        }
-
-        &::-webkit-scrollbar-thumb {
-          background: #404040;
-          border: 2px solid #1a1a1a;
-          border-radius: 6px;
-
-          &:hover {
-            background: #505050;
-          }
-        }
-      }
-
-      table {
-        border-collapse: collapse;
-        table-layout: fixed;
-        background: #262626;
-        color: rgba(255, 255, 255, 0.85);
-        user-select: none;
-        width: max-content;
-        min-width: 100%;
-
-        .row-header-col {
-          width: 50px;
-          min-width: 50px;
-        }
-
-        .data-col {
-          width: 120px;
-          min-width: 120px;
-        }
-
-        thead {
-          position: sticky;
-          top: -1px;
-          z-index: 2;
-          background: #262626;
-          margin-bottom: -1px;
-        }
-
-        tbody {
-          background: #262626;
-        }
-
-        th, td {
-          height: 24px;
-          padding: 4px 8px;
-          border: 1px solid #404040;
-          font-size: 13px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        th {
-          background: #303030;
-          font-weight: 500;
-          text-align: center;
-          border-bottom: 2px solid #404040;
-          color: rgba(255, 255, 255, 0.95);
-        }
-
-        .corner-cell {
-          position: sticky;
-          left: 0;
-          z-index: 3;
-          background: #262626;
-          border-right: 2px solid #404040;
-          border-bottom: 2px solid #404040;
-        }
-
-        .row-header {
-          position: sticky;
-          left: 0;
-          background: #303030;
-          text-align: center;
-          font-weight: 500;
-          z-index: 1;
-          border-right: 2px solid #404040;
-          color: rgba(255, 255, 255, 0.95);
-        }
-
-        td {
-          background: #262626;
-          text-align: left;
-
-          &.empty-cell {
-            color: transparent;
-          }
-        }
-
-        tbody tr:hover {
-          td {
-            background: #303030;
-
-            &.empty-cell {
-              background: #2a2a2a;
-            }
-
-            &.row-header {
-              background: #404040;
-            }
-          }
-        }
-      }
-
-      &::-webkit-scrollbar {
-        width: 12px;
-        height: 12px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: #1a1a1a;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #404040;
-        border: 2px solid #1a1a1a;
-        border-radius: 6px;
-
-        &:hover {
-          background: #505050;
-        }
-      }
-    }
-
-    .tool-btn {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.85);
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      cursor: pointer;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-
-      &:hover {
-        background: #303030;
-        color: #177ddc;
-      }
-    }
-
-    .zoom-text {
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 13px;
-      min-width: 48px;
-      text-align: center;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 4px;
-
-      &:hover {
-        background: #303030;
-        color: #177ddc;
-      }
-    }
-
-    .loading-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(26, 26, 26, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #262626;
-      border-top-color: #177ddc;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-  `],
+  styleUrls: ["../../styles/_theme.scss", "excel-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExcelPreviewComponent extends PreviewBaseComponent implements OnChanges, AfterViewInit, OnDestroy {

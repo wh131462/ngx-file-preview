@@ -1,15 +1,16 @@
-:host{
+:host {
   display: block;
   width: 100%;
   height: 100%;
 }
+
 .video-container {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: black;
+  background: var(--bg-container);
   position: relative;
 }
 
@@ -30,231 +31,105 @@ video {
 
 .controls {
   position: absolute;
-  bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-  padding: 20px;
+  bottom: 0;
+  background: linear-gradient(transparent, var(--preview-mask));
+  padding: 48px 16px 8px;
   opacity: 0;
   transition: opacity 0.3s;
+  user-select: none;
 
   &.visible {
     opacity: 1;
   }
-}
 
-.progress-bar {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  margin-bottom: 10px;
-  position: relative;
-
-  .progress {
-    height: 100%;
-    background: #003fff;
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--toolbar-bg);
+    margin-bottom: 8px;
+    cursor: pointer;
     position: relative;
 
-    &::after {
-      content: '';
-      position: absolute;
-      right: -6px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 12px;
-      height: 12px;
-      background: #003fff;
-      border-radius: 50%;
-      transition: transform 0.2s;
+    .progress {
+      height: 100%;
+      background: var(--primary-color);
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: -4px;
+        top: -4px;
+        width: 12px;
+        height: 12px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        transform: scale(0);
+        transition: transform 0.2s;
+      }
+    }
+
+    &:hover .progress::after {
+      transform: scale(1);
     }
   }
 
-  &:hover .progress::after {
-    transform: translateY(-50%) scale(1.2);
-  }
-}
-
-.bottom-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.left-controls, .right-controls {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-button {
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-}
-
-.time {
-  color: white;
-  font-size: 14px;
-  font-family: monospace;
-  min-width: 120px;
-  display: inline-block;
-}
-
-.control-group {
-  position: relative;
-
-  .slider-container {
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    padding: 10px 6px;
-    border-radius: 4px;
-    height: 120px;
-    margin-bottom: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
+  .bottom-controls {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+  }
 
-    &::before {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      right: 0;
-      height: 10px;
-      background: transparent;
+  .left-controls,
+  .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  button {
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+      background: var(--toolbar-hover);
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 6px solid rgba(0, 0, 0, 0.8);
-    }
-
-    input[type="range"] {
-      writing-mode: bt-lr;
-      -webkit-appearance: slider-vertical;
-      width: 4px;
-      height: 100px;
-      padding: 0;
-      margin: 0;
-      background: rgba(255, 255, 255, 0.2);
-
-      &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 12px;
-        height: 12px;
-        background: white;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: transform 0.2s;
-
-        &:hover {
-          transform: scale(1.2);
-        }
-      }
-
-      &::-moz-range-thumb {
-        width: 12px;
-        height: 12px;
-        background: white;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: transform 0.2s;
-
-        &:hover {
-          transform: scale(1.2);
-        }
-      }
+    &:disabled {
+      color: var(--text-disabled);
+      cursor: not-allowed;
     }
   }
 
-  &:hover .slider-container {
-    opacity: 1;
-    pointer-events: auto;
+  .time {
+    color: var(--text-primary);
+    font-size: 13px;
+    margin: 0 8px;
   }
-}
 
-.speed-control {
-  position: relative;
-
+  .slider-container,
   .speed-options {
     position: absolute;
     bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--toolbar-bg);
     border-radius: 4px;
-    padding: 6px 0;
-    min-width: 100px;
-    display: flex;
-    flex-direction: column-reverse;
-    margin-bottom: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
+    padding: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px var(--preview-mask);
 
-    &::before {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      right: 0;
-      height: 10px;
-      background: transparent;
+    button.active {
+      color: var(--primary-color);
+      background: var(--toolbar-hover);
     }
-
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 6px solid rgba(0, 0, 0, 0.8);
-    }
-
-    button {
-      width: 100%;
-      padding: 4px 16px;
-      text-align: left;
-      border-radius: 0;
-
-      &.active {
-        color: #003fff;
-      }
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-    }
-  }
-
-  &:hover .speed-options {
-    opacity: 1;
-    pointer-events: auto;
   }
 }

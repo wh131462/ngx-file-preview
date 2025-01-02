@@ -1,11 +1,14 @@
 import {
-  Component,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  OnInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
   OnDestroy,
-  ViewEncapsulation,
-  HostListener
+  OnInit,
+  Renderer2,
+  ViewEncapsulation
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewService} from '../../services/preview.service';
@@ -18,10 +21,13 @@ import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {WordPreviewComponent} from '../word-preview/word-preview.component';
 import {ExcelPreviewComponent} from '../excel-preview/excel-preview.component';
 import {PptPreviewComponent} from '../ppt-preview/ppt-preview.component';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {PreviewFile} from '../../types/preview.types';
 import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
-import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
+import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview.component";
+import {ThemeService} from '../../services/theme.service';
+import {AutoThemeConfig, ThemeMode} from "../../types/theme.types";
+import {PreviewBaseComponent} from '../base/preview-base.component';
 
 @Component({
   selector: 'ngx-file-preview-modal',
@@ -40,6 +46,7 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
     AudioPreviewComponent,
     UnknownPreviewComponent
   ],
+  providers: [ThemeService],
   template: `
     <div class="preview-modal-overlay" *ngIf="isVisible" (click)="close()">
       <div class="preview-modal-content"
@@ -52,6 +59,16 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
             <span class="file-index" *ngIf="hasMultipleFiles">{{ getCurrentFileInfo() }}</span>
           </div>
           <div class="header-right">
+            <div class="theme-toggle" (click)="toggleTheme()">
+              <svg *ngIf="(theme$|async)=='light'" width="20px" height="20px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5s5-2.24 5-5s-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 0 0-1.41 0a.996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 0 0-1.41 0a.996.996 0 0 0 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 0 0 0-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 0 0 0-1.41a.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 0 0 0-1.41a.996.996 0 0 0-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/>
+              </svg>
+              <svg *ngIf="(theme$|async)=='dark'" width="20px" height="20px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                      d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9s9-4.03 9-9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26a5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
+              </svg>
+            </div>
             <preview-icon name="close" (click)="close()"></preview-icon>
           </div>
         </div>
@@ -128,169 +145,17 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: contents;
-    }
-
-    .preview-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 1000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .preview-modal-content {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .preview-modal-header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 44px;
-      padding: 0 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(8px);
-      z-index: 10;
-      opacity: 0.8;
-      transition: opacity 0.3s;
-
-      &:hover {
-        opacity: 1;
-      }
-
-      .header-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        .file-name {
-          font-size: 14px;
-          font-weight: 500;
-          max-width: 500px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          color: rgba(255, 255, 255, 0.9);
-        }
-
-        .file-index {
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.6);
-        }
-      }
-
-      .header-right preview-icon {
-        width: 20px;
-        height: 20px;
-        color: rgba(255, 255, 255, 0.8);
-        cursor: pointer;
-        transition: all 0.2s;
-
-        &:hover {
-          color: white;
-          transform: scale(1.1);
-        }
-      }
-    }
-
-    .preview-modal-body {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      margin-top: 44px;
-    }
-
-    .preview-content {
-      flex: 1;
-      height: 100%;
-      width: 100%;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .nav-button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      padding: 8px;
-      color: rgba(255, 255, 255, 0.5);
-      cursor: pointer;
-      z-index: 5;
-      transition: all 0.3s;
-      opacity: 0;
-      pointer-events: none;
-
-      &.visible {
-        opacity: 0.8;
-        pointer-events: auto;
-      }
-
-      &:hover {
-        color: white;
-        transform: translateY(-50%) scale(1.1);
-      }
-
-      &.prev {
-        left: 16px;
-      }
-
-      &.next {
-        right: 16px;
-      }
-
-      preview-icon {
-        display: block;
-        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
-      }
-    }
-
-    body:has(.preview-modal-overlay) {
-      overflow: hidden;
-    }
-
-    :host ::ng-deep {
-      fp-image-preview,
-      fp-video-preview,
-      fp-pdf-preview,
-      fp-word-preview,
-      fp-excel-preview,
-      fp-ppt-preview,
-      fp-text-preview,
-      fp-archive-preview,
-      fp-audio-preview,
-      fp-unknown-preview {
-        width: 100%;
-        height: 100%;
-        display: block;
-      }
-    }
-  `],
+  styleUrls: [
+    '../../styles/_theme.scss',
+    'preview-modal.component.scss'
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class PreviewModalComponent implements OnInit, OnDestroy {
+export class PreviewModalComponent extends PreviewBaseComponent implements OnInit, OnDestroy {
+  @Input() themeMode: ThemeMode = 'auto';
+  @Input() autoThemeConfig?: AutoThemeConfig;
+
   isVisible = false;
   currentFile?: PreviewFile;
   private subscription?: Subscription;
@@ -298,11 +163,14 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
   isControlsVisible = true;
   private controlsTimeout?: number;
   private readonly HIDE_DELAY = 2000;
+  theme$!: Observable<'dark' | 'light'>;
 
   constructor(
     private previewService: PreviewService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private themeService: ThemeService,
   ) {
+    super();
   }
 
   ngOnInit() {
@@ -311,12 +179,20 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
       this.currentFile = state.currentFile;
       this.cdr.markForCheck();
     });
+
+    this.themeService.setMode(this.themeMode);
+    this.theme$ = this.themeService.currentTheme$
   }
 
   ngOnDestroy() {
     this.subscription?.unsubscribe();
     if (this.controlsTimeout) {
       window.clearTimeout(this.controlsTimeout);
+    }
+    if (window.matchMedia) {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      prefersDark.removeEventListener('change', () => {
+      });
     }
   }
 
@@ -387,5 +263,9 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
     if (this.controlsTimeout) {
       window.clearTimeout(this.controlsTimeout);
     }
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 }

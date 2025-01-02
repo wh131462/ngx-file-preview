@@ -1,10 +1,10 @@
-<p [ngxFilePreview]="files">预览文件</p>
+<p [ngxFilePreview]="files" themeMode="light">预览文件</p>
 
 <!-- 使用默认模板 -->
-<ngx-file-preview [files]="files"></ngx-file-preview>
+<ngx-file-preview [files]="files"  themeMode="light"></ngx-file-preview>
 
 <!-- 使用自定义模板 -->
-<ngx-file-preview [files]="files">
+<ngx-file-preview [files]="files" themeMode="light">
   <ng-template #itemTemplate let-file let-index="index" let-isActive="isActive" let-preview="preview">
     <div class="custom-file-item"
          [class.active]="isActive"

@@ -17,29 +17,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .unknown-preview {
-      color: white;
-      text-align: center;
-      padding: 24px;
-
-      .unknown-message {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-      }
-    }
-
-  `],
+  styleUrls:['../../styles/_theme.scss','unknown-preview.component.scss'],
 })
 export class UnknownPreviewComponent {
   @Input() file!: PreviewFile;

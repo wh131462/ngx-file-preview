@@ -1,3 +1,5 @@
+import {AutoThemeConfig, ThemeMode} from "./theme.types";
+
 export interface PreviewFile {
   url: string;
   name: string;
@@ -25,4 +27,6 @@ export const PreviewTypeEnum: Record<PreviewType, string> = {
 export interface PreviewOptions {
   files: PreviewFile[];
   index?: number;
+  themeMode?: ThemeMode;
+  autoThemeConfig?: AutoThemeConfig;
 }

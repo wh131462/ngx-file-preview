@@ -93,7 +93,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
       </div>
     </div>
   `,
-  styleUrls: ['./audio-preview.component.scss'],
+  styleUrls: ['../../styles/_theme.scss','./audio-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioPreviewComponent extends PreviewBaseComponent implements OnInit, AfterViewInit, OnDestroy {

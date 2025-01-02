@@ -1,0 +1,93 @@
+// 首先定义所有变量的默认值（暗色主题）
+:root {
+  // 基础色板
+  --primary-color: #177ddc;
+  --primary-hover: #1890ff;
+  --primary-active: #0050b3;
+  --error-color: #d32029;
+  --warning-color: #d89614;
+  --success-color: #49aa19;
+
+  // 文本颜色
+  --text-primary: rgba(0, 0, 0, 0.85);
+  --text-secondary: rgba(0, 0, 0, 0.65);
+  --text-disabled: rgba(0, 0, 0, 0.25);
+
+  // 背景色
+  --bg-container: #ffffff;
+  --bg-elevated: #fafafa;
+  --bg-layout: #f0f2f5;
+  --hover-bg: rgba(0, 0, 0, 0.04);
+
+  // 边框和分割线
+  --border-color: #d9d9d9;
+  --split-color: rgba(0, 0, 0, 0.06);
+
+  // 滚动条
+  --scrollbar-bg: #f5f5f5;
+  --scrollbar-thumb: #d9d9d9;
+
+  // 工具栏
+  --toolbar-bg: #fafafa;
+  --toolbar-border: #d9d9d9;
+  --toolbar-hover: rgba(0, 0, 0, 0.04);
+  --toolbar-active: #e6f4ff;
+
+  // 预览组件特定
+  --preview-mask: rgba(0, 0, 0, 0.45);
+  --preview-loading-bg: rgba(255, 255, 255, 0.8);
+  --preview-toolbar-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  // 基础色板
+  --primary-color: #177ddc;
+  --primary-hover: #1890ff;
+  --primary-active: #0050b3;
+  --error-color: #a61d24;
+  --warning-color: #d89614;
+  --success-color: #49aa19;
+
+  // 文本颜色
+  --text-primary: rgba(255, 255, 255, 0.85);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-disabled: rgba(255, 255, 255, 0.25);
+
+  // 背景色
+  --bg-container: #1a1a1a;
+  --bg-elevated: #262626;
+  --bg-layout: #141414;
+  --hover-bg: rgba(255, 255, 255, 0.08);
+
+  // 边框和分割线
+  --border-color: #303030;
+  --split-color: rgba(255, 255, 255, 0.12);
+
+  // 滚动条
+  --scrollbar-bg: #1a1a1a;
+  --scrollbar-thumb: #404040;
+
+  // 工具栏
+  --toolbar-bg: #262626;
+  --toolbar-border: #303030;
+  --toolbar-hover: rgba(255, 255, 255, 0.08);
+  --toolbar-active: #111b26;
+
+  // 预览组件特定
+  --preview-mask: rgba(0, 0, 0, 0.65);
+  --preview-loading-bg: rgba(0, 0, 0, 0.8);
+  --preview-toolbar-bg: rgba(0, 0, 0, 0.4);
+}
+
+// 添加过渡动画
+* {
+  transition: background-color var(--theme-transition-duration) var(--theme-transition-timing),
+            border-color var(--theme-transition-duration) var(--theme-transition-timing),
+            color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+// 某些元素不需要过渡动画
+.no-transition,
+.no-transition * {
+  transition: none !important;
+}

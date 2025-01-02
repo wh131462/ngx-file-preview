@@ -1,15 +1,15 @@
 import {
-  Injectable,
-  ComponentRef,
-  Type,
   ApplicationRef,
+  ComponentRef,
   createComponent,
   EnvironmentInjector,
-  inject
+  inject,
+  Injectable,
+  Type
 } from '@angular/core';
-import { PreviewFile, PreviewOptions } from '../types/preview.types';
-import { BehaviorSubject } from 'rxjs';
-import { PreviewModalComponent } from '../components/preview-modal/preview-modal.component';
+import {PreviewFile, PreviewOptions} from '../types/preview.types';
+import {BehaviorSubject} from 'rxjs';
+import {PreviewModalComponent} from '../components/preview-modal/preview-modal.component';
 
 export interface PreviewState {
   isVisible: boolean;
@@ -37,7 +37,7 @@ export class PreviewService {
   readonly previewState$ = this.previewStateSubject.asObservable();
 
   open(options: PreviewOptions) {
-    const { files, index = 0 } = options;
+    const {files, index = 0} = options;
 
     // 如果模态框已存在，更新状态即可
     if (this.modalRef) {
@@ -50,16 +50,15 @@ export class PreviewService {
       this.modalRef = createComponent(PreviewModalComponent as Type<PreviewModalComponent>, {
         environmentInjector: this.injector
       });
-
+      Object.assign(this.modalRef.instance, options)
+      console.log("this.modalRef", options);
       // 将模态框添加到 body
       document.body.appendChild(this.modalRef.location.nativeElement);
-
       // 手动触发变更检测
       this.modalRef.changeDetectorRef.detectChanges();
 
       // 更新预览状态
       this.updatePreviewState(true, files, index);
-
       // 将组件添加到 ApplicationRef
       this.appRef.attachView(this.modalRef.hostView);
     } catch (error) {

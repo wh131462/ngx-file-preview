@@ -2,25 +2,32 @@ import { Directive, Input, HostListener } from '@angular/core';
 import { PreviewService } from '../services/preview.service';
 import { PreviewFile, PreviewType } from '../types/preview.types';
 import { PreviewUtils } from '../utils/preview.utils';
+import { ThemeService } from '../services/theme.service';
+import { ThemeMode, AutoThemeConfig } from '../types/theme.types';
 
 @Directive({
   selector: '[ngxFilePreview]',
-  standalone: true
+  standalone: true,
 })
 export class PreviewDirective {
   @Input('ngxFilePreview') fileInput: string | File | PreviewFile | (string | File | PreviewFile)[] | undefined;
   @Input() previewIndex = 0;
+  @Input() themeMode: ThemeMode = 'auto';
+  @Input() autoConfig?: AutoThemeConfig;
 
   constructor(private previewService: PreviewService) {}
 
   @HostListener('click')
   onClick() {
     if (!this.fileInput) return;
+    console.log("file", this.themeMode)
     const files = this.normalizeFiles(this.fileInput);
     if (files.length > 0) {
       this.previewService.open({
         files,
-        index: this.previewIndex
+        index: this.previewIndex,
+        themeMode: this.themeMode,
+        autoThemeConfig: this.autoConfig
       });
     }
   }

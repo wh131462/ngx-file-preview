@@ -4,7 +4,7 @@ import { PreviewFile } from '../../types/preview.types';
 @Directive()
 export abstract class PreviewBaseComponent {
   @Input() file!: PreviewFile;
-  
+
   protected isLoading = true;
 
   protected handleError(error: any) {
@@ -15,4 +15,4 @@ export abstract class PreviewBaseComponent {
   protected onLoadComplete() {
     this.isLoading = false;
   }
-} 
+}

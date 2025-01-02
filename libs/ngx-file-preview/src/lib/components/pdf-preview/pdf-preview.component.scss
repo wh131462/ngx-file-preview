@@ -1,0 +1,144 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pdf-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-container);
+  
+  // 工具栏
+  .toolbar {
+    height: 48px;
+    min-height: 48px;
+    background: var(--toolbar-bg);
+    border-bottom: 1px solid var(--toolbar-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    user-select: none;
+
+    .left-controls,
+    .right-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+
+      &:hover:not(:disabled) {
+        background: var(--toolbar-hover);
+        color: var(--primary-color);
+      }
+
+      &:disabled {
+        color: var(--text-disabled);
+        cursor: not-allowed;
+      }
+    }
+
+    span {
+      color: var(--text-primary);
+      font-size: 13px;
+      min-width: 48px;
+      text-align: center;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--toolbar-hover);
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  // PDF 查看区域
+  .viewer-container {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    background: var(--bg-container);
+    padding: 16px;
+
+    // 滚动条样式
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--scrollbar-bg);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 4px;
+      
+      &:hover {
+        background: var(--primary-color);
+      }
+    }
+
+    // Firefox 滚动条
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+
+    // PDF 页面样式
+    ::ng-deep {
+      .page {
+        margin: 16px auto;
+        box-shadow: 0 2px 8px var(--preview-mask);
+        background: white;
+        border-radius: 2px;
+      }
+
+      // 加载状态
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        color: var(--text-secondary);
+      }
+
+      // 错误状态
+      .error {
+        color: var(--error-color);
+        text-align: center;
+        padding: 24px;
+      }
+    }
+  }
+}
+
+// 加载动画
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--toolbar-bg);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}

@@ -1,10 +1,11 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ContentChild, TemplateRef, ViewChildren, QueryList, ElementRef, AfterViewInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ContentChild, TemplateRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnInit, ViewEncapsulation} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewFile, PreviewTypeEnum, PreviewType} from '../../types/preview.types';
-import {PreviewService} from '../../services/preview.service';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewDirective} from "../../directives/preview.directive";
 import {PreviewUtils} from "../../utils/preview.utils";
+import { ThemeService } from '../../services/theme.service';
+import { ThemeMode, AutoThemeConfig } from '../../types/theme.types';
 
 @Component({
   selector: 'ngx-file-preview',
@@ -17,14 +18,14 @@ import {PreviewUtils} from "../../utils/preview.utils";
   template: `
     <div class="preview-list">
       <!-- 隐藏的预览触发器 -->
-      <div style="display: none">
+      <div *ngIf="itemTemplate" style="display: none">
         <div *ngFor="let file of files; let i = index"
              [ngxFilePreview]="file"
+             [themeMode]="themeMode"
              [attr.data-index]="i"
              #previewTrigger>
         </div>
       </div>
-
       <ng-content></ng-content>
       <div class="file-list-header">
         <span>文件列表</span>
@@ -40,6 +41,7 @@ import {PreviewUtils} from "../../utils/preview.utils";
                 $implicit: file,
                 index: i,
                 isActive: i === index,
+                themeMode: themeMode,
                 preview: triggerPreview.bind(this,i)
               }"
             ></ng-container>
@@ -50,6 +52,7 @@ import {PreviewUtils} from "../../utils/preview.utils";
             <div class="file-item"
                  (click)="index=i"
                  [ngxFilePreview]="file"
+                 [themeMode]="themeMode"
                  [class.active]="i === index">
               <span class="file-icon">
                 <preview-icon [size]="40" [svg]="file.type"></preview-icon>
@@ -72,105 +75,18 @@ import {PreviewUtils} from "../../utils/preview.utils";
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-      'Noto Sans', sans-serif;
-    }
-
-    .file-list {
-      border: 1px solid #f0f0f0;
-      border-radius: 2px;
-      background: #fff;
-    }
-
-    .file-list-header {
-      padding: 16px;
-      border-bottom: 1px solid #f0f0f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .file-count {
-        color: #8c8c8c;
-        font-size: 14px;
-      }
-    }
-
-    .file-list-content {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .file-item {
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: #fafafa;
-      }
-
-      &.active {
-        background-color: #e6f7ff;
-      }
-
-      .file-icon {
-        font-size: 24px;
-        color: #1890ff;
-      }
-
-      .file-info {
-        flex: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-
-        .file-main-info {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-
-          .file-name {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: #333;
-            font-size: 14px;
-            font-weight: 400;
-          }
-
-          .file-size {
-            flex-shrink: 0;
-            color: #8c8c8c;
-            font-size: 12px;
-          }
-        }
-
-        .file-sub-info {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-
-          .file-type,
-          .file-date {
-            color: #8c8c8c;
-            font-size: 12px;
-          }
-        }
-      }
-    }
-  `],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: [
+    '../../styles/_theme.scss',
+    'preview.component.scss'
+  ],
+  providers: [ThemeService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreviewComponent implements AfterViewInit {
+export class PreviewComponent implements OnInit {
   @Input() files?: PreviewFile[];
   @Input() index = 0;
+  @Input() themeMode: ThemeMode = 'auto';
+  @Input() autoConfig?: AutoThemeConfig;
   @Output() fileSelect = new EventEmitter<PreviewFile>();
 
   @ContentChild('itemTemplate') itemTemplate?: TemplateRef<any>;
@@ -178,18 +94,13 @@ export class PreviewComponent implements AfterViewInit {
 
   protected readonly PreviewTypeEnum = PreviewTypeEnum;
 
-  constructor(private previewService: PreviewService) {}
+  constructor(private themeService: ThemeService) {}
 
-  ngAfterViewInit() {
-    // 初始化时确保所有触发器都已创建
-    this.previewTriggers.changes.subscribe(() => {
-      // 触发器列表更新时的处理
-    });
-  }
-
-  selectAndPreview(index: number) {
-    this.index = index;
-    this.triggerPreview(index);
+  ngOnInit() {
+    this.themeService.setMode(this.themeMode);
+    if (this.themeMode === 'auto' && this.autoConfig) {
+      this.themeService.setAutoConfig(this.autoConfig);
+    }
   }
 
   triggerPreview(index: number) {
@@ -209,9 +120,5 @@ export class PreviewComponent implements AfterViewInit {
 
   formatDate(timestamp: number): string {
     return new Date(timestamp).toLocaleDateString();
-  }
-
-  getFileTypeText(type: PreviewType): string {
-    return PreviewTypeEnum[type] || PreviewTypeEnum.unknown;
   }
 }

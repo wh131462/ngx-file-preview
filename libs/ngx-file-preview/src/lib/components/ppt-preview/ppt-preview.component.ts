@@ -1,15 +1,15 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
-  ViewChild,
-  ChangeDetectorRef,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PreviewBaseComponent } from '../base/preview-base.component';
-import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
-import { init } from 'pptx-preview';
+import {CommonModule} from '@angular/common';
+import {PreviewBaseComponent} from '../base/preview-base.component';
+import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import {init} from 'pptx-preview';
 
 @Component({
   selector: 'fp-ppt-preview',
@@ -51,181 +51,7 @@ import { init } from 'pptx-preview';
       </div>
     </div>
   `,
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .ppt-container {
-      width: 100%;
-      height: 100%;
-      background: #1a1a1a;
-      display: flex;
-      flex-direction: column;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .toolbar {
-      height: 48px;
-      min-height: 48px;
-      background: #262626;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 16px;
-      border-bottom: 1px solid #303030;
-      gap: 16px;
-    }
-
-    .left-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .preview-container {
-      flex: 1;
-      overflow: auto;
-      position: relative;
-      cursor: default;
-      background: #1a1a1a;
-
-      &.dragging {
-        cursor: grab;
-        user-select: none;
-
-        * {
-          cursor: grab !important;
-          user-select: none;
-          pointer-events: none;
-        }
-      }
-
-      &::-webkit-scrollbar {
-        width: 12px;
-        height: 12px;
-      }
-
-      &::-webkit-scrollbar-track {
-        background: #1a1a1a;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: #404040;
-        border: 2px solid #1a1a1a;
-        border-radius: 6px;
-
-        &:hover {
-          background: #505050;
-        }
-      }
-    }
-
-    .content-wrapper {
-      min-width: 100%;
-      min-height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
-    .preview-content {
-      border-radius: 2px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-      transform-origin: center top;
-      width: fit-content;
-      height: fit-content;
-
-      ::ng-deep {
-        .pptx-preview-wrapper {
-          width: 100% !important;
-          height: 100% !important;
-          scrollbar-width: none;
-        }
-
-        img {
-          user-drag: none;
-          -webkit-user-drag: none;
-          user-select: none;
-          -moz-user-select: none;
-          -webkit-user-select: none;
-          -ms-user-select: none;
-          pointer-events: none;
-        }
-      }
-    }
-
-    .tool-btn {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.85);
-      width: 32px;
-      height: 32px;
-      padding: 0;
-      cursor: pointer;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-
-      &:hover {
-        background: #303030;
-        color: #177ddc;
-      }
-    }
-
-    .zoom-text {
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 13px;
-      min-width: 48px;
-      text-align: center;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 4px;
-
-      &:hover {
-        background: #303030;
-        color: #177ddc;
-      }
-    }
-
-    .loading-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(26, 26, 26, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #262626;
-      border-top-color: #177ddc;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    :host(.fullscreen) {
-      .ppt-container {
-        border-radius: 0;
-      }
-
-      .preview-container {
-        background: #1a1a1a;
-      }
-    }
-  `],
+  styleUrls: ["../../styles/_theme.scss", "ppt-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PptPreviewComponent extends PreviewBaseComponent {
@@ -286,8 +112,8 @@ export class PptPreviewComponent extends PreviewBaseComponent {
   startDrag(e: MouseEvent) {
     // 如果是从按钮或其他控件开始拖动，不处理
     if (e.target instanceof HTMLButtonElement ||
-        e.target instanceof HTMLInputElement ||
-        (e.target as HTMLElement).closest('.toolbar')) {
+      e.target instanceof HTMLInputElement ||
+      (e.target as HTMLElement).closest('.toolbar')) {
       return;
     }
 
@@ -373,7 +199,7 @@ export class PptPreviewComponent extends PreviewBaseComponent {
 
       // 获取容器尺寸
       const container = this.previewContainer.nativeElement;
-      const { width } = container.getBoundingClientRect();
+      const {width} = container.getBoundingClientRect();
 
       // 初始化预览器
       this.pptxPreviewer = init(this.content.nativeElement, {
@@ -412,7 +238,7 @@ export class PptPreviewComponent extends PreviewBaseComponent {
 
   private applyZoom() {
     if (this.content) {
-      const wrapper:HTMLElement = this.content.nativeElement.querySelector('.pptx-preview-wrapper')!;
+      const wrapper: HTMLElement = this.content.nativeElement.querySelector('.pptx-preview-wrapper')!;
       if (wrapper) {
         wrapper.style.transform = `scale(${this.scale})`;
         wrapper.style.transformOrigin = 'center top';
