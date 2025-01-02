@@ -9,8 +9,6 @@ export class ThemeService {
 
   // 当前主题模式（light/dark/auto）
   private themeSubject = new BehaviorSubject<ThemeMode>('dark');
-  theme$ = this.themeSubject.asObservable();
-
   // 实际应用的主题（只有light/dark）
   private currentTheme = new BehaviorSubject<'light' | 'dark'>('dark');
   currentTheme$ = this.currentTheme.asObservable();
@@ -89,27 +87,22 @@ export class ThemeService {
   }
 
   private applyTheme(theme: 'light' | 'dark') {
-    console.log("theme", theme);
     // 更新当前主题
     this.currentTheme.next(theme);
-
     // 移除现有主题
     this.renderer.removeAttribute(this.elementRef.nativeElement, 'data-theme');
-
     // 应用新主题
     if (theme === 'dark') {
       this.renderer.setAttribute(this.elementRef.nativeElement, 'data-theme', 'dark');
     }else{
       this.renderer.setAttribute(this.elementRef.nativeElement, 'data-theme', 'light');
     }
-
     // 保存到本地存储
     localStorage.setItem(this.THEME_KEY, theme);
   }
 
   toggleTheme() {
     const currentMode = this.themeSubject.getValue();
-    console.log("currentMode", currentMode);
     if (currentMode === 'auto') return;
     const newTheme = this.currentTheme.getValue() === 'light' ? 'dark' : 'light';
     this.setMode(newTheme);

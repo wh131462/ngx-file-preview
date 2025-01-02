@@ -20,7 +20,6 @@ export class PreviewDirective {
   @HostListener('click')
   onClick() {
     if (!this.fileInput) return;
-    console.log("file", this.themeMode)
     const files = this.normalizeFiles(this.fileInput);
     if (files.length > 0) {
       this.previewService.open({

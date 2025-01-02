@@ -69,7 +69,7 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
                       d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9s9-4.03 9-9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26a5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
               </svg>
             </div>
-            <preview-icon name="close" (click)="close()"></preview-icon>
+            <preview-icon name="close" [themeMode]="theme$|async" (click)="close()"></preview-icon>
           </div>
         </div>
 

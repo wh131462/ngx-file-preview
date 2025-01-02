@@ -51,7 +51,6 @@ export class PreviewService {
         environmentInjector: this.injector
       });
       Object.assign(this.modalRef.instance, options)
-      console.log("this.modalRef", options);
       // 将模态框添加到 body
       document.body.appendChild(this.modalRef.location.nativeElement);
       // 手动触发变更检测
