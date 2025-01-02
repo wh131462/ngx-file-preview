@@ -16,7 +16,7 @@ import { init } from 'pptx-preview';
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
-    <div class="ppt-container">
+    <div class="ppt-container" #container>
       <div class="toolbar">
         <div class="left-controls">
           <button class="tool-btn" (click)="zoomOut()">
@@ -36,8 +36,14 @@ import { init } from 'pptx-preview';
         </div>
       </div>
 
-      <div class="preview-container" #previewContainer>
-        <div #content class="preview-content"></div>
+      <div class="preview-container"
+           #previewContainer
+           (wheel)="handleWheel($event)"
+           (mousedown)="startDrag($event)"
+           [class.dragging]="isDragging">
+        <div class="content-wrapper">
+          <div #content class="preview-content"></div>
+        </div>
       </div>
 
       <div *ngIf="isLoading" class="loading-overlay">
@@ -83,8 +89,20 @@ import { init } from 'pptx-preview';
     .preview-container {
       flex: 1;
       overflow: auto;
-      display: flex;
-      justify-content: center;
+      position: relative;
+      cursor: default;
+      background: #1a1a1a;
+
+      &.dragging {
+        cursor: grab;
+        user-select: none;
+
+        * {
+          cursor: grab !important;
+          user-select: none;
+          pointer-events: none;
+        }
+      }
 
       &::-webkit-scrollbar {
         width: 12px;
@@ -106,13 +124,37 @@ import { init } from 'pptx-preview';
       }
     }
 
+    .content-wrapper {
+      min-width: 100%;
+      min-height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
     .preview-content {
       border-radius: 2px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-      ::ng-deep .pptx-preview-wrapper{
-        width: 100% !important;
-        height: 100% !important;
-        scrollbar-width: none;
+      transform-origin: center top;
+      width: fit-content;
+      height: fit-content;
+
+      ::ng-deep {
+        .pptx-preview-wrapper {
+          width: 100% !important;
+          height: 100% !important;
+          scrollbar-width: none;
+        }
+
+        img {
+          user-drag: none;
+          -webkit-user-drag: none;
+          user-select: none;
+          -moz-user-select: none;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+          pointer-events: none;
+        }
       }
     }
 
@@ -173,6 +215,16 @@ import { init } from 'pptx-preview';
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    :host(.fullscreen) {
+      .ppt-container {
+        border-radius: 0;
+      }
+
+      .preview-container {
+        background: #1a1a1a;
+      }
+    }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -187,12 +239,129 @@ export class PptPreviewComponent extends PreviewBaseComponent {
   private readonly MIN_SCALE = 0.1;
   private readonly DEFAULT_SCALE = 1;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  isDragging = false;
+  private startX = 0;
+  private startY = 0;
+  private scrollLeft = 0;
+  private scrollTop = 0;
+  private mouseMoveListener?: (e: MouseEvent) => void;
+  private mouseUpListener?: (e: MouseEvent) => void;
+
+  constructor(private cdr: ChangeDetectorRef, private elementRef: ElementRef) {
     super();
   }
+
   ngOnChanges(simpleChanges: SimpleChanges) {
     if (simpleChanges['file'] && this.file) {
       this.handleFile();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.setupDragListeners();
+    this.disableNativeDragAndSelect();
+  }
+
+  ngOnDestroy() {
+    this.removeDragListeners();
+  }
+
+  private setupDragListeners() {
+    this.mouseMoveListener = (e: MouseEvent) => this.onDrag(e);
+    this.mouseUpListener = () => this.stopDrag();
+
+    document.addEventListener('mousemove', this.mouseMoveListener);
+    document.addEventListener('mouseup', this.mouseUpListener);
+  }
+
+  private removeDragListeners() {
+    if (this.mouseMoveListener) {
+      document.removeEventListener('mousemove', this.mouseMoveListener);
+    }
+    if (this.mouseUpListener) {
+      document.removeEventListener('mouseup', this.mouseUpListener);
+    }
+  }
+
+  startDrag(e: MouseEvent) {
+    // 如果是从按钮或其他控件开始拖动，不处理
+    if (e.target instanceof HTMLButtonElement ||
+        e.target instanceof HTMLInputElement ||
+        (e.target as HTMLElement).closest('.toolbar')) {
+      return;
+    }
+
+    const container = this.previewContainer.nativeElement;
+    const rect = container.getBoundingClientRect();
+
+    // 检查是否点击在滚动条上
+    const isClickOnScrollbarX = e.clientY > (rect.bottom - 12);
+    const isClickOnScrollbarY = e.clientX > (rect.right - 12);
+    if (isClickOnScrollbarX || isClickOnScrollbarY) {
+      return;
+    }
+
+    this.isDragging = true;
+    this.startX = e.pageX - container.offsetLeft;
+    this.startY = e.pageY - container.offsetTop;
+    this.scrollLeft = container.scrollLeft;
+    this.scrollTop = container.scrollTop;
+
+    // 添加临时的全局样式
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'grab';
+  }
+
+  private onDrag(e: MouseEvent) {
+    if (!this.isDragging) return;
+
+    e.preventDefault();
+    const container = this.previewContainer.nativeElement;
+
+    // 计算移动距离
+    const x = e.pageX - container.offsetLeft;
+    const y = e.pageY - container.offsetTop;
+    const walkX = (x - this.startX) * 1.5;
+    const walkY = (y - this.startY) * 1.5;
+
+    // 检查是否有可滚动区域
+    const hasHorizontalScroll = container.scrollWidth > container.clientWidth;
+    const hasVerticalScroll = container.scrollHeight > container.clientHeight;
+
+    requestAnimationFrame(() => {
+      // 只在有可滚动区域的方向上应用滚动
+      if (hasHorizontalScroll) {
+        container.scrollLeft = this.scrollLeft - walkX;
+      }
+      if (hasVerticalScroll) {
+        container.scrollTop = this.scrollTop - walkY;
+      }
+    });
+  }
+
+  private stopDrag() {
+    if (!this.isDragging) return;
+
+    this.isDragging = false;
+
+    // 移除临时的全局样式
+    document.body.style.removeProperty('user-select');
+    document.body.style.removeProperty('cursor');
+
+    // 移除可能的选中内容
+    window.getSelection()?.removeAllRanges();
+  }
+
+  handleWheel(event: WheelEvent) {
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      const delta = event.deltaY || event.detail || 0;
+
+      if (delta < 0) {
+        this.zoomIn();
+      } else {
+        this.zoomOut();
+      }
     }
   }
 
@@ -208,8 +377,7 @@ export class PptPreviewComponent extends PreviewBaseComponent {
 
       // 初始化预览器
       this.pptxPreviewer = init(this.content.nativeElement, {
-        width: width - 40, // 减去padding
-        height: (width - 40) * 0.5625 // 16:9 比例
+        width: Math.min(1200, width - 40), // 最大宽度1200px
       });
 
       // 预览PPT
@@ -244,17 +412,38 @@ export class PptPreviewComponent extends PreviewBaseComponent {
 
   private applyZoom() {
     if (this.content) {
-      this.content.nativeElement.style.transform = `scale(${this.scale})`;
-      this.content.nativeElement.style.transformOrigin = 'center top';
+      const wrapper:HTMLElement = this.content.nativeElement.querySelector('.pptx-preview-wrapper')!;
+      if (wrapper) {
+        wrapper.style.transform = `scale(${this.scale})`;
+        wrapper.style.transformOrigin = 'center top';
+      }
     }
     this.cdr.markForCheck();
   }
 
   toggleFullscreen() {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
+      document.body.requestFullscreen();
     } else {
       document.exitFullscreen();
+    }
+  }
+
+  private disableNativeDragAndSelect() {
+    if (this.content) {
+      const element = this.content.nativeElement;
+
+      // 禁用原生拖动
+      element.addEventListener('dragstart', (e: Event) => {
+        e.preventDefault();
+      });
+
+      // 禁用文本选择
+      element.addEventListener('selectstart', (e: Event) => {
+        if (this.isDragging) {
+          e.preventDefault();
+        }
+      });
     }
   }
 }
