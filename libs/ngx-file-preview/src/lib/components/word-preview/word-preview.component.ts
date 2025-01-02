@@ -71,7 +71,7 @@ import {renderAsync} from 'docx-preview';
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 52px 0 16px;
+      padding: 0 16px;
       border-bottom: 1px solid #303030;
       gap: 16px;
     }
@@ -88,7 +88,6 @@ import {renderAsync} from 'docx-preview';
       background: #262626;
       display: flex;
       justify-content: center;
-      padding: 20px;
 
       &::-webkit-scrollbar {
         width: 12px;
@@ -234,7 +233,7 @@ import {renderAsync} from 'docx-preview';
       cursor: pointer;
       padding: 4px;
       border-radius: 4px;
-      
+
       &:hover {
         background: #303030;
         color: #177ddc;
@@ -306,7 +305,7 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
         this.resetZoom();
       }
     };
-    
+
     document.addEventListener('keydown', this.keydownListener);
   }
 
@@ -320,7 +319,7 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
     if (event.ctrlKey || event.metaKey) {
       event.preventDefault();
       const delta = event.deltaY || event.detail || 0;
-      
+
       if (delta < 0) {
         this.zoomIn();
       } else {
@@ -378,9 +377,9 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
       if (container) {
         const scrollLeftPercent = container.scrollLeft / (container.scrollWidth - container.clientWidth);
         const scrollTopPercent = container.scrollTop / (container.scrollHeight - container.clientHeight);
-        
+
         this.content.nativeElement.style.transform = `scale(${this.scale})`;
-        
+
         setTimeout(() => {
           container.scrollLeft = scrollLeftPercent * (container.scrollWidth - container.clientWidth);
           container.scrollTop = scrollTopPercent * (container.scrollHeight - container.clientHeight);
