@@ -24,6 +24,8 @@ import {PreviewFile} from '../../types/preview.types';
              (loadeddata)="onVideoLoad()"
              (error)="handleError($event)"
              (timeupdate)="onTimeUpdate()"
+             (ended)="onVideoEnded()"
+             (pause)="onVideoPause()"
              (click)="togglePlay()">
       </video>
 
@@ -115,7 +117,7 @@ import {PreviewFile} from '../../types/preview.types';
     </div>
   `,
   styleUrls: ["video-preview.component.scss", '../../styles/_preview-base.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoPreviewComponent extends PreviewBaseComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('videoPlayer') videoPlayer!: ElementRef<HTMLVideoElement>;
@@ -172,12 +174,20 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
 
   // 播放控制
   togglePlay() {
-    if (this.videoPlayer.nativeElement.paused) {
-      this.videoPlayer.nativeElement.play();
-      this.isPlaying = true;
+    const video = this.videoPlayer.nativeElement;
+    if (video.paused) {
+      video.play().then(() => {
+        this.isPlaying = true;
+        this.cdr.markForCheck();
+      }).catch((error) => {
+        console.error('播放失败:', error);
+        this.isPlaying = false;
+        this.cdr.markForCheck();
+      });
     } else {
-      this.videoPlayer.nativeElement.pause();
+      video.pause();
       this.isPlaying = false;
+      this.cdr.markForCheck();
     }
   }
 
@@ -397,5 +407,15 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
     return [hours, minutes, secs]
       .map(val => val.toString().padStart(2, '0'))
       .join(':');
+  }
+
+  onVideoEnded() {
+    this.isPlaying = false;
+    this.cdr.markForCheck();
+  }
+
+  onVideoPause() {
+    this.isPlaying = false;
+    this.cdr.markForCheck();
   }
 }
