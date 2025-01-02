@@ -12,7 +12,7 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
 
 @Component({
-  selector: 'core-image-preview',
+  selector: 'fp-image-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
@@ -253,7 +253,7 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
     link.download = this.file.name || 'image';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    
+
     if (this.isExternalUrl(this.file.url)) {
       const image = this.previewImage?.nativeElement;
       if (!image) return;
@@ -266,7 +266,7 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
       if (!ctx) return;
 
       ctx.drawImage(image, 0, 0);
-      
+
       try {
         canvas.toBlob((blob) => {
           if (!blob) return;

@@ -13,7 +13,7 @@ import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {renderAsync} from 'docx-preview';
 
 @Component({
-  selector: 'core-word-preview',
+  selector: 'fp-word-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
@@ -23,7 +23,9 @@ import {renderAsync} from 'docx-preview';
           <button class="tool-btn" (click)="zoomOut()">
             <preview-icon name="zoom-out"></preview-icon>
           </button>
-          <span class="zoom-text">{{ (scale * 100).toFixed(0) }}%</span>
+          <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
+            {{ (scale * 100).toFixed(0) }}%
+          </span>
           <button class="tool-btn" (click)="zoomIn()">
             <preview-icon name="zoom-in"></preview-icon>
           </button>
@@ -35,7 +37,7 @@ import {renderAsync} from 'docx-preview';
         </div>
       </div>
 
-      <div class="preview-container">
+      <div class="preview-container" (wheel)="handleWheel($event)">
         <div #content class="preview-content" [style.transform]="'scale(' + scale + ')'">
         </div>
       </div>
@@ -86,6 +88,7 @@ import {renderAsync} from 'docx-preview';
       background: #262626;
       display: flex;
       justify-content: center;
+      padding: 20px;
 
       &::-webkit-scrollbar {
         width: 12px;
@@ -111,9 +114,10 @@ import {renderAsync} from 'docx-preview';
       background: white;
       border-radius: 2px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-      transform-origin: top center;
+      transform-origin: center center;
       width: 816px;
       min-height: 1056px;
+      margin: auto;
 
       :host ::ng-deep {
         font-family: 'Calibri', 'Arial', sans-serif;
@@ -227,6 +231,14 @@ import {renderAsync} from 'docx-preview';
       font-size: 13px;
       min-width: 48px;
       text-align: center;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      
+      &:hover {
+        background: #303030;
+        color: #177ddc;
+      }
     }
 
     .loading-overlay {
@@ -266,6 +278,8 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
   private readonly SCALE_STEP = 0.1;
   private readonly MAX_SCALE = 3;
   private readonly MIN_SCALE = 0.1;
+  private readonly DEFAULT_SCALE = 1;
+  private keydownListener?: (e: KeyboardEvent) => void;
 
   constructor(private cdr: ChangeDetectorRef) {
     super();
@@ -274,6 +288,44 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
   ngOnChanges(changes: SimpleChanges) {
     if (changes['file'] && this.file) {
       this.handleFile();
+    }
+  }
+
+  ngOnInit() {
+    this.setupKeyboardListeners();
+  }
+
+  ngOnDestroy() {
+    this.removeKeyboardListeners();
+  }
+
+  private setupKeyboardListeners() {
+    this.keydownListener = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        this.resetZoom();
+      }
+    };
+    
+    document.addEventListener('keydown', this.keydownListener);
+  }
+
+  private removeKeyboardListeners() {
+    if (this.keydownListener) {
+      document.removeEventListener('keydown', this.keydownListener);
+    }
+  }
+
+  handleWheel(event: WheelEvent) {
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      const delta = event.deltaY || event.detail || 0;
+      
+      if (delta < 0) {
+        this.zoomIn();
+      } else {
+        this.zoomOut();
+      }
     }
   }
 
@@ -303,16 +355,39 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
 
   zoomIn() {
     if (this.scale < this.MAX_SCALE) {
-      this.scale += this.SCALE_STEP;
-      this.cdr.markForCheck();
+      this.scale = Math.min(this.MAX_SCALE, this.scale + this.SCALE_STEP);
+      this.applyZoom();
     }
   }
 
   zoomOut() {
     if (this.scale > this.MIN_SCALE) {
-      this.scale -= this.SCALE_STEP;
-      this.cdr.markForCheck();
+      this.scale = Math.max(this.MIN_SCALE, this.scale - this.SCALE_STEP);
+      this.applyZoom();
     }
+  }
+
+  resetZoom() {
+    this.scale = this.DEFAULT_SCALE;
+    this.applyZoom();
+  }
+
+  private applyZoom() {
+    if (this.content) {
+      const container = this.content.nativeElement.parentElement;
+      if (container) {
+        const scrollLeftPercent = container.scrollLeft / (container.scrollWidth - container.clientWidth);
+        const scrollTopPercent = container.scrollTop / (container.scrollHeight - container.clientHeight);
+        
+        this.content.nativeElement.style.transform = `scale(${this.scale})`;
+        
+        setTimeout(() => {
+          container.scrollLeft = scrollLeftPercent * (container.scrollWidth - container.clientWidth);
+          container.scrollTop = scrollTopPercent * (container.scrollHeight - container.clientHeight);
+        });
+      }
+    }
+    this.cdr.markForCheck();
   }
 
   toggleFullscreen() {
@@ -323,3 +398,4 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
     }
   }
 }
+

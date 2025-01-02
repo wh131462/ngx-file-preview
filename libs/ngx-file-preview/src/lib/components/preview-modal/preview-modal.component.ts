@@ -21,6 +21,7 @@ import {PptPreviewComponent} from '../ppt-preview/ppt-preview.component';
 import {Subscription} from 'rxjs';
 import {PreviewFile} from '../../types/preview.types';
 import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
+import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview";
 
 @Component({
   selector: 'ngx-file-preview-modal',
@@ -36,7 +37,8 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
     WordPreviewComponent,
     ExcelPreviewComponent,
     PptPreviewComponent,
-    AudioPreviewComponent
+    AudioPreviewComponent,
+    UnknownPreviewComponent
   ],
   template: `
     <div class="preview-modal-overlay" *ngIf="isVisible" (click)="close()">
@@ -59,57 +61,55 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
           </div>
 
           <ng-container [ngSwitch]="currentFile?.type">
-            <core-image-preview
+            <fp-image-preview
               *ngSwitchCase="'image'"
               [file]="currentFile!"
-            ></core-image-preview>
+            ></fp-image-preview>
 
-            <core-video-preview
+            <fp-video-preview
               *ngSwitchCase="'video'"
               [file]="currentFile!"
-            ></core-video-preview>
+            ></fp-video-preview>
 
-            <core-pdf-preview
+            <fp-pdf-preview
               *ngSwitchCase="'pdf'"
               [file]="currentFile!"
-            ></core-pdf-preview>
+            ></fp-pdf-preview>
 
-            <core-word-preview
+            <fp-word-preview
               *ngSwitchCase="'word'"
               [file]="currentFile!"
-            ></core-word-preview>
+            ></fp-word-preview>
 
-            <core-excel-preview
+            <fp-excel-preview
               *ngSwitchCase="'excel'"
               [file]="currentFile!"
-            ></core-excel-preview>
+            ></fp-excel-preview>
 
-            <core-ppt-preview
+            <fp-ppt-preview
               *ngSwitchCase="'ppt'"
               [file]="currentFile!"
-            ></core-ppt-preview>
+            ></fp-ppt-preview>
 
-            <core-text-preview
+            <fp-text-preview
               *ngSwitchCase="'txt'"
               [file]="currentFile!"
-            ></core-text-preview>
+            ></fp-text-preview>
 
-            <core-archive-preview
+            <fp-archive-preview
               *ngSwitchCase="'zip'"
               [file]="currentFile!"
-            ></core-archive-preview>
+            ></fp-archive-preview>
 
-            <core-audio-preview
+            <fp-audio-preview
               *ngSwitchCase="'audio'"
               [file]="currentFile!"
-            ></core-audio-preview>
+            ></fp-audio-preview>
 
-            <div *ngSwitchCase="'unknown'" class="unknown-preview">
-              <div class="unknown-message">
-                <preview-icon [size]="72" svg="unknown"></preview-icon>
-                <p>暂不支持该文件类型的预览</p>
-              </div>
-            </div>
+            <fp-unknown-preview
+              *ngSwitchCase="'unknown'"
+              [file]="currentFile!">
+            </fp-unknown-preview>
           </ng-container>
 
           <div class="nav-button next"
@@ -236,19 +236,6 @@ import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
 
       &.next {
         right: 24px;
-      }
-    }
-
-    .unknown-preview {
-      color: white;
-      text-align: center;
-      padding: 24px;
-
-      .unknown-message {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 16px;
       }
     }
 

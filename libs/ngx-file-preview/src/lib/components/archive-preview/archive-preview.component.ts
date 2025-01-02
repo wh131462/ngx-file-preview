@@ -3,14 +3,8 @@ import { CommonModule } from '@angular/common';
 import { PreviewFile } from '../../types/preview.types';
 import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
 
-interface ArchiveInfo {
-  size: string;
-  type: string;
-  lastModified?: string;
-}
-
 @Component({
-  selector: 'core-archive-preview',
+  selector: 'fp-archive-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `

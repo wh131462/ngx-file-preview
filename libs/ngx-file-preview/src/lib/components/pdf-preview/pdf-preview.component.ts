@@ -5,7 +5,7 @@ import { PreviewFile } from '../../types/preview.types';
 import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
 
 @Component({
-  selector: 'core-pdf-preview',
+  selector: 'fp-pdf-preview',
   standalone: true,
   imports: [CommonModule, PdfViewerModule, PreviewIconComponent],
   template: `

@@ -6,33 +6,41 @@ import { PreviewFile } from '../../types/preview.types';
 import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
 
 @Component({
-  selector: 'core-text-preview',
+  selector: 'fp-text-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
     <div class="text-container">
       <div class="toolbar">
         <div class="left-controls">
-          <span class="filename">{{ file.name }}</span>
-        </div>
-        <div class="right-controls">
-          <button (click)="toggleWrap()">
-            <preview-icon [name]="isWrapped ? 'nowrap' : 'wrap'"></preview-icon>
-          </button>
-          <button (click)="adjustFontSize(1)">
-            <preview-icon name="zoom-in"></preview-icon>
-          </button>
-          <button (click)="adjustFontSize(-1)">
+          <button class="tool-btn" (click)="zoomOut()">
             <preview-icon name="zoom-out"></preview-icon>
           </button>
-          <button (click)="toggleFullscreen()">
+          <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
+            {{ (scale * 100).toFixed(0) }}%
+          </span>
+          <button class="tool-btn" (click)="zoomIn()">
+            <preview-icon name="zoom-in"></preview-icon>
+          </button>
+          <button class="tool-btn" (click)="toggleWrap()">
+            <preview-icon [name]="isWrapped ? 'nowrap' : 'wrap'"></preview-icon>
+          </button>
+        </div>
+        <div class="right-controls">
+          <button class="tool-btn" (click)="toggleFullscreen()">
             <preview-icon name="fullscreen"></preview-icon>
           </button>
         </div>
       </div>
 
-      <div class="content-container" [class.wrap]="isWrapped">
-        <pre [style.font-size.px]="fontSize">{{ content }}</pre>
+      <div class="content-container" 
+           [class.wrap]="isWrapped"
+           (wheel)="handleWheel($event)">
+        <div class="content-wrapper" [class.wrap]="isWrapped">
+          <pre [style.transform]="'scale(' + scale + ')'"
+               [style.transform-origin]="'left top'"
+               [class.wrap]="isWrapped">{{ content }}</pre>
+        </div>
         <div class="loading-overlay" *ngIf="isLoading">
           <div class="spinner"></div>
           <span>加载中...</span>
@@ -54,53 +62,60 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       flex-direction: column;
       background: #1e1e1e;
       color: #d4d4d4;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     .toolbar {
-      height: 50px;
-      background: #2c2c2c;
+      height: 48px;
+      min-height: 48px;
+      background: #262626;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 20px;
-      padding-right: 64px;
-      border-bottom: 1px solid #404040;
+      padding: 0 52px 0 16px;
+      border-bottom: 1px solid #303030;
+      gap: 16px;
+    }
 
-      .filename {
-        font-size: 14px;
-        opacity: 0.8;
+    .left-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-btn {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.85);
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #303030;
+        color: #177ddc;
       }
+    }
 
-      .right-controls {
-        display: flex;
-        gap: 10px;
-
-        button {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: transparent;
-          border: 1px solid rgba(255,255,255,0.2);
-          color: white;
-          padding: 6px;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-
-          &:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.3);
-          }
-
-          &:active {
-            transform: scale(0.95);
-          }
-
-          preview-icon {
-            width: 16px;
-            height: 16px;
-          }
-        }
+    .zoom-text {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 13px;
+      min-width: 48px;
+      text-align: center;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      
+      &:hover {
+        background: #303030;
+        color: #177ddc;
       }
     }
 
@@ -108,24 +123,58 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       flex: 1;
       overflow: auto;
       position: relative;
-      padding: 20px;
+      background: #1e1e1e;
 
-      pre {
-        margin: 0;
-        font-family: 'Consolas', 'Monaco', monospace;
-        white-space: pre;
-        tab-size: 4;
-        -moz-tab-size: 4;
-
-        &.wrap {
-          white-space: pre-wrap;
-          word-wrap: break-word;
-        }
+      &.wrap {
+        overflow-x: hidden;
       }
 
-      &.wrap pre {
+      &::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #1a1a1a;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #404040;
+        border: 2px solid #1a1a1a;
+        border-radius: 6px;
+
+        &:hover {
+          background: #505050;
+        }
+      }
+    }
+
+    .content-wrapper {
+      min-width: min-content;
+
+      &.wrap {
+        min-width: 100%;
+        width: 100%;
+      }
+    }
+
+    pre {
+      margin: 0;
+      font-family: 'Consolas', 'Monaco', monospace;
+      white-space: pre;
+      tab-size: 4;
+      -moz-tab-size: 4;
+      transform-origin: left top;
+      background: #1e1e1e;
+      text-align: left;
+      display: inline-block;
+      min-width: 100%;
+
+      &.wrap {
         white-space: pre-wrap;
         word-wrap: break-word;
+        width: 100%;
+        display: block;
       }
     }
 
@@ -169,7 +218,13 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
   content = '';
   isLoading = true;
   isWrapped = false;
-  fontSize = 14;
+  scale = 1;
+
+  private readonly SCALE_STEP = 0.1;
+  private readonly MAX_SCALE = 3;
+  private readonly MIN_SCALE = 0.1;
+  private readonly DEFAULT_SCALE = 1;
+  private keydownListener?: (e: KeyboardEvent) => void;
 
   constructor(
     private http: HttpClient,
@@ -178,6 +233,64 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadContent();
+    this.setupKeyboardListeners();
+  }
+
+  ngOnDestroy() {
+    this.removeKeyboardListeners();
+  }
+
+  private setupKeyboardListeners() {
+    this.keydownListener = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        this.resetZoom();
+      }
+    };
+    
+    document.addEventListener('keydown', this.keydownListener);
+  }
+
+  private removeKeyboardListeners() {
+    if (this.keydownListener) {
+      document.removeEventListener('keydown', this.keydownListener);
+    }
+  }
+
+  handleWheel(event: WheelEvent) {
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      const delta = event.deltaY || event.detail || 0;
+      
+      if (delta < 0) {
+        this.zoomIn();
+      } else {
+        this.zoomOut();
+      }
+    }
+  }
+
+  zoomIn() {
+    if (this.scale < this.MAX_SCALE) {
+      this.scale = Math.min(this.MAX_SCALE, this.scale + this.SCALE_STEP);
+      this.applyZoom();
+    }
+  }
+
+  zoomOut() {
+    if (this.scale > this.MIN_SCALE) {
+      this.scale = Math.max(this.MIN_SCALE, this.scale - this.SCALE_STEP);
+      this.applyZoom();
+    }
+  }
+
+  resetZoom() {
+    this.scale = this.DEFAULT_SCALE;
+    this.applyZoom();
+  }
+
+  private applyZoom() {
+    this.cdr.markForCheck();
   }
 
   private async loadContent() {
@@ -188,7 +301,7 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
       const response = await firstValueFrom(
         this.http.get(this.file.url, { responseType: 'text' })
       );
-      
+
       this.content = response || '文件内容为空';
     } catch (error) {
       this.content = '文件加载失败';
@@ -204,20 +317,11 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  adjustFontSize(delta: number) {
-    this.fontSize = Math.min(Math.max(this.fontSize + delta, 10), 24);
-    this.cdr.markForCheck();
-  }
-
   toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
     } else {
       document.exitFullscreen();
     }
-  }
-
-  ngOnDestroy() {
-    // 清理工作
   }
 }

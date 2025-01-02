@@ -5,7 +5,7 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
-  selector: 'core-audio-preview',
+  selector: 'fp-audio-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
@@ -147,7 +147,7 @@ export class AudioPreviewComponent extends PreviewBaseComponent implements OnIni
         this.coverUrl = this.file.coverUrl;
         return;
       }
-      
+
       // 如果没有封面，使用默认图标
       this.coverUrl = null;
       this.cdr.markForCheck();

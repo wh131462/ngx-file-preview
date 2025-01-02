@@ -19,7 +19,7 @@ interface TableData {
 }
 
 @Component({
-  selector: 'core-excel-preview',
+  selector: 'fp-excel-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
@@ -29,7 +29,9 @@ interface TableData {
           <button class="tool-btn" (click)="zoomOut()">
             <preview-icon name="zoom-out"></preview-icon>
           </button>
-          <span class="zoom-text">{{ (scale * 100).toFixed(0) }}%</span>
+          <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
+            {{ (scale * 100).toFixed(0) }}%
+          </span>
           <button class="tool-btn" (click)="zoomIn()">
             <preview-icon name="zoom-in"></preview-icon>
           </button>
@@ -54,7 +56,9 @@ interface TableData {
           <div class="table-wrapper"
                #tableWrapper
                (mousedown)="startDrag($event)"
-               [class.dragging]="isDragging">
+               (wheel)="handleWheel($event)"
+               [class.dragging]="isDragging"
+               [style.transform]="'scale(' + scale + ')'">
             <table *ngIf="tableData">
               <colgroup>
                 <col class="row-header-col">
@@ -184,12 +188,14 @@ interface TableData {
       display: flex;
       flex-direction: column;
       background: #262626;
+      overflow: hidden;
 
       .table-wrapper {
         width: 100%;
         height: 100%;
         overflow: auto;
         cursor: default;
+        transform-origin: 0 0;
 
         &.dragging {
           cursor: grab;
@@ -359,6 +365,14 @@ interface TableData {
       font-size: 13px;
       min-width: 48px;
       text-align: center;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      
+      &:hover {
+        background: #303030;
+        color: #177ddc;
+      }
     }
 
     .loading-overlay {
@@ -416,6 +430,9 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
   private mouseMoveListener?: (e: MouseEvent) => void;
   private mouseUpListener?: (e: MouseEvent) => void;
 
+  private readonly DEFAULT_SCALE = 1;
+  private keydownListener?: (e: KeyboardEvent) => void;
+
   get totalColumns(): number[] {
     const total = (this.tableData.headers.length + this.extraColumns.length) || 0;
     return Array(total).fill(0);
@@ -433,10 +450,12 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
 
   ngAfterViewInit() {
     this.setupDragListeners();
+    this.setupKeyboardListeners();
   }
 
   ngOnDestroy() {
     this.removeDragListeners();
+    this.removeKeyboardListeners();
   }
 
   private setupDragListeners() {
@@ -550,15 +569,15 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
 
   zoomIn() {
     if (this.scale < this.MAX_SCALE) {
-      this.scale += this.SCALE_STEP;
-      this.cdr.markForCheck();
+      this.scale = Math.min(this.MAX_SCALE, this.scale + this.SCALE_STEP);
+      this.applyZoom();
     }
   }
 
   zoomOut() {
     if (this.scale > this.MIN_SCALE) {
-      this.scale -= this.SCALE_STEP;
-      this.cdr.markForCheck();
+      this.scale = Math.max(this.MIN_SCALE, this.scale - this.SCALE_STEP);
+      this.applyZoom();
     }
   }
 
@@ -584,5 +603,61 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
 
   getRowNumber(index: number): number {
     return index + 1;
+  }
+
+  handleWheel(event: WheelEvent) {
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      const delta = event.deltaY || event.detail || 0;
+      
+      if (delta < 0) {
+        this.zoomIn();
+      } else {
+        this.zoomOut();
+      }
+    }
+  }
+
+  private applyZoom() {
+    if (this.tableWrapper) {
+      const wrapper = this.tableWrapper.nativeElement;
+      
+      // 保存当前滚动位置的相对百分比
+      const scrollLeftPercent = wrapper.scrollLeft / (wrapper.scrollWidth - wrapper.clientWidth);
+      const scrollTopPercent = wrapper.scrollTop / (wrapper.scrollHeight - wrapper.clientHeight);
+      
+      // 应用缩放
+      wrapper.style.transform = `scale(${this.scale})`;
+      
+      // 在下一个事件循环中恢复滚动位置
+      setTimeout(() => {
+        wrapper.scrollLeft = scrollLeftPercent * (wrapper.scrollWidth - wrapper.clientWidth);
+        wrapper.scrollTop = scrollTopPercent * (wrapper.scrollHeight - wrapper.clientHeight);
+      });
+    }
+    this.cdr.markForCheck();
+  }
+
+  private setupKeyboardListeners() {
+    this.keydownListener = (e: KeyboardEvent) => {
+      // 按下 Ctrl/Command + 0 重置缩放
+      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        this.resetZoom();
+      }
+    };
+    
+    document.addEventListener('keydown', this.keydownListener);
+  }
+
+  private removeKeyboardListeners() {
+    if (this.keydownListener) {
+      document.removeEventListener('keydown', this.keydownListener);
+    }
+  }
+
+  resetZoom() {
+    this.scale = this.DEFAULT_SCALE;
+    this.applyZoom();
   }
 }

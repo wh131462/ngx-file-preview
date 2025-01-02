@@ -5,11 +5,11 @@ import {CommonModule} from "@angular/common";
   selector: "preview-icon",
   template: `
     <ng-container *ngIf="name">
-      <i class="core-font-icon NGX-FILE-PREVIEW" [class]="'nfp-'+name" [style.width]="size" [style.font-size]="size"
+      <i class="fp-font-icon NGX-FILE-PREVIEW" [class]="'nfp-'+name" [style.width]="size" [style.font-size]="size"
          [style.color]="color"></i>
     </ng-container>
     <ng-container *ngIf="svg">
-      <svg class="core-svg-icon" [style.width]="size" [style.height]="size" aria-hidden="true">
+      <svg class="fp-svg-icon" [style.width]="size" [style.height]="size" aria-hidden="true">
         <use [attr.xlink:href]="'#nfp-' + svg">"></use>
       </svg>
     </ng-container>
@@ -18,14 +18,14 @@ import {CommonModule} from "@angular/common";
     display: inline-block;
     line-height: 0;
 
-    .core-svg-icon {
+    .fp-svg-icon {
       width: 1em;
       height: 1em;
       vertical-align: -0.15em;
       fill: currentColor;
       overflow: hidden;
     }
-    .core-font-icon{
+    .fp-font-icon{
       color: #FFFFFF;
       display: inline-flex;
       justify-content: center;

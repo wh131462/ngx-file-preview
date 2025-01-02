@@ -15,7 +15,7 @@ import Hls from 'hls.js';
 import {PreviewFile} from '../../types/preview.types';
 
 @Component({
-  selector: 'core-video-preview',
+  selector: 'fp-video-preview',
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
