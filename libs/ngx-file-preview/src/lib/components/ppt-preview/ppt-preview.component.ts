@@ -43,8 +43,7 @@ import {init} from "pptx-preview";
            [class.dragging]="isDragging">
         <div class="content-wrapper">
           <div #content
-               class="preview-content"
-               [style.transform]="'scale(' + scale + ')'">
+               class="preview-content">
           </div>
         </div>
       </div>
@@ -70,8 +69,6 @@ export class PptPreviewComponent extends PreviewBaseComponent {
   private readonly DEFAULT_SCALE = 1;
 
   isDragging = false;
-  private startX = 0;
-  private startY = 0;
   private startScrollLeft = 0;
   private startScrollTop = 0;
   private lastMouseX = 0;
@@ -111,8 +108,10 @@ export class PptPreviewComponent extends PreviewBaseComponent {
   private updatePreviewSize() {
     const container = this.previewContainer.nativeElement;
     const {width} = container.getBoundingClientRect();
+    const scaledWidth = Math.min(1200, width) * this.scale;
+
     if (this.pptxPreviewer) {
-      this.pptxPreviewer.resize(Math.min(1200, width));
+      this.pptxPreviewer?.resize(scaledWidth);
     }
   }
 
@@ -191,32 +190,64 @@ export class PptPreviewComponent extends PreviewBaseComponent {
       event.preventDefault();
       const delta = event.deltaY || event.detail || 0;
 
-      const rect = this.previewContainer.nativeElement.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const container = this.previewContainer.nativeElement;
+      const rect = container.getBoundingClientRect();
+
+      // 获取鼠标相对容器的位置
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
 
       const oldScale = this.scale;
+
+      // 调整缩放比例
       if (delta < 0) {
         this.zoomIn();
       } else {
         this.zoomOut();
       }
 
+      // 如果缩放比例变化，则调整滚动条位置
       if (oldScale !== this.scale) {
-        this.adjustScroll(x, y, oldScale);
+        const scaleChange = this.scale / oldScale;
+
+        // 鼠标位置在内容中的坐标
+        const contentX = (container.scrollLeft + mouseX) / oldScale;
+        const contentY = (container.scrollTop + mouseY) / oldScale;
+
+        // 缩放后鼠标位置对应的新坐标
+        const newContentX = contentX * this.scale;
+        const newContentY = contentY * this.scale;
+
+        // 调整滚动条位置
+        container.scrollLeft = newContentX - mouseX;
+        container.scrollTop = newContentY - mouseY;
       }
     }
   }
 
-  private adjustScroll(x: number, y: number, oldScale: number) {
+
+  private adjustScroll(mouseX: number, mouseY: number, oldScale: number) {
     const container = this.previewContainer.nativeElement;
+    const contentWrapper = this.content.nativeElement;
+
+    // 获取内容的缩放变换比例
     const scaleChange = this.scale / oldScale;
 
-    const newX = x * scaleChange;
-    const newY = y * scaleChange;
+    // 计算鼠标位置在内容中的原始坐标
+    const contentX = (container.scrollLeft + mouseX) / oldScale;
+    const contentY = (container.scrollTop + mouseY) / oldScale;
 
-    container.scrollLeft += (newX - x);
-    container.scrollTop += (newY - y);
+    // 计算缩放后鼠标位置对应的新坐标
+    const newContentX = contentX * this.scale;
+    const newContentY = contentY * this.scale;
+
+    // 调整滚动条位置以对齐鼠标位置
+    container.scrollLeft = newContentX - mouseX;
+    container.scrollTop = newContentY - mouseY;
+
+    // 更新内容的缩放样式
+    contentWrapper.style.transform = `scale(${this.scale})`;
+    contentWrapper.style.transformOrigin = 'top left';
   }
 
   async handleFile() {
@@ -244,20 +275,46 @@ export class PptPreviewComponent extends PreviewBaseComponent {
 
   zoomIn() {
     if (this.scale < this.MAX_SCALE) {
+      const oldScale = this.scale;
       this.scale = Math.min(this.MAX_SCALE, this.scale + this.SCALE_STEP);
-      this.cdr.markForCheck();
+      this.applyScale(oldScale);
     }
   }
 
   zoomOut() {
     if (this.scale > this.MIN_SCALE) {
+      const oldScale = this.scale;
       this.scale = Math.max(this.MIN_SCALE, this.scale - this.SCALE_STEP);
-      this.cdr.markForCheck();
+      this.applyScale(oldScale);
     }
   }
 
   resetZoom() {
+    const oldScale = this.scale;
     this.scale = this.DEFAULT_SCALE;
+    this.applyScale(oldScale);
+  }
+
+  private applyScale(oldScale: number) {
+    const container = this.previewContainer.nativeElement;
+    const contentWrapper = this.content.nativeElement;
+
+    const rect = container.getBoundingClientRect();
+
+    const scaleChange = this.scale / oldScale;
+
+    // 计算内容中心点
+    const centerX = (container.scrollLeft + rect.width / 2) / oldScale;
+    const centerY = (container.scrollTop + rect.height / 2) / oldScale;
+
+    // 更新内容缩放样式
+    contentWrapper.style.transform = `scale(${this.scale})`;
+    contentWrapper.style.transformOrigin = 'top left';
+
+    // 调整滚动条位置以保持视图中心
+    container.scrollLeft = centerX * this.scale - rect.width / 2;
+    container.scrollTop = centerY * this.scale - rect.height / 2;
+
     this.cdr.markForCheck();
   }
 

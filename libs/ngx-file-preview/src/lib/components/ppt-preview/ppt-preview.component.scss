@@ -12,8 +12,13 @@
   flex-direction: column;
   border-radius: 8px;
   overflow: hidden;
-  & .pptx-preview-slide-wrapper{
-    overflow: scroll !important;
+
+  ::ng-deep .pptx-preview-wrapper {
+    background-color: var(--bg-container) !important;
+  }
+
+  ::ng-deep .pptx-preview-slide-wrapper {
+    box-shadow: 0 2px 8px var(--preview-mask);
   }
 }
 
@@ -71,9 +76,14 @@
   display: flex;
   justify-content: center;
   padding: 24px;
+  position: relative;
+  transform-origin: top center;
+  transition: transform 0.2s ease-out;
 }
 
 .preview-content {
+  display: block;
+  position: absolute;
   transform-origin: top center;
   will-change: transform;
   background: var(--bg-container);
@@ -135,8 +145,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 :host(.fullscreen) {
