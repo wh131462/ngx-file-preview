@@ -27,7 +27,7 @@
 ## 特性
 
 - 🎯 支持多种文件格式预览 (图片、PDF、PPT、Word、文本、视频等)
-- 🎨 提供默认样式，也支持完全自定义
+- 🎨 暗黑模式和浅色模式支持
 - 💪 支持指令和组件两种使用方式
 - 🚀 轻量级，易于集成
 - 📱 响应式设计，支持移动端
@@ -97,7 +97,17 @@ import { PreviewDirective } from '@eternalheart/ngx-file-preview';
 @Component({
   imports: [PreviewDirective],
   template: `
-    <div [ngxFilePreview]="file">点击预览单个文件</div>
+    <!--可以通过themeMode指定组件显示暗黑模式/浅色模式 默认按时间自动切换模式 也可以在预览页面内切换模式 -->
+    <!--浅色模式-->
+    <div [ngxFilePreview]="file" themeMode="light">点击预览单个文件</div>
+    <!--暗黑模式-->
+    <div [ngxFilePreview]="file" themeMode="dark">点击预览单个文件</div>
+    <!--自动切换主题(可以自定义切换暗黑模式的时间段)-->
+    <div [ngxFilePreview]="file" themeMode="auto" [autoConfig]="{dark: {
+    start: 19,
+    end: 7
+  }}">点击预览单个文件</div>
+    <!--预览文件列表-->
     <div [ngxFilePreview]="files">点击预览多个文件</div>
   `
 })
@@ -124,6 +134,7 @@ import { PreviewComponent } from '@eternalheart/ngx-file-preview';
 @Component({
   imports: [PreviewComponent],
   template: `
+    <!--主题切换与指令的设置方式相同-->
     <ngx-file-preview 
       [files]="files"
       (fileSelect)="onFileSelect($event)">
@@ -251,7 +262,7 @@ MIT
 }
 ```
 
-这些依赖项会在安装 ngx-file-preview 时自动安装。如果您的项目中已经包含了某些依赖，可以根据需要手动管理版本。
+这些依赖项需要在安装 ngx-file-preview 的时候同步安装。如果您的项目中已经包含了某些依赖，可以根据需要手动管理版本。
 
 ### 可选依赖
 

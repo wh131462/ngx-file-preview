@@ -1,7 +1,10 @@
 <p [ngxFilePreview]="files" themeMode="light">预览文件</p>
 
 <!-- 使用默认模板 -->
-<ngx-file-preview [files]="files"  themeMode="light"></ngx-file-preview>
+<ngx-file-preview [files]="files" themeMode="auto" [autoConfig]="{dark: {
+    start: 18,
+    end: 6
+  }}"></ngx-file-preview>
 
 <!-- 使用自定义模板 -->
 <ngx-file-preview [files]="files" themeMode="light">
