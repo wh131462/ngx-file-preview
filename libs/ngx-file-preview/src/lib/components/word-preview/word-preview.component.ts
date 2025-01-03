@@ -40,7 +40,9 @@ import {renderAsync} from 'docx-preview';
       <div class="preview-container"
            #previewContainer
            (wheel)="handleWheel($event)"
-           (mousedown)="startDrag($event)"
+           (pointerdown)="startDrag($event)"
+           (pointermove)="onDrag($event)"
+           (pointerup)="stopDrag($event)"
            [class.dragging]="isDragging">
         <div class="content-wrapper">
           <div #content
@@ -55,7 +57,7 @@ import {renderAsync} from 'docx-preview';
       </div>
     </div>
   `,
-  styleUrls: ["word-preview.component.scss"],
+  styleUrls: ["../../styles/_theme.scss","word-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WordPreviewComponent extends PreviewBaseComponent implements OnChanges {
@@ -77,9 +79,6 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
   private startY = 0;
   private scrollLeft = 0;
   private scrollTop = 0;
-  private mouseMoveListener?: (e: MouseEvent) => void;
-  private mouseUpListener?: (e: MouseEvent) => void;
-
   constructor(private cdr: ChangeDetectorRef) {
     super();
   }
@@ -87,31 +86,6 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
   ngOnChanges(changes: SimpleChanges) {
     if (changes['file']) {
       this.loadDocument();
-    }
-  }
-
-  ngOnInit() {
-    this.setupDragListeners();
-  }
-
-  ngOnDestroy() {
-    this.removeDragListeners();
-  }
-
-  private setupDragListeners() {
-    this.mouseMoveListener = this.onDrag.bind(this);
-    this.mouseUpListener = this.stopDrag.bind(this);
-
-    document.addEventListener('mousemove', this.mouseMoveListener);
-    document.addEventListener('mouseup', this.mouseUpListener);
-  }
-
-  private removeDragListeners() {
-    if (this.mouseMoveListener) {
-      document.removeEventListener('mousemove', this.mouseMoveListener);
-    }
-    if (this.mouseUpListener) {
-      document.removeEventListener('mouseup', this.mouseUpListener);
     }
   }
 
@@ -155,41 +129,38 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
     }
   }
 
-  startDrag(event: MouseEvent) {
+  startDrag(event: PointerEvent) {
     if (event.button !== 0) return;
 
     this.isDragging = true;
     const container = this.previewContainer.nativeElement;
-    this.startX = event.pageX - container.offsetLeft;
-    this.startY = event.pageY - container.offsetTop;
+    this.startX = event.clientX;
+    this.startY = event.clientY;
     this.scrollLeft = container.scrollLeft;
     this.scrollTop = container.scrollTop;
 
-    container.style.cursor = 'grabbing';
+    container.setPointerCapture(event.pointerId);
     event.preventDefault();
   }
 
-  onDrag(event: MouseEvent) {
+  onDrag(event: PointerEvent) {
     if (!this.isDragging) return;
 
     const container = this.previewContainer.nativeElement;
-    const x = event.pageX - container.offsetLeft;
-    const y = event.pageY - container.offsetTop;
-    const walkX = (x - this.startX);
-    const walkY = (y - this.startY);
+    const deltaX = event.clientX - this.startX;
+    const deltaY = event.clientY - this.startY;
 
-    requestAnimationFrame(() => {
-      container.scrollLeft = this.scrollLeft - walkX;
-      container.scrollTop = this.scrollTop - walkY;
-    });
+    container.scrollLeft = this.scrollLeft - deltaX;
+    container.scrollTop = this.scrollTop - deltaY;
   }
 
-  stopDrag() {
+  stopDrag(event: PointerEvent) {
     if (!this.isDragging) return;
 
     this.isDragging = false;
-    this.previewContainer.nativeElement.style.cursor = '';
+    this.previewContainer.nativeElement.releasePointerCapture(event.pointerId);
   }
+
 
   zoomIn() {
     if (this.scale < this.MAX_SCALE) {
@@ -209,16 +180,20 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
     this.scale = this.DEFAULT_SCALE;
     this.applyZoom();
   }
-
   private applyZoom() {
-    if (this.content?.nativeElement) {
+    if (this.content?.nativeElement && this.previewContainer?.nativeElement) {
       const container = this.previewContainer.nativeElement;
       const rect = container.getBoundingClientRect();
-      const centerX = container.scrollLeft + rect.width / 2;
-      const centerY = container.scrollTop + rect.height / 2;
 
+      // 获取当前滚动中心点
+      const centerX = (container.scrollLeft + rect.width / 2) / this.scale;
+      const centerY = (container.scrollTop + rect.height / 2) / this.scale;
+
+      // 更新缩放
       this.content.nativeElement.style.transform = `scale(${this.scale})`;
+      this.content.nativeElement.style.transformOrigin = 'top left';
 
+      // 调整滚动位置，确保视图保持缩放中心一致
       requestAnimationFrame(() => {
         container.scrollLeft = centerX * this.scale - rect.width / 2;
         container.scrollTop = centerY * this.scale - rect.height / 2;
@@ -226,7 +201,6 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
     }
     this.cdr.markForCheck();
   }
-
   toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
