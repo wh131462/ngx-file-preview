@@ -182,24 +182,24 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
   rotate(angle: number) {
     this.rotation += angle;
 
-    if (this.imageWidth && this.imageHeight && this.imageWrapper?.nativeElement) {
-      const wrapper = this.imageWrapper.nativeElement;
-      const wrapperWidth = wrapper.clientWidth;
-      const wrapperHeight = wrapper.clientHeight;
-
-      const displayRotation = Math.abs(this.rotation % 360);
-      const rad = (displayRotation % 180) * Math.PI / 180;
-      const rotatedWidth = Math.abs(this.imageWidth * Math.cos(rad) + this.imageHeight * Math.sin(rad));
-      const rotatedHeight = Math.abs(this.imageWidth * Math.sin(rad) + this.imageHeight * Math.cos(rad));
-
-      const scaleX = wrapperWidth / rotatedWidth;
-      const scaleY = wrapperHeight / rotatedHeight;
-      const newZoom = Math.min(scaleX, scaleY) * 0.9;
-
-      this.zoom = newZoom;
-      this.translateX = 0;
-      this.translateY = 0;
-    }
+    // if (this.imageWidth && this.imageHeight && this.imageWrapper?.nativeElement) {
+    //   const wrapper = this.imageWrapper.nativeElement;
+    //   const wrapperWidth = wrapper.clientWidth;
+    //   const wrapperHeight = wrapper.clientHeight;
+    //
+    //   const displayRotation = Math.abs(this.rotation % 360);
+    //   const rad = (displayRotation % 180) * Math.PI / 180;
+    //   const rotatedWidth = Math.abs(this.imageWidth * Math.cos(rad) + this.imageHeight * Math.sin(rad));
+    //   const rotatedHeight = Math.abs(this.imageWidth * Math.sin(rad) + this.imageHeight * Math.cos(rad));
+    //
+    //   const scaleX = wrapperWidth / rotatedWidth;
+    //   const scaleY = wrapperHeight / rotatedHeight;
+    //   const newZoom = Math.min(scaleX, scaleY) * 0.9;
+    //
+    //   this.zoom = newZoom;
+    //   this.translateX = 0;
+    //   this.translateY = 0;
+    // }
 
     this.updateTransformStyle();
   }
