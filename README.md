@@ -52,10 +52,10 @@ npm install @eternalheart/ngx-file-preview --save docx-preview hls.js ng2-pdf-vi
         "build": {
           "options": {
             "styles": [
-              "node_modules/@eternalheart/ngx-file-preview/assets/icon/font/iconfont.css"
+              "node_modules/@eternalheart/ngx-file-preview/src/assets/icon/font/iconfont.css"
             ],
             "scripts": [
-              "node_modules/@eternalheart/ngx-file-preview/assets/icon/color/iconfont.js"
+              "node_modules/@eternalheart/ngx-file-preview/src/assets/icon/color/iconfont.js"
             ]
           }
         }
