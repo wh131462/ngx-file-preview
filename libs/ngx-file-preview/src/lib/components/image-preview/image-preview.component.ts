@@ -42,11 +42,11 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
       <div class="toolbar" *ngIf="!isLoading">
         <div class="tool-group">
           <div class="control" (click)="zoomOut()" [class.disabled]="zoom <= minZoom">
-            <preview-icon name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="zoom-out"></preview-icon>
           </div>
           <span class="zoom-text">{{ (zoom * 100).toFixed(0) }}%</span>
           <div class="control" (click)="zoomIn()" [class.disabled]="zoom >= maxZoom">
-            <preview-icon name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="zoom-in"></preview-icon>
           </div>
         </div>
 
@@ -54,10 +54,10 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
 
         <div class="tool-group">
           <div class="control" (click)="rotate(-90)">
-            <preview-icon name="rotate-90"></preview-icon>
+            <preview-icon  [themeMode]="themeMode"  name="rotate-90"></preview-icon>
           </div>
           <div class="control" (click)="rotate(90)">
-            <preview-icon name="rotate90"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="rotate90"></preview-icon>
           </div>
         </div>
 
@@ -65,10 +65,10 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
 
         <div class="tool-group">
           <div class="control" (click)="resetView()">
-            <preview-icon name="reset"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="reset"></preview-icon>
           </div>
           <div class="control" (click)="download()">
-            <preview-icon name="download"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="download"></preview-icon>
           </div>
         </div>
       </div>

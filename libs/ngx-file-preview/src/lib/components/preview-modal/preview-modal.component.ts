@@ -2,12 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   HostListener,
-  Input,
   OnDestroy,
   OnInit,
-  Renderer2,
   ViewEncapsulation
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
@@ -26,7 +23,7 @@ import {PreviewFile} from '../../types/preview.types';
 import {AudioPreviewComponent} from "../audio-preview/audio-preview.component";
 import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview.component";
 import {ThemeService} from '../../services/theme.service';
-import {AutoThemeConfig, ThemeMode} from "../../types/theme.types";
+import {ThemeMode} from "../../types/theme.types";
 import {PreviewBaseComponent} from '../base/preview-base.component';
 
 @Component({
@@ -72,13 +69,12 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
             <preview-icon name="close" [themeMode]="theme$|async" (click)="close()"></preview-icon>
           </div>
         </div>
-
         <div class="preview-modal-body">
           <button class="nav-button prev"
                   *ngIf="canShowPrevious()"
                   [class.visible]="isControlsVisible"
                   (click)="previous()">
-            <preview-icon [size]="36" name="previous"></preview-icon>
+            <preview-icon  [themeMode]="themeMode"  [size]="36" name="previous"></preview-icon>
           </button>
 
           <div class="preview-content">
@@ -139,7 +135,7 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
                   *ngIf="canShowNext()"
                   [class.visible]="isControlsVisible"
                   (click)="next()">
-            <preview-icon [size]="36" name="next"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  [size]="36" name="next"></preview-icon>
           </button>
         </div>
       </div>
@@ -153,9 +149,6 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
   encapsulation: ViewEncapsulation.None
 })
 export class PreviewModalComponent extends PreviewBaseComponent implements OnInit, OnDestroy {
-  @Input() themeMode: ThemeMode = 'auto';
-  @Input() autoThemeConfig?: AutoThemeConfig;
-
   isVisible = false;
   currentFile?: PreviewFile;
   private subscription?: Subscription;
@@ -163,7 +156,7 @@ export class PreviewModalComponent extends PreviewBaseComponent implements OnIni
   isControlsVisible = true;
   private controlsTimeout?: number;
   private readonly HIDE_DELAY = 2000;
-  theme$!: Observable<'dark' | 'light'>;
+  theme$!: Observable<ThemeMode>;
 
   constructor(
     private previewService: PreviewService,

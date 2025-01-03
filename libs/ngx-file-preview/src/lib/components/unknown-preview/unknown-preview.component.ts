@@ -1,8 +1,8 @@
-import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { PreviewFile } from '../../types/preview.types';
-import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import {PreviewBaseComponent} from "../base/preview-base.component";
 
 @Component({
   selector: 'fp-unknown-preview',
@@ -11,14 +11,13 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
   template: `
     <div class="unknown-preview">
       <div class="unknown-message">
-        <preview-icon [size]="72" svg="unknown"></preview-icon>
+        <preview-icon [themeMode]="themeMode" [size]="72" svg="unknown"></preview-icon>
         <p>{{ file.name }}</p>
         <p>暂不支持该文件类型的预览</p>
       </div>
     </div>
   `,
-  styleUrls:['../../styles/_theme.scss','unknown-preview.component.scss'],
+  styleUrls: ['../../styles/_theme.scss', 'unknown-preview.component.scss'],
 })
-export class UnknownPreviewComponent {
-  @Input() file!: PreviewFile;
+export class UnknownPreviewComponent extends PreviewBaseComponent {
 }

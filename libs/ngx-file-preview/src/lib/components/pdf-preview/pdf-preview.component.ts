@@ -1,8 +1,8 @@
-import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
-import { PreviewFile } from '../../types/preview.types';
-import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import {PreviewBaseComponent} from "../base/preview-base.component";
 
 @Component({
   selector: 'fp-pdf-preview',
@@ -14,23 +14,23 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       <div class="toolbar">
         <div class="left-controls">
           <div class="control" (click)="zoomOut()">
-            <preview-icon name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
           </div>
           <span>{{ (zoom * 100).toFixed(0) }}%</span>
           <div class="control" (click)="zoomIn()">
-            <preview-icon name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
           </div>
         </div>
 
         <div class="right-controls">
           <div class="control" (click)="rotate(-90)">
-            <preview-icon name="rotate-90"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="rotate-90"></preview-icon>
           </div>
           <div class="control" (click)="rotate(90)">
-            <preview-icon name="rotate90"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="rotate90"></preview-icon>
           </div>
           <div class="control" (click)="resetZoom()">
-            <preview-icon name="reset"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="reset"></preview-icon>
           </div>
         </div>
       </div>
@@ -51,19 +51,18 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       </div>
     </div>
   `,
-  styleUrls:["../../styles/_theme.scss","./pdf-preview.component.scss"],
+  styleUrls: ["../../styles/_theme.scss", "./pdf-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PdfPreviewComponent {
-  @Input() file!: PreviewFile;
-
+export class PdfPreviewComponent extends PreviewBaseComponent {
   zoom = 1;
   rotation = 0;
   currentPage = 1;
   totalPages = 0;
-  isLoading = true;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) {
+    super();
+  }
 
   onPdfLoaded(pdf: any) {
     this.totalPages = pdf.numPages;

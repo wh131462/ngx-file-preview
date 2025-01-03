@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PreviewFile} from '../../types/preview.types';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import {PreviewBaseComponent} from "../base/preview-base.component";
 
 @Component({
   selector: 'fp-archive-preview',
@@ -11,7 +11,7 @@ import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
     <div class="archive-container">
       <div class="archive-info">
         <div class="icon">
-          <preview-icon [svg]="'zip'" [size]="48"></preview-icon>
+          <preview-icon [themeMode]="themeMode" [svg]="'zip'" [size]="48"></preview-icon>
         </div>
         <div class="details">
           <h2>{{ file.name }}</h2>
@@ -26,9 +26,7 @@ import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
   styleUrls: ["../../styles/_theme.scss", "archive-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ArchivePreviewComponent {
-  @Input() file!: PreviewFile;
-
+export class ArchivePreviewComponent extends PreviewBaseComponent {
   getArchiveType(): string {
     const extension = this.file.name.split('.').pop()?.toLowerCase();
     const types: { [key: string]: string } = {

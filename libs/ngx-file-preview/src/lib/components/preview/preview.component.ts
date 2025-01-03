@@ -55,7 +55,7 @@ import { ThemeMode, AutoThemeConfig } from '../../types/theme.types';
                  [themeMode]="themeMode"
                  [class.active]="i === index">
               <span class="file-icon">
-                <preview-icon [size]="40" [svg]="file.type"></preview-icon>
+                <preview-icon [themeMode]="themeMode"  [size]="40" [svg]="file.type"></preview-icon>
               </span>
               <div class="file-info">
                 <div class="file-main-info">

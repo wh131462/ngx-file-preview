@@ -1,6 +1,6 @@
 import {Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA} from "@angular/core";
 import {CommonModule} from "@angular/common";
-import theme from "echarts/types/src/theme/dark";
+import {ThemeMode} from "../../types/theme.types";
 
 @Component({
   selector: "preview-icon",
@@ -8,7 +8,7 @@ import theme from "echarts/types/src/theme/dark";
     <ng-container *ngIf="name">
       <i class="fp-font-icon NGX-FILE-PREVIEW" [class]="'nfp-'+name"
          [style.width]="size" [style.font-size]="size"
-         [style.color]="color ? color: (themeMode=='dark'?'#FFFFFF':'#333333')"></i>
+         [style.color]="color ? color: (themeMode=='light'?'#333333':'#FFFFFF')"></i>
     </ng-container>
     <ng-container *ngIf="svg">
       <svg class="fp-svg-icon" [style.width]="size" [style.height]="size" aria-hidden="true">
@@ -27,7 +27,8 @@ import theme from "echarts/types/src/theme/dark";
       fill: currentColor;
       overflow: hidden;
     }
-    .fp-font-icon{
+
+    .fp-font-icon {
       color: #FFFFFF;
       display: inline-flex;
       justify-content: center;
@@ -44,7 +45,7 @@ import theme from "echarts/types/src/theme/dark";
 export class PreviewIconComponent {
   @Input() name: string = "";
   @Input() svg: string = "";
-  @Input({transform: (v:any) => typeof v === 'number' ? `${v}px` : v}) size: number | string = '16px';
+  @Input({transform: (v: any) => typeof v === 'number' ? `${v}px` : v}) size: number | string = '16px';
   @Input() color?: string;
-  @Input() themeMode!: "dark" | "light" | null;
+  @Input() themeMode?: ThemeMode|null;
 }

@@ -24,7 +24,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
             <img [src]="coverUrl" alt="album cover">
           </ng-container>
           <ng-template #defaultCover>
-            <preview-icon name="music" [size]="48"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="music" [size]="48"></preview-icon>
           </ng-template>
         </div>
 
@@ -39,7 +39,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
           <div class="player-controls">
             <div class="main-controls">
               <button class="control-btn" (click)="togglePlay()">
-                <preview-icon [name]="isPlaying ? 'pause' : 'play'" [size]="24"></preview-icon>
+                <preview-icon [themeMode]="themeMode" [name]="isPlaying ? 'pause' : 'play'" [size]="24"></preview-icon>
               </button>
             </div>
 
@@ -78,7 +78,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
                  (mouseenter)="showVolumeControl = true"
                  (mouseleave)="showVolumeControl = false">
               <button class="control-btn" (click)="cycleVolume()">
-                <preview-icon [name]="getVolumeIcon()"></preview-icon>
+                <preview-icon [themeMode]="themeMode" [name]="getVolumeIcon()"></preview-icon>
               </button>
               <div class="slider-container" *ngIf="showVolumeControl">
                 <input type="range"

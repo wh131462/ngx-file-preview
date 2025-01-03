@@ -1,9 +1,9 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
-import { PreviewFile } from '../../types/preview.types';
-import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
+import {firstValueFrom} from 'rxjs';
+import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import {PreviewBaseComponent} from "../base/preview-base.component";
 
 @Component({
   selector: 'fp-text-preview',
@@ -14,21 +14,21 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       <div class="toolbar">
         <div class="left-controls">
           <button class="tool-btn" (click)="zoomOut()">
-            <preview-icon name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
           </button>
           <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
             {{ (scale * 100).toFixed(0) }}%
           </span>
           <button class="tool-btn" (click)="zoomIn()">
-            <preview-icon name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
           </button>
           <button class="tool-btn" (click)="toggleWrap()">
-            <preview-icon [name]="isWrapped ? 'nowrap' : 'wrap'"></preview-icon>
+            <preview-icon [themeMode]="themeMode" [name]="isWrapped ? 'nowrap' : 'wrap'"></preview-icon>
           </button>
         </div>
         <div class="right-controls">
           <button class="tool-btn" (click)="toggleFullscreen()">
-            <preview-icon name="fullscreen"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="fullscreen"></preview-icon>
           </button>
         </div>
       </div>
@@ -48,14 +48,12 @@ import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
       </div>
     </div>
   `,
-  styleUrls: ['../../styles/_theme.scss','./text-preview.component.scss'],
+  styleUrls: ['../../styles/_theme.scss', './text-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextPreviewComponent implements OnInit, OnDestroy {
-  @Input() file!: PreviewFile;
+export class TextPreviewComponent extends PreviewBaseComponent implements OnInit, OnDestroy {
 
   content = '';
-  isLoading = true;
   isWrapped = false;
   scale = 1;
 
@@ -68,7 +66,9 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit() {
     this.loadContent();
@@ -138,7 +138,7 @@ export class TextPreviewComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
 
       const response = await firstValueFrom(
-        this.http.get(this.file.url, { responseType: 'text' })
+        this.http.get(this.file.url, {responseType: 'text'})
       );
 
       this.content = response || '文件内容为空';

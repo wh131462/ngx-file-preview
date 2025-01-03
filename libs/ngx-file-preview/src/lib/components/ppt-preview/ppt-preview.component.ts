@@ -20,18 +20,18 @@ import {init} from 'pptx-preview';
       <div class="toolbar">
         <div class="left-controls">
           <button class="tool-btn" (click)="zoomOut()">
-            <preview-icon name="zoom-out"></preview-icon>
+            <preview-icon name="zoom-out" [themeMode]="themeMode"></preview-icon>
           </button>
           <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
             {{ (scale * 100).toFixed(0) }}%
           </span>
           <button class="tool-btn" (click)="zoomIn()">
-            <preview-icon name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="zoom-in"></preview-icon>
           </button>
         </div>
         <div class="right-controls">
           <button class="tool-btn" (click)="toggleFullscreen()">
-            <preview-icon name="fullscreen"></preview-icon>
+            <preview-icon [themeMode]="themeMode"  name="fullscreen"></preview-icon>
           </button>
         </div>
       </div>

@@ -41,13 +41,13 @@ import {PreviewFile} from '../../types/preview.types';
           <!-- 左侧控制按钮 -->
           <div class="left-controls">
             <button (click)="togglePlay()">
-              <preview-icon [color]="'#FFFFFF'" [name]="isPlaying ? 'pause' : 'play'"></preview-icon>
+              <preview-icon [name]="isPlaying ? 'pause' : 'play'"></preview-icon>
             </button>
             <button (click)="back15s()">
-              <preview-icon [color]="'#FFFFFF'" name="back15s"></preview-icon>
+              <preview-icon name="back15s"></preview-icon>
             </button>
             <button (click)="forward15s()">
-              <preview-icon [color]="'#FFFFFF'" name="forward15s"></preview-icon>
+              <preview-icon name="forward15s"></preview-icon>
             </button>
             <span class="time">
               {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
@@ -77,7 +77,7 @@ import {PreviewFile} from '../../types/preview.types';
                  (mouseenter)="showBrightnessControl = true"
                  (mouseleave)="showBrightnessControl = false">
               <button (click)="cycleBrightness()">
-                <preview-icon [name]="'lightness'"></preview-icon>
+                <preview-icon [themeMode]="themeMode" [name]="'lightness'"></preview-icon>
               </button>
               <div class="slider-container" *ngIf="showBrightnessControl">
                 <input type="range"
@@ -93,7 +93,7 @@ import {PreviewFile} from '../../types/preview.types';
                  (mouseenter)="showVolumeControl = true"
                  (mouseleave)="showVolumeControl = false">
               <button (click)="cycleVolume()">
-                <preview-icon [name]="getVolumeIcon()"></preview-icon>
+                <preview-icon [themeMode]="themeMode" [name]="getVolumeIcon()"></preview-icon>
               </button>
               <div class="slider-container" *ngIf="showVolumeControl">
                 <input type="range"
@@ -105,12 +105,11 @@ import {PreviewFile} from '../../types/preview.types';
             </div>
 
             <button (click)="togglePip()">
-              <preview-icon name="pip"></preview-icon>
+              <preview-icon [themeMode]="themeMode" name="pip"></preview-icon>
             </button>
             <button (click)="toggleFullscreen()">
-              <preview-icon name="fullscreen"></preview-icon>
+              <preview-icon [themeMode]="themeMode" name="fullscreen"></preview-icon>
             </button>
-
           </div>
         </div>
       </div>
