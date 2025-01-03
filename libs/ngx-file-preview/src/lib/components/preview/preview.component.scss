@@ -100,7 +100,6 @@
 
 // 添加滚动条样式
 .file-list {
-  max-height: 400px;
   overflow-y: auto;
 
   &::-webkit-scrollbar {

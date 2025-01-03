@@ -74,7 +74,7 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
                   *ngIf="canShowPrevious()"
                   [class.visible]="isControlsVisible"
                   (click)="previous()">
-            <preview-icon  [themeMode]="themeMode"  [size]="36" name="previous"></preview-icon>
+            <preview-icon [themeMode]="themeMode" [size]="36" name="previous"></preview-icon>
           </button>
 
           <div class="preview-content">
@@ -82,51 +82,61 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
               <fp-image-preview
                 *ngSwitchCase="'image'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-image-preview>
 
               <fp-video-preview
                 *ngSwitchCase="'video'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-video-preview>
 
               <fp-pdf-preview
                 *ngSwitchCase="'pdf'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-pdf-preview>
 
               <fp-word-preview
                 *ngSwitchCase="'word'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-word-preview>
 
               <fp-excel-preview
                 *ngSwitchCase="'excel'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-excel-preview>
 
               <fp-ppt-preview
                 *ngSwitchCase="'ppt'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-ppt-preview>
 
               <fp-text-preview
                 *ngSwitchCase="'txt'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-text-preview>
 
               <fp-archive-preview
                 *ngSwitchCase="'zip'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-archive-preview>
 
               <fp-audio-preview
                 *ngSwitchCase="'audio'"
                 [file]="currentFile!"
+                [themeMode]="theme$|async"
               ></fp-audio-preview>
 
               <fp-unknown-preview
                 *ngSwitchCase="'unknown'"
                 [file]="currentFile!">
+                [themeMode]="theme$|async"
               </fp-unknown-preview>
             </ng-container>
           </div>
@@ -135,7 +145,7 @@ import {PreviewBaseComponent} from '../base/preview-base.component';
                   *ngIf="canShowNext()"
                   [class.visible]="isControlsVisible"
                   (click)="next()">
-            <preview-icon [themeMode]="themeMode"  [size]="36" name="next"></preview-icon>
+            <preview-icon [themeMode]="themeMode" [size]="36" name="next"></preview-icon>
           </button>
         </div>
       </div>
@@ -175,6 +185,7 @@ export class PreviewModalComponent extends PreviewBaseComponent implements OnIni
 
     this.themeService.setMode(this.themeMode);
     this.theme$ = this.themeService.currentTheme$
+    this.subscription.add(this.theme$.subscribe(theme => this.themeMode = theme))
   }
 
   ngOnDestroy() {

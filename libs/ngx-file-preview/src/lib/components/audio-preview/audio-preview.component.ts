@@ -94,7 +94,6 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
     </div>
   `,
   styleUrls: ['../../styles/_theme.scss','./audio-preview.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioPreviewComponent extends PreviewBaseComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
@@ -265,7 +264,6 @@ export class AudioPreviewComponent extends PreviewBaseComponent implements OnIni
 
   getVolumeIcon(): string {
     if (this.volume === 0) return 'mute';
-    if (this.volume < 0.5) return 'volume-low';
     return 'volume';
   }
 

@@ -6,6 +6,7 @@
     "prestart": "npm run build",
     "start": "ng serve --port 3333 -o --host 0.0.0.0",
     "prebuild": "node scripts/copy.js ./README.md libs/ngx-file-preview/",
+    "postbuild": "node scripts/rm.js libs/ngx-file-preview//README.md",
     "build": "ng build ngx-file-preview",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

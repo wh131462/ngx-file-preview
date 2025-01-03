@@ -72,6 +72,14 @@ export class AppComponent {
       size: 1024, // 可以替换为实际文件大小
       url: 'assets/dsadasdasdasds.docx'
     },
+    {
+      name: '啵啵鱼.pdf',
+      type: 'pdf',
+      size: 1024, // 可以替换为实际文件大小
+      url:  'assets/啵啵鱼-87.78.pdf'
+    },
+
+
   ];
   protected readonly PreviewTypeEnum: any = PreviewTypeEnum;
 

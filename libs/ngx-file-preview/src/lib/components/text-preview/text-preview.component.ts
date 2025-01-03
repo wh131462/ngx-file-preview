@@ -36,9 +36,10 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
       <div class="content-container"
            [class.wrap]="isWrapped"
            (wheel)="handleWheel($event)">
-        <div class="content-wrapper" [class.wrap]="isWrapped">
-          <pre [style.transform]="'scale(' + scale + ')'"
-               [style.transform-origin]="'left top'"
+        <div class="content-wrapper" [style]="'--scale:'+scale" [class.wrap]="isWrapped">
+          <pre
+            [style.transform-origin]="'left top'"
+            [class.wrap]="isWrapped"
           >{{ content }}</pre>
         </div>
         <div class="loading-overlay" *ngIf="isLoading">

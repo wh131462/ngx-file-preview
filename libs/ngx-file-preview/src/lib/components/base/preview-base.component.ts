@@ -5,7 +5,7 @@ import {AutoThemeConfig, ThemeMode} from "../../types/theme.types";
 @Directive()
 export abstract class PreviewBaseComponent {
   @Input() file!: PreviewFile;
-  @Input() themeMode!: ThemeMode;
+  @Input({transform: (value: ThemeMode | null): ThemeMode => value!}) themeMode!: ThemeMode;
   @Input() autoThemeConfig?: AutoThemeConfig;
 
   protected isLoading = true;

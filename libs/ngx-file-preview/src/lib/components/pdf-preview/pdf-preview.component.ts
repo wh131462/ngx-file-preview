@@ -16,7 +16,7 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
           <div class="control" (click)="zoomOut()">
             <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
           </div>
-          <span>{{ (zoom * 100).toFixed(0) }}%</span>
+          <span (click)="resetZoom()">{{ (zoom * 100).toFixed(0) }}%</span>
           <div class="control" (click)="zoomIn()">
             <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
           </div>
@@ -29,7 +29,7 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
           <div class="control" (click)="rotate(90)">
             <preview-icon [themeMode]="themeMode"  name="rotate90"></preview-icon>
           </div>
-          <div class="control" (click)="resetZoom()">
+          <div class="control" (click)="reset()">
             <preview-icon [themeMode]="themeMode"  name="reset"></preview-icon>
           </div>
         </div>
@@ -41,11 +41,11 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
           [rotation]="rotation"
           [zoom]="zoom"
           [page]="currentPage"
-          [show-all]="false"
+          [show-all]="true"
           (after-load-complete)="onPdfLoaded($event)"
           (page-rendered)="pageRendered()"
           [render-text]="true"
-          [original-size]="false"
+          [original-size]="true"
           style="width: 100%; height: 100%;"
         ></pdf-viewer>
       </div>
@@ -89,33 +89,12 @@ export class PdfPreviewComponent extends PreviewBaseComponent {
     this.zoom = 1;
   }
 
-  // 页面导航
-  previousPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.isLoading = true;
-    }
+  reset(){
+    this.resetZoom()
+    this.rotation = 0;
   }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.isLoading = true;
-    }
-  }
-
   // 旋转控制
   rotate(degrees: number) {
     this.rotation = (this.rotation + degrees) % 360;
-  }
-
-  // 全屏控制
-  toggleFullscreen() {
-    const elem = document.documentElement;
-    if (!document.fullscreenElement) {
-      elem.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
   }
 }

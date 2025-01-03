@@ -17,28 +17,36 @@ import {renderAsync} from 'docx-preview';
   standalone: true,
   imports: [CommonModule, PreviewIconComponent],
   template: `
-    <div class="word-container" #container>
+    <div class="word-container">
       <div class="toolbar">
         <div class="left-controls">
-          <button class="tool-btn" (click)="zoomOut()">
-            <preview-icon [themeMode]="themeMode"  name="zoom-out"></preview-icon>
+          <button class="tool-btn" (click)="zoomOut()" [disabled]="scale <= MIN_SCALE">
+            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
           </button>
           <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
             {{ (scale * 100).toFixed(0) }}%
           </span>
-          <button class="tool-btn" (click)="zoomIn()">
-            <preview-icon [themeMode]="themeMode"  name="zoom-in"></preview-icon>
+          <button class="tool-btn" (click)="zoomIn()" [disabled]="scale >= MAX_SCALE">
+            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
           </button>
         </div>
         <div class="right-controls">
           <button class="tool-btn" (click)="toggleFullscreen()">
-            <preview-icon [themeMode]="themeMode"  name="fullscreen"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="fullscreen"></preview-icon>
           </button>
         </div>
       </div>
 
-      <div class="preview-container" (wheel)="handleWheel($event)">
-        <div #content class="preview-content" [style.transform]="'scale(' + scale + ')'">
+      <div class="preview-container"
+           #previewContainer
+           (wheel)="handleWheel($event)"
+           (mousedown)="startDrag($event)"
+           [class.dragging]="isDragging">
+        <div class="content-wrapper">
+          <div #content
+               class="preview-content"
+               [style.transform]="'scale(' + scale + ')'">
+          </div>
         </div>
       </div>
 
@@ -47,76 +55,78 @@ import {renderAsync} from 'docx-preview';
       </div>
     </div>
   `,
-  styleUrls: ["word-preview.component.scss", "../../styles/_theme.scss"],
+  styleUrls: ["word-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WordPreviewComponent extends PreviewBaseComponent implements OnChanges {
-  @ViewChild('container') container!: ElementRef<HTMLDivElement>;
   @ViewChild('content') content!: ElementRef<HTMLDivElement>;
+  @ViewChild('previewContainer') previewContainer!: ElementRef<HTMLDivElement>;
 
-  scale = 1;
-  private readonly SCALE_STEP = 0.1;
-  private readonly MAX_SCALE = 3;
-  private readonly MIN_SCALE = 0.1;
-  private readonly DEFAULT_SCALE = 1;
-  private keydownListener?: (e: KeyboardEvent) => void;
+  // 缩放相关常量
+  protected readonly MIN_SCALE = 0.25;
+  protected readonly MAX_SCALE = 4;
+  protected readonly SCALE_STEP = 0.1;
+  protected readonly DEFAULT_SCALE = 1;
+
+  // 状态
+  protected scale = 1;
+  protected isDragging = false;
+
+  // 拖拽相关
+  private startX = 0;
+  private startY = 0;
+  private scrollLeft = 0;
+  private scrollTop = 0;
+  private mouseMoveListener?: (e: MouseEvent) => void;
+  private mouseUpListener?: (e: MouseEvent) => void;
 
   constructor(private cdr: ChangeDetectorRef) {
     super();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['file'] && this.file) {
-      this.handleFile();
+    if (changes['file']) {
+      this.loadDocument();
     }
   }
 
   ngOnInit() {
-    this.setupKeyboardListeners();
+    this.setupDragListeners();
   }
 
   ngOnDestroy() {
-    this.removeKeyboardListeners();
+    this.removeDragListeners();
   }
 
-  private setupKeyboardListeners() {
-    this.keydownListener = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
-        e.preventDefault();
-        this.resetZoom();
-      }
-    };
+  private setupDragListeners() {
+    this.mouseMoveListener = this.onDrag.bind(this);
+    this.mouseUpListener = this.stopDrag.bind(this);
 
-    document.addEventListener('keydown', this.keydownListener);
+    document.addEventListener('mousemove', this.mouseMoveListener);
+    document.addEventListener('mouseup', this.mouseUpListener);
   }
 
-  private removeKeyboardListeners() {
-    if (this.keydownListener) {
-      document.removeEventListener('keydown', this.keydownListener);
+  private removeDragListeners() {
+    if (this.mouseMoveListener) {
+      document.removeEventListener('mousemove', this.mouseMoveListener);
+    }
+    if (this.mouseUpListener) {
+      document.removeEventListener('mouseup', this.mouseUpListener);
     }
   }
 
-  handleWheel(event: WheelEvent) {
-    if (event.ctrlKey || event.metaKey) {
-      event.preventDefault();
-      const delta = event.deltaY || event.detail || 0;
+  private async loadDocument() {
+    if (!this.file?.url) return;
 
-      if (delta < 0) {
-        this.zoomIn();
-      } else {
-        this.zoomOut();
-      }
-    }
-  }
-
-  async handleFile() {
     this.isLoading = true;
+    this.cdr.markForCheck();
+
     try {
       const response = await fetch(this.file.url);
       const arrayBuffer = await response.arrayBuffer();
 
-      await renderAsync(arrayBuffer, this.content.nativeElement, this.content.nativeElement, {
-        className: 'docx-preview',
+      await renderAsync(arrayBuffer, this.content.nativeElement, undefined, {
+        className: 'docx-content',
         inWrapper: false,
         ignoreWidth: false,
         ignoreHeight: false,
@@ -124,13 +134,61 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
         breakPages: true,
         useBase64URL: true,
       });
+
+      this.onLoadComplete();
     } catch (error) {
-      console.error('Word文件预览失败:', error);
       this.handleError(error);
-    } finally {
-      this.isLoading = false;
-      this.cdr.markForCheck();
     }
+
+    this.cdr.markForCheck();
+  }
+
+  handleWheel(event: WheelEvent) {
+    if (event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      const delta = event.deltaY < 0 ? 1 : -1;
+      if (delta > 0) {
+        this.zoomIn();
+      } else {
+        this.zoomOut();
+      }
+    }
+  }
+
+  startDrag(event: MouseEvent) {
+    if (event.button !== 0) return;
+
+    this.isDragging = true;
+    const container = this.previewContainer.nativeElement;
+    this.startX = event.pageX - container.offsetLeft;
+    this.startY = event.pageY - container.offsetTop;
+    this.scrollLeft = container.scrollLeft;
+    this.scrollTop = container.scrollTop;
+
+    container.style.cursor = 'grabbing';
+    event.preventDefault();
+  }
+
+  onDrag(event: MouseEvent) {
+    if (!this.isDragging) return;
+
+    const container = this.previewContainer.nativeElement;
+    const x = event.pageX - container.offsetLeft;
+    const y = event.pageY - container.offsetTop;
+    const walkX = (x - this.startX);
+    const walkY = (y - this.startY);
+
+    requestAnimationFrame(() => {
+      container.scrollLeft = this.scrollLeft - walkX;
+      container.scrollTop = this.scrollTop - walkY;
+    });
+  }
+
+  stopDrag() {
+    if (!this.isDragging) return;
+
+    this.isDragging = false;
+    this.previewContainer.nativeElement.style.cursor = '';
   }
 
   zoomIn() {
@@ -153,19 +211,18 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
   }
 
   private applyZoom() {
-    if (this.content) {
-      const container = this.content.nativeElement.parentElement;
-      if (container) {
-        const scrollLeftPercent = container.scrollLeft / (container.scrollWidth - container.clientWidth);
-        const scrollTopPercent = container.scrollTop / (container.scrollHeight - container.clientHeight);
+    if (this.content?.nativeElement) {
+      const container = this.previewContainer.nativeElement;
+      const rect = container.getBoundingClientRect();
+      const centerX = container.scrollLeft + rect.width / 2;
+      const centerY = container.scrollTop + rect.height / 2;
 
-        this.content.nativeElement.style.transform = `scale(${this.scale})`;
+      this.content.nativeElement.style.transform = `scale(${this.scale})`;
 
-        setTimeout(() => {
-          container.scrollLeft = scrollLeftPercent * (container.scrollWidth - container.clientWidth);
-          container.scrollTop = scrollTopPercent * (container.scrollHeight - container.clientHeight);
-        });
-      }
+      requestAnimationFrame(() => {
+        container.scrollLeft = centerX * this.scale - rect.width / 2;
+        container.scrollTop = centerY * this.scale - rect.height / 2;
+      });
     }
     this.cdr.markForCheck();
   }

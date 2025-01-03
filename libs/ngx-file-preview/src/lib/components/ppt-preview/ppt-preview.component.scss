@@ -12,6 +12,9 @@
   flex-direction: column;
   border-radius: 8px;
   overflow: hidden;
+  & .pptx-preview-slide-wrapper{
+    overflow: scroll !important;
+  }
 }
 
 .toolbar {
@@ -34,20 +37,13 @@
 
 .preview-container {
   flex: 1;
-  overflow: auto;
   position: relative;
-  cursor: default;
-  background: var(--bg-container);
+  overflow: auto;
+  cursor: grab;
 
   &.dragging {
-    cursor: grab;
+    cursor: grabbing;
     user-select: none;
-
-    * {
-      cursor: grab !important;
-      user-select: none;
-      pointer-events: none;
-    }
   }
 
   &::-webkit-scrollbar {
@@ -71,37 +67,18 @@
 }
 
 .content-wrapper {
-  min-width: 100%;
   min-height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  padding: 24px;
 }
 
 .preview-content {
-  border-radius: 2px;
-  box-shadow: 0 4px 24px var(--preview-mask);
-  transform-origin: center top;
-  width: fit-content;
-  height: fit-content;
-
-  ::ng-deep {
-    .pptx-preview-wrapper {
-      width: 100% !important;
-      height: 100% !important;
-      scrollbar-width: none;
-    }
-
-    img {
-      user-drag: none;
-      -webkit-user-drag: none;
-      user-select: none;
-      -moz-user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-      pointer-events: none;
-    }
-  }
+  transform-origin: top center;
+  will-change: transform;
+  background: var(--bg-container);
+  box-shadow: 0 2px 8px var(--preview-mask);
+  min-width: min-content;
 }
 
 .tool-btn {
