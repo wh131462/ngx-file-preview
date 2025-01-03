@@ -64,10 +64,10 @@
             ],
             "styles": [
               "libs/demo/src/styles.scss",
-              "dist/ngx-file-preview/src/assets/icon/font/iconfont.css"
+              "dist/ngx-file-preview/src/assets/icon/font/nfp.css"
             ],
             "scripts": [
-              "dist/ngx-file-preview/src/assets/icon/color/iconfont.js"
+              "dist/ngx-file-preview/src/assets/icon/color/nfp.js"
             ]
           },
           "configurations": {
