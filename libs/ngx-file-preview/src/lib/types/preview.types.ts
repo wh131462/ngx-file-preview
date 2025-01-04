@@ -1,5 +1,7 @@
 import {AutoThemeConfig, ThemeMode} from "./theme.types";
-export type  PreviewFileInput= string | File | PreviewFile | (string | File | PreviewFile)[] | undefined
+
+export type  PreviewFileInput = string | File | PreviewFile | (string | File | PreviewFile)[] | undefined
+
 export interface PreviewFile {
   url: string;
   name: string;

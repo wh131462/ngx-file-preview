@@ -2,11 +2,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "paths": {
-      "ngx-file-preview": [
-        "./libs/ngx-file-preview/src"
-      ]
-    },
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,

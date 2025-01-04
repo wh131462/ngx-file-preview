@@ -71,7 +71,7 @@
   min-width: min-content;
   width: calc(100% * var(--scale, 1));
   height: calc(100% * var(--scale, 1));
-  font-size: calc(16px* var(--scale, 1));
+  font-size: calc(16px * var(--scale, 1));
 
   &.wrap {
     min-width: 100%;

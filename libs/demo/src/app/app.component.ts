@@ -1,19 +1,11 @@
 import {Component} from '@angular/core';
-import {
-  PreviewDirective,
-  PreviewIconComponent,
-  PreviewFile,
-  PreviewComponent,
-  PreviewTypeEnum,
-  PreviewUtils
-} from 'ngx-file-preview';
-import {PreviewModalComponent} from 'ngx-file-preview';
+import {PreviewComponent, PreviewDirective, PreviewIconComponent} from '@eternalheart/ngx-file-preview';
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PreviewDirective, PreviewComponent, PreviewIconComponent, PreviewModalComponent, NgForOf, NgIf],
+  imports: [PreviewDirective, PreviewComponent, PreviewIconComponent, NgForOf, NgIf],
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
@@ -23,6 +15,7 @@ export class AppComponent {
 
   sourceCodeVisible = false;
   sourceCode = '';
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {

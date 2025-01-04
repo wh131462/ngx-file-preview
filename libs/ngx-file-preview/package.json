@@ -37,7 +37,7 @@
   "bugs": {
     "url": "https://github.com/wh131462/ngx-file-preview/issues"
   },
-  "homepage": "https://github.com/wh131462/ngx-file-preview#readme",
+  "homepage": "https://wh131462.github.io/ngx-file-preview/",
   "license": "MIT",
   "peerDependencies": {
     "docx-preview": "^0.3.3",

@@ -28,13 +28,13 @@ interface TableData {
       <div class="toolbar">
         <div class="left-controls">
           <button class="tool-btn" (click)="zoomOut()">
-            <preview-icon [themeMode]="themeMode"  name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
           </button>
           <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
             {{ (scale * 100).toFixed(0) }}%
           </span>
           <button class="tool-btn" (click)="zoomIn()">
-            <preview-icon [themeMode]="themeMode"  name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
           </button>
         </div>
         <div class="sheet-controls" *ngIf="sheets.length > 0">
@@ -47,7 +47,7 @@ interface TableData {
         </div>
         <div class="right-controls">
           <button class="tool-btn" (click)="toggleFullscreen()">
-            <preview-icon [themeMode]="themeMode"  name="fullscreen"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="fullscreen"></preview-icon>
           </button>
         </div>
       </div>

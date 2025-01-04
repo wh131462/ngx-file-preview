@@ -24,13 +24,13 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
 
         <div class="right-controls">
           <div class="control" (click)="rotate(-90)">
-            <preview-icon [themeMode]="themeMode"  name="rotate-90"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="rotate-90"></preview-icon>
           </div>
           <div class="control" (click)="rotate(90)">
-            <preview-icon [themeMode]="themeMode"  name="rotate90"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="rotate90"></preview-icon>
           </div>
           <div class="control" (click)="reset()">
-            <preview-icon [themeMode]="themeMode"  name="reset"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="reset"></preview-icon>
           </div>
         </div>
       </div>
@@ -89,10 +89,11 @@ export class PdfPreviewComponent extends PreviewBaseComponent {
     this.zoom = 1;
   }
 
-  reset(){
+  reset() {
     this.resetZoom()
     this.rotation = 0;
   }
+
   // 旋转控制
   rotate(degrees: number) {
     this.rotation = (this.rotation + degrees) % 360;

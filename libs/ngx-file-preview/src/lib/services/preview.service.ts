@@ -67,7 +67,7 @@ export class PreviewService {
   }
 
   close() {
-    if(document.fullscreenElement){
+    if (document.fullscreenElement) {
       document?.exitFullscreen();
     }
     this.updatePreviewState(false, [], 0);

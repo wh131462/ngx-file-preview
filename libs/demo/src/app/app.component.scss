@@ -11,6 +11,26 @@
   flex-direction: column;
   gap: 16px;
 
+  .title{
+    font-family: Arial, sans-serif;
+    font-size: 64px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff007f, #ffcc00, #00ffcc, #0066ff, #8e2eff,#ff007f);
+    background-size: 200% 100%;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: flow 8s linear infinite;
+    @keyframes flow {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  }
+
   input[type="file"] {
     display: none;
   }
@@ -167,6 +187,7 @@
     }
   }
 }
+
 /* 背景遮罩 */
 
 .source-code-modal {

@@ -1,4 +1,7 @@
 <div class="file-upload-container">
+  <div class="title">
+    NGX-FILE-PREVIEW
+  </div>
   <input #file type="file" (change)="onFileSelected($event)" multiple/>
   <div class="upload" [class.upload-dragging]="isDragging" (click)="file.click()"
        (dragover)="setDragging(true, $event)"
@@ -15,16 +18,22 @@
       </div>
     </ng-container>
   </div>
-  <div class="title-container"><span class="title">指令预览模式</span><span class="source-code" (click)="showSourceCode('directive')">查看源码</span></div>
+  <div class="title-container"><span class="title">指令预览模式</span><span class="source-code"
+                                                                            (click)="showSourceCode('directive')">查看源码</span>
+  </div>
   <div class="directive" [ngxFilePreview]="files" themeMode="light">点击预览文件</div>
-  <div class="title-container"><span class="title">组件预览模式</span><span class="source-code" (click)="showSourceCode('component')">查看源码</span></div>
+  <div class="title-container"><span class="title">组件预览模式</span><span class="source-code"
+                                                                            (click)="showSourceCode('component')">查看源码</span>
+  </div>
   <!-- 使用默认模板 -->
   <ngx-file-preview
     [files]="files"
     themeMode="auto"
     [autoConfig]="{dark: { start: 18, end: 6 }}"
   ></ngx-file-preview>
-  <div class="title-container"><span class="title">自定义模板列表</span><span class="source-code" (click)="showSourceCode('custom')">查看源码</span></div>
+  <div class="title-container"><span class="title">自定义模板列表</span><span class="source-code"
+                                                                              (click)="showSourceCode('custom')">查看源码</span>
+  </div>
   <!-- 使用自定义模板 -->
   <ngx-file-preview [files]="files" themeMode="light">
     <ng-template

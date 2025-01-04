@@ -57,7 +57,7 @@ import {renderAsync} from 'docx-preview';
       </div>
     </div>
   `,
-  styleUrls: ["../../styles/_theme.scss","word-preview.component.scss"],
+  styleUrls: ["../../styles/_theme.scss", "word-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WordPreviewComponent extends PreviewBaseComponent implements OnChanges {
@@ -79,6 +79,7 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
   private startY = 0;
   private scrollLeft = 0;
   private scrollTop = 0;
+
   constructor(private cdr: ChangeDetectorRef) {
     super();
   }
@@ -180,6 +181,7 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
     this.scale = this.DEFAULT_SCALE;
     this.applyZoom();
   }
+
   private applyZoom() {
     if (this.content?.nativeElement && this.previewContainer?.nativeElement) {
       const container = this.previewContainer.nativeElement;
@@ -201,6 +203,7 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
     }
     this.cdr.markForCheck();
   }
+
   toggleFullscreen() {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();

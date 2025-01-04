@@ -1,0 +1,27 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js (如果你的部署脚本依赖于 Node.js)
+        uses: actions/setup-node@v2
+        with:
+          node-version: '23'
+
+      - name: Install dependencies (如果你的部署脚本需要依赖)
+        run: npm install
+
+      - name: Run deploy script
+        run: npm run deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub 自动生成的 token，用于授权推送

@@ -21,7 +21,7 @@ export class ThemeService {
   private systemThemeQuery: MediaQueryList | null = null;
   private systemThemeListener: ((e: MediaQueryListEvent) => void) | null = null;
 
-  constructor(renderFactory: RendererFactory2, private elementRef:ElementRef) {
+  constructor(renderFactory: RendererFactory2, private elementRef: ElementRef) {
     this.renderer = renderFactory.createRenderer(null, null);
     // 初始化系统主题监听
     if (window.matchMedia) {
@@ -94,7 +94,7 @@ export class ThemeService {
     // 应用新主题
     if (theme === 'dark') {
       this.renderer.setAttribute(this.elementRef.nativeElement, 'data-theme', 'dark');
-    }else{
+    } else {
       this.renderer.setAttribute(this.elementRef.nativeElement, 'data-theme', 'light');
     }
     // 保存到本地存储

@@ -82,8 +82,8 @@
 // 添加过渡动画
 * {
   transition: background-color var(--theme-transition-duration) var(--theme-transition-timing),
-            border-color var(--theme-transition-duration) var(--theme-transition-timing),
-            color var(--theme-transition-duration) var(--theme-transition-timing);
+  border-color var(--theme-transition-duration) var(--theme-transition-timing),
+  color var(--theme-transition-duration) var(--theme-transition-timing);
 }
 
 // 某些元素不需要过渡动画

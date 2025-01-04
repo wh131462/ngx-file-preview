@@ -74,7 +74,7 @@ import {
   PreviewDirective, 
   PreviewComponent, 
   PreviewModalComponent 
-} from 'ngx-file-preview';
+} from '@eternalheart/ngx-file-preview';
 
 @Component({
   // ... 其他配置

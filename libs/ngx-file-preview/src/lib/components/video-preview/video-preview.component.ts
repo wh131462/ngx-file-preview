@@ -1,18 +1,17 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
   OnInit,
-  ViewChild,
-  AfterViewInit, Input
+  ViewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import Hls from 'hls.js';
-import {PreviewFile} from '../../types/preview.types';
 
 @Component({
   selector: 'fp-video-preview',
@@ -115,7 +114,7 @@ import {PreviewFile} from '../../types/preview.types';
       </div>
     </div>
   `,
-  styleUrls: ["../../styles/_theme.scss","video-preview.component.scss"],
+  styleUrls: ["../../styles/_theme.scss", "video-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoPreviewComponent extends PreviewBaseComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -213,6 +212,7 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
     this.videoPlayer.nativeElement.volume = this.volume;
     this.cdr.markForCheck();
   }
+
   adjustBrightness(event: Event) {
     const value = +(event.target as HTMLInputElement).value;
     this.brightness = value;
@@ -267,6 +267,7 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
       video.src = url;
     }
   }
+
   toggleFullscreen() {
     const video = this.videoContainer.nativeElement;
     if (!document.fullscreenElement) {
@@ -373,7 +374,7 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
 
   // 亮度控制
   cycleBrightness() {
-    const levels = [0, 100,200];
+    const levels = [0, 100, 200];
     const currentIndex = levels.indexOf(this.brightness);
     const nextIndex = (currentIndex + 1) % levels.length;
     this.brightness = levels[nextIndex];

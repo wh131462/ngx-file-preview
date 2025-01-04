@@ -1,26 +1,23 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
+  ElementRef,
   EventEmitter,
   Input,
-  Output,
-  ContentChild,
-  TemplateRef,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-  AfterViewInit,
   OnInit,
-  ViewEncapsulation
+  Output,
+  QueryList,
+  TemplateRef,
+  ViewChildren
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PreviewFile, PreviewTypeEnum, PreviewType, PreviewFileInput} from '../../types/preview.types';
+import {PreviewFile, PreviewFileInput, PreviewTypeEnum} from '../../types/preview.types';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewDirective} from "../../directives/preview.directive";
 import {PreviewUtils} from "../../utils/preview.utils";
 import {ThemeService} from '../../services/theme.service';
-import {ThemeMode, AutoThemeConfig} from '../../types/theme.types';
-import {timestamp} from "rxjs";
+import {AutoThemeConfig, ThemeMode} from '../../types/theme.types';
 
 @Component({
   selector: 'ngx-file-preview',
@@ -128,7 +125,8 @@ export class PreviewComponent implements OnInit {
       this.themeService.setAutoConfig(this.autoConfig);
     }
   }
-  triggerSelect(index: number){
+
+  triggerSelect(index: number) {
     this.index = index;
     this.fileSelect.emit(this.files[index]);
   }

@@ -1,5 +1,5 @@
-import { Directive, Input } from '@angular/core';
-import { PreviewFile } from '../../types/preview.types';
+import {Directive, Input} from '@angular/core';
+import {PreviewFile} from '../../types/preview.types';
 import {AutoThemeConfig, ThemeMode} from "../../types/theme.types";
 
 @Directive()

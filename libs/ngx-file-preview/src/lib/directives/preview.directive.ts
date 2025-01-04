@@ -1,8 +1,8 @@
-import {Directive, Input, HostListener} from '@angular/core';
+import {Directive, HostListener, Input} from '@angular/core';
 import {PreviewService} from '../services/preview.service';
 import {PreviewFileInput} from '../types/preview.types';
 import {PreviewUtils} from '../utils/preview.utils';
-import {ThemeMode, AutoThemeConfig} from '../types/theme.types';
+import {AutoThemeConfig, ThemeMode} from '../types/theme.types';
 
 @Directive({
   selector: '[ngxFilePreview]',

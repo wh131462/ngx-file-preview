@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { PreviewBaseComponent } from '../base/preview-base.component';
-import { PreviewIconComponent } from '../preview-icon/preview-icon.component';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {PreviewBaseComponent} from '../base/preview-base.component';
+import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'fp-audio-preview',
@@ -93,7 +93,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
       </div>
     </div>
   `,
-  styleUrls: ['../../styles/_theme.scss','./audio-preview.component.scss'],
+  styleUrls: ['../../styles/_theme.scss', './audio-preview.component.scss'],
 })
 export class AudioPreviewComponent extends PreviewBaseComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;

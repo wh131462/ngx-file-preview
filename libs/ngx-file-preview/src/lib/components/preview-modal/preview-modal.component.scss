@@ -13,7 +13,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  -webkit-app-region: no-drag;//electron 防止被拖动部分影响
+  -webkit-app-region: no-drag; //electron 防止被拖动部分影响
 }
 
 .preview-modal-content {
@@ -67,11 +67,13 @@
       color: var(--text-secondary);
     }
   }
-  .header-right{
+
+  .header-right {
     display: flex;
     align-items: center;
     gap: 8px;
-    .theme-toggle,preview-icon {
+
+    .theme-toggle, preview-icon {
       width: 20px;
       height: 20px;
       color: var(--text-primary);

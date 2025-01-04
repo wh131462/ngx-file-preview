@@ -47,5 +47,5 @@ export class PreviewIconComponent {
   @Input() svg: string = "";
   @Input({transform: (v: any) => typeof v === 'number' ? `${v}px` : v}) size: number | string = '16px';
   @Input() color?: string;
-  @Input() themeMode?: ThemeMode|null;
+  @Input() themeMode?: ThemeMode | null;
 }

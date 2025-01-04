@@ -1,6 +1,6 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Subject, fromEvent, takeUntil, filter } from 'rxjs';
-import { PreviewService, PreviewState, INITIAL_PREVIEW_STATE } from './preview.service';
+import {Injectable, OnDestroy} from '@angular/core';
+import {filter, fromEvent, Subject, takeUntil} from 'rxjs';
+import {INITIAL_PREVIEW_STATE, PreviewService, PreviewState} from './preview.service';
 
 @Injectable({
   providedIn: 'root'
@@ -67,4 +67,4 @@ export class KeyboardService implements OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-} 
+}
