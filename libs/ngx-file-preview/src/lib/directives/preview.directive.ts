@@ -1,6 +1,6 @@
-import {Directive, HostListener, Input} from '@angular/core';
+import {Directive, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {PreviewService} from '../services/preview.service';
-import {PreviewFileInput} from '../types/preview.types';
+import {PreviewEvent, PreviewFileInput} from '../types/preview.types';
 import {PreviewUtils} from '../utils/preview.utils';
 import {AutoThemeConfig, ThemeMode} from '../types/theme.types';
 
@@ -13,7 +13,7 @@ export class PreviewDirective {
   @Input() previewIndex = 0;
   @Input() themeMode: ThemeMode = 'auto';
   @Input() autoConfig?: AutoThemeConfig;
-
+  @Output() previewEvent = new EventEmitter<PreviewEvent>();
   constructor(private previewService: PreviewService) {
   }
 
@@ -28,6 +28,8 @@ export class PreviewDirective {
         themeMode: this.themeMode,
         autoThemeConfig: this.autoConfig
       });
+    }else{
+      this.previewEvent.emit({type:'error', message: '没有文件可预览!'})
     }
   }
 

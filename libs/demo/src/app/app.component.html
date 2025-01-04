@@ -21,7 +21,7 @@
   <div class="title-container"><span class="title">指令预览模式</span><span class="source-code"
                                                                             (click)="showSourceCode('directive')">查看源码</span>
   </div>
-  <div class="directive" [ngxFilePreview]="files" themeMode="light">点击预览文件</div>
+  <div class="directive" [ngxFilePreview]="files" themeMode="light" (previewEvent)="handleError($event)">点击预览文件</div>
   <div class="title-container"><span class="title">组件预览模式</span><span class="source-code"
                                                                             (click)="showSourceCode('component')">查看源码</span>
   </div>

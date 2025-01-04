@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {PreviewComponent, PreviewDirective, PreviewIconComponent} from '@eternalheart/ngx-file-preview';
+import {PreviewComponent, PreviewDirective, PreviewIconComponent,PreviewEvent} from '@eternalheart/ngx-file-preview';
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
@@ -21,7 +21,6 @@ export class AppComponent {
     if (input.files) {
       this.files = [...this.files, ...Array.from(input.files)]
     }
-
   }
 
   formatFileSize(size: number): string {
@@ -100,5 +99,11 @@ export class AppComponent {
   // 关闭源码弹窗
   closeSourceCode() {
     this.sourceCodeVisible = false;
+  }
+
+  handleError(event: PreviewEvent) {
+    if (event.type === 'error') {
+      alert(event.message)
+    }
   }
 }

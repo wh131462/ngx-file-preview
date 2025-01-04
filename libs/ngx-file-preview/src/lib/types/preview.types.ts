@@ -32,3 +32,10 @@ export interface PreviewOptions {
   themeMode?: ThemeMode;
   autoThemeConfig?: AutoThemeConfig;
 }
+
+// 预览产生的事件
+export interface PreviewEvent {
+  type: 'error'|'select';
+  message?: string; // 如果error有消息
+  event?: any;//其他对应的事件返回消息体
+}

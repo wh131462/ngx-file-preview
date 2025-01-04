@@ -27,7 +27,6 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.0",
     "@angular/router": "^17.3.0",
-    "@eternalheart/ngx-file-preview": "file:./dist/ngx-file-preview",
     "docx-preview": "^0.3.3",
     "hls.js": "^1.4.12",
     "ng2-pdf-viewer": "^10.0.0",
