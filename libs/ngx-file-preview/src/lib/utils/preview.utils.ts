@@ -1,4 +1,4 @@
-import { PreviewFile, PreviewType } from '../types/preview.types';
+import {PreviewFile, PreviewFileInput, PreviewType} from '../types/preview.types';
 
 export class PreviewUtils {
   private static readonly VIDEO_EXTENSIONS = [
@@ -62,13 +62,6 @@ export class PreviewUtils {
     return typeMap[extension] || 'unknown';
   }
 
-  static normalizeFiles(input: string | PreviewFile | (string | PreviewFile)[]): PreviewFile[] {
-    if (Array.isArray(input)) {
-      return input.map(item => this.normalizeFile(item));
-    }
-    return [this.normalizeFile(input)];
-  }
-
   static formatFileSize(bytes?: number): string {
     if (bytes === undefined || bytes === null) return '未知大小';
     if (bytes === 0) return '0 B';
@@ -80,23 +73,11 @@ export class PreviewUtils {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + units[i];
   }
 
-  static normalizeFile(input: string | PreviewFile): PreviewFile {
-    if (typeof input !== 'string') {
-      return input;
-    }
-
-    const url = input;
-    const name = this.getFileName(url);
-    const type = this.detectFileType(url);
-
-    return { url, name, type };
-  }
-
   static getPreviewType(filename: string): PreviewType {
     const ext = filename.split('.').pop()?.toLowerCase() || '';
-    
-    if (this.VIDEO_EXTENSIONS.includes(ext) || filename.includes('video/') || 
-        filename.includes('application/x-mpegURL') || filename.includes('application/vnd.apple.mpegurl')) {
+
+    if (this.VIDEO_EXTENSIONS.includes(ext) || filename.includes('video/') ||
+      filename.includes('application/x-mpegURL') || filename.includes('application/vnd.apple.mpegurl')) {
       return 'video';
     }
 
@@ -106,11 +87,11 @@ export class PreviewUtils {
   static getFileType(file: File): PreviewType {
     // 首先检查 MIME 类型
     const mimeType = file.type.toLowerCase();
-    
+
     if (mimeType.startsWith('image/')) return 'image';
     if (mimeType.startsWith('video/')) return 'video';
     if (mimeType.startsWith('audio/')) return 'audio';
-    
+
     // 检查文件扩展名
     const extension = file.name.split('.').pop()?.toLowerCase();
     return this.getFileTypeFromExtension(extension);
@@ -165,4 +146,61 @@ export class PreviewUtils {
         return 'unknown';
     }
   }
+
+  /**
+   * 转换为 PreviewFile 类型
+   */
+  static normalizeFiles(input: PreviewFileInput): PreviewFile[] {
+    // 转换为数组
+    const inputArray = Array.isArray(input) ? input : [input];
+    return inputArray.map(item => PreviewUtils.normalizeFile(item));
+  }
+
+  static normalizeFile(input: PreviewFileInput): PreviewFile {
+    // 如果已经是 PreviewFile 类型，直接返回
+    if (PreviewUtils.isPreviewFile(input)) {
+      return input;
+    }
+
+    // 如果是 File 对象
+    if (input instanceof File) {
+      return {
+        url: URL.createObjectURL(input),
+        name: input.name,
+        type: PreviewUtils.getFileType(input),
+        size: input.size,
+        lastModified: input.lastModified
+      };
+    }
+
+    // 如果是字符串 URL
+    if (typeof input === 'string') {
+      return {
+        url: input,
+        name: PreviewUtils.getFileNameFromUrl(input),
+        type: PreviewUtils.getFileTypeFromUrl(input)
+      };
+    }
+
+    throw new Error('Invalid file input');
+  }
+
+  static isPreviewFile(input: any): input is PreviewFile {
+    return typeof input === 'object' &&
+      'url' in input &&
+      'name' in input &&
+      'type' in input;
+  }
+
+  static getFileNameFromUrl(url: string): string {
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname;
+      const fileName = pathname.split('/').pop();
+      return fileName || 'unknown';
+    } catch {
+      return 'unknown';
+    }
+  }
+
 }

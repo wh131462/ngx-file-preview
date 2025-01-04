@@ -1,28 +1,66 @@
-<p [ngxFilePreview]="files" themeMode="light">预览文件</p>
-
-<!-- 使用默认模板 -->
-<ngx-file-preview [files]="files" themeMode="auto" [autoConfig]="{dark: {
-    start: 18,
-    end: 6
-  }}"></ngx-file-preview>
-
-<!-- 使用自定义模板 -->
-<ngx-file-preview [files]="files" themeMode="light">
-  <ng-template #itemTemplate let-file let-index="index" let-isActive="isActive" let-preview="preview">
-    <div class="custom-file-item"
-         [class.active]="isActive">
-      <div class="custom-icon">
-        <preview-icon [svg]="file.type" [size]="'32px'"></preview-icon>
+<div class="file-upload-container">
+  <input #file type="file" (change)="onFileSelected($event)" multiple/>
+  <div class="upload" [class.upload-dragging]="isDragging" (click)="file.click()"
+       (dragover)="setDragging(true, $event)"
+       (dragleave)="setDragging(false, $event)"
+       (drop)="onDrop($event)">
+    <i class="NGX-FILE-PREVIEW nfp-plus"></i>
+    <div class="upload-text">点击或者拖拽文件至此开始预览</div>
+  </div>
+  <div class="file-list">
+    <ng-container *ngFor="let file of files;let i = index">
+      <div class="file">
+        <span>{{ file.name }}</span>
+        <i class="NGX-FILE-PREVIEW nfp-delete" (click)="deleteFile(i)"></i>
       </div>
-      <div class="custom-info">
-        <h3>{{ file.name }}</h3>
-        <p>
-          <span>{{ PreviewTypeEnum[file.type] }}</span>
-          <span>{{ formatFileSize(file.size) }}</span>
-        </p>
+    </ng-container>
+  </div>
+  <div class="title-container"><span class="title">指令预览模式</span><span class="source-code" (click)="showSourceCode('directive')">查看源码</span></div>
+  <div class="directive" [ngxFilePreview]="files" themeMode="light">点击预览文件</div>
+  <div class="title-container"><span class="title">组件预览模式</span><span class="source-code" (click)="showSourceCode('component')">查看源码</span></div>
+  <!-- 使用默认模板 -->
+  <ngx-file-preview
+    [files]="files"
+    themeMode="auto"
+    [autoConfig]="{dark: { start: 18, end: 6 }}"
+  ></ngx-file-preview>
+  <div class="title-container"><span class="title">自定义模板列表</span><span class="source-code" (click)="showSourceCode('custom')">查看源码</span></div>
+  <!-- 使用自定义模板 -->
+  <ngx-file-preview [files]="files" themeMode="light">
+    <ng-template
+      #itemTemplate
+      let-file
+      let-index="index"
+      let-isActive="isActive"
+      let-select="select"
+      let-preview="preview"
+    >
+      <div class="custom-file-item" [class.active]="isActive" (click)="select()">
+        <div class="custom-icon">
+          <preview-icon [svg]="file.type" [size]="'32px'"></preview-icon>
+        </div>
+        <div class="custom-info">
+          <h3>{{ file.name }}</h3>
+          <p>
+            <span>{{ file.type }}</span>
+            <span>{{ formatFileSize(file.size) }}</span>
+          </p>
+        </div>
+        <button class="custom-preview-btn" (click)="preview()">
+          预览
+        </button>
       </div>
-      <button class="custom-preview-btn" (click)="preview(file, index)">预览</button>
+    </ng-template>
+  </ngx-file-preview>
+</div>
+
+<!-- 弹窗显示源码 -->
+<div class="source-code-modal" *ngIf="sourceCodeVisible">
+  <div class="source-code-content">
+    <div class="source-code-title">
+      <span class="title">源码</span>
+      <i class="close NGX-FILE-PREVIEW nfp-close" (click)="closeSourceCode()"></i>
     </div>
-  </ng-template>
-</ngx-file-preview>
-
+    <pre>{{ sourceCode }}</pre>
+  </div>
+</div>

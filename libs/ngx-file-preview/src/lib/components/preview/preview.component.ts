@@ -1,11 +1,26 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ContentChild, TemplateRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ContentChild,
+  TemplateRef,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  AfterViewInit,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PreviewFile, PreviewTypeEnum, PreviewType} from '../../types/preview.types';
+import {PreviewFile, PreviewTypeEnum, PreviewType, PreviewFileInput} from '../../types/preview.types';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewDirective} from "../../directives/preview.directive";
 import {PreviewUtils} from "../../utils/preview.utils";
-import { ThemeService } from '../../services/theme.service';
-import { ThemeMode, AutoThemeConfig } from '../../types/theme.types';
+import {ThemeService} from '../../services/theme.service';
+import {ThemeMode, AutoThemeConfig} from '../../types/theme.types';
+import {timestamp} from "rxjs";
 
 @Component({
   selector: 'ngx-file-preview',
@@ -42,6 +57,7 @@ import { ThemeMode, AutoThemeConfig } from '../../types/theme.types';
                 index: i,
                 isActive: i === index,
                 themeMode: themeMode,
+                select: triggerSelect.bind(this,i),
                 preview: triggerPreview.bind(this,i)
               }"
             ></ng-container>
@@ -50,12 +66,12 @@ import { ThemeMode, AutoThemeConfig } from '../../types/theme.types';
           <!-- 默认模板 -->
           <ng-template #defaultTemplate>
             <div class="file-item"
-                 (click)="index=i"
+                 (click)="triggerSelect(i)"
                  [ngxFilePreview]="file"
                  [themeMode]="themeMode"
                  [class.active]="i === index">
               <span class="file-icon">
-                <preview-icon [themeMode]="themeMode"  [size]="40" [svg]="file.type"></preview-icon>
+                <preview-icon [themeMode]="themeMode" [size]="40" [svg]="file.type"></preview-icon>
               </span>
               <div class="file-info">
                 <div class="file-main-info">
@@ -83,7 +99,16 @@ import { ThemeMode, AutoThemeConfig } from '../../types/theme.types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PreviewComponent implements OnInit {
-  @Input() files?: PreviewFile[];
+  private _files: PreviewFile[] = [];
+  @Input()
+  get files(): PreviewFile[] {
+    return this._files;
+  }
+
+  set files(value: PreviewFileInput) {
+    this._files = PreviewUtils.normalizeFiles(value);
+  }
+
   @Input() index = 0;
   @Input() themeMode: ThemeMode = 'auto';
   @Input() autoConfig?: AutoThemeConfig;
@@ -94,7 +119,8 @@ export class PreviewComponent implements OnInit {
 
   protected readonly PreviewTypeEnum = PreviewTypeEnum;
 
-  constructor(private themeService: ThemeService) {}
+  constructor(private themeService: ThemeService) {
+  }
 
   ngOnInit() {
     this.themeService.setMode(this.themeMode);
@@ -102,10 +128,13 @@ export class PreviewComponent implements OnInit {
       this.themeService.setAutoConfig(this.autoConfig);
     }
   }
+  triggerSelect(index: number){
+    this.index = index;
+    this.fileSelect.emit(this.files[index]);
+  }
 
   triggerPreview(index: number) {
     if (this.files?.[index]) {
-      this.fileSelect.emit(this.files[index]);
       // 手动触发隐藏元素的点击事件
       const triggerElement = this.previewTriggers.get(index)?.nativeElement;
       if (triggerElement) {
