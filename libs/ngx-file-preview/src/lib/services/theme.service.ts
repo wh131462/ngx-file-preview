@@ -102,8 +102,6 @@ export class ThemeService {
   }
 
   toggleTheme() {
-    const currentMode = this.themeSubject.getValue();
-    if (currentMode === 'auto') return;
     const newTheme = this.currentTheme.getValue() === 'light' ? 'dark' : 'light';
     this.setMode(newTheme);
   }

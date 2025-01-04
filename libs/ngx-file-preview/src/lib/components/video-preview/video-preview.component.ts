@@ -77,7 +77,7 @@ import {PreviewFile} from '../../types/preview.types';
                  (mouseenter)="showBrightnessControl = true"
                  (mouseleave)="showBrightnessControl = false">
               <button (click)="cycleBrightness()">
-                <preview-icon [themeMode]="themeMode" [name]="'lightness'"></preview-icon>
+                <preview-icon [name]="'lightness'"></preview-icon>
               </button>
               <div class="slider-container" *ngIf="showBrightnessControl">
                 <input type="range"
@@ -93,7 +93,7 @@ import {PreviewFile} from '../../types/preview.types';
                  (mouseenter)="showVolumeControl = true"
                  (mouseleave)="showVolumeControl = false">
               <button (click)="cycleVolume()">
-                <preview-icon [themeMode]="themeMode" [name]="getVolumeIcon()"></preview-icon>
+                <preview-icon [name]="getVolumeIcon()"></preview-icon>
               </button>
               <div class="slider-container" *ngIf="showVolumeControl">
                 <input type="range"
@@ -105,10 +105,10 @@ import {PreviewFile} from '../../types/preview.types';
             </div>
 
             <button (click)="togglePip()">
-              <preview-icon [themeMode]="themeMode" name="pip"></preview-icon>
+              <preview-icon name="pip"></preview-icon>
             </button>
             <button (click)="toggleFullscreen()">
-              <preview-icon [themeMode]="themeMode" name="fullscreen"></preview-icon>
+              <preview-icon name="fullscreen"></preview-icon>
             </button>
           </div>
         </div>

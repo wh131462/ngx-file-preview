@@ -67,6 +67,7 @@ export class PreviewService {
   }
 
   close() {
+    document?.exitFullscreen();
     this.updatePreviewState(false, [], 0);
     this.cleanupModal();
   }

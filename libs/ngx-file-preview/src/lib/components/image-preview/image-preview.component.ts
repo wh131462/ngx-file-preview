@@ -75,6 +75,7 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
     </div>
   `,
   styleUrls: [
+    "../../styles/_theme.scss",
     './image-preview.component.scss'
   ],
   changeDetection: ChangeDetectionStrategy.OnPush

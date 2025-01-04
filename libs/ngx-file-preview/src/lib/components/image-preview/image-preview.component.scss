@@ -39,7 +39,7 @@
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--mask-color);
+    background: var(--bg-container);
     border-radius: 24px;
     padding: 8px 12px;
     display: flex;
@@ -142,4 +142,4 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-} 
+}

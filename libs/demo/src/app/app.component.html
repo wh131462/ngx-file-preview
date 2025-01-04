@@ -10,8 +10,7 @@
 <ngx-file-preview [files]="files" themeMode="light">
   <ng-template #itemTemplate let-file let-index="index" let-isActive="isActive" let-preview="preview">
     <div class="custom-file-item"
-         [class.active]="isActive"
-         (click)="preview(file, index)">
+         [class.active]="isActive">
       <div class="custom-icon">
         <preview-icon [svg]="file.type" [size]="'32px'"></preview-icon>
       </div>
