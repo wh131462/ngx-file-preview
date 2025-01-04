@@ -7,31 +7,31 @@
 ### 默认列表视图
 ![默认列表视图](assets/readme/default-list.png)
 
-### 自定义模板
+### 自定义模板(仅示例,可自由定义)
 ![自定义模板](assets/readme/custom-template.png)
 
 ### 各类型文件预览效果
 
-| 文件类型 | 预览效果                                 |
-|---------|--------------------------------------|
-| 图片预览 | ![图片预览](assets/readme/img.png) |
-| 视频预览 | ![视频预览](assets/readme/video.png)     |
-| 音频预览 | ![音频预览](assets/readme/audio.png)     |
-| PPT预览 | ![PPT预览](assets/readme/ppt.png)      |
-| Word预览 | ![Word预览](assets/readme/word.png)    |
-| Excel预览 | ![Excel预览](assets/readme/excel.png)  |
-| 文本预览 | ![文本预览](assets/readme/text.png)      |
-| 压缩包预览 | ![压缩包预览](assets/readme/zip.png)      |
-| 未知类型 | ![未知类型](assets/readme/unknown.png)   |
+| 文件类型 | 预览效果                                                                                                    |
+|---------|---------------------------------------------------------------------------------------------------------|
+| 图片预览 | ![图片预览-dark](assets/readme/image-preview-dark.png) ![图片预览-light](assets/readme/image-preview-light.png) |
+| 视频预览 | ![视频预览-dark](assets/readme/video-preview-dark.png) ![视频预览-light](assets/readme/video-preview-light.png) |
+| 音频预览 | ![音频预览-dark](assets/readme/audio-preview-dark.png) ![音频预览-light](assets/readme/audio-preview-light.png) |
+| PPT预览 | ![PPT预览-dark](assets/readme/ppt-preview-dark.png) ![PPT预览-light](assets/readme/ppt-preview-light.png) |
+| Word预览 | ![Word预览-dark](assets/readme/word-preview-dark.png) ![Word预览-light](assets/readme/word-preview-light.png) |
+| Excel预览 | ![Excel预览-dark](assets/readme/excel-preview-dark.png) ![Excel预览-light](assets/readme/excel-preview-light.png) |
+| 文本预览 | ![文本预览-dark](assets/readme/text-preview-dark.png) ![文本预览-light](assets/readme/text-preview-light.png) |
+| 压缩包预览 | ![压缩包预览-dark](assets/readme/zip-preview-dark.png) ![压缩包预览-light](assets/readme/zip-preview-light.png) |
+| 未知类型 | ![未知类型-dark](assets/readme/unknown-preview-dark.png) ![未知类型-light](assets/readme/unknown-preview-light.png) |
 
 ## 特性
 
-- 🎯 支持多种文件格式预览 (图片、PDF、PPT、Word、文本、视频等)
-- 🎨 暗黑模式和浅色模式支持
-- 💪 支持指令和组件两种使用方式
-- 🚀 轻量级，易于集成
-- 📱 响应式设计，支持移动端
-- ⌨️ 支持键盘快捷操作
+🎯 支持多种文件格式预览：全面兼容图片、PDF、PPT、Word、文本、视频等常见文件类型。
+👬🏻 友好的交互体验：提示未知文件类型，对不同的文件类型提供友好的交互操作。
+🎨 暗黑模式与浅色模式：满足不同使用场景的视觉需求。
+💪 多样化使用方式：同时支持指令式和组件式调用，灵活适配开发需求。
+🚀 轻量化设计：高效性能，轻松集成到各类项目中。
+⌨️ 键盘快捷操作支持：提升操作效率，让使用更加顺畅。
 
 ## 安装
 ```bash
@@ -92,7 +92,7 @@ import {
 最简单的使用方式，直接在元素上添加指令：
 
 ```typescript
-import { PreviewDirective } from '@eternalheart/ngx-file-preview';
+import {PreviewDirective,PreviewEvent} from '@eternalheart/ngx-file-preview';
 
 @Component({
   imports: [PreviewDirective],
@@ -101,7 +101,7 @@ import { PreviewDirective } from '@eternalheart/ngx-file-preview';
     <!--浅色模式-->
     <div [ngxFilePreview]="file" themeMode="light">点击预览单个文件</div>
     <!--暗黑模式-->
-    <div [ngxFilePreview]="file" themeMode="dark">点击预览单个文件</div>
+    <div [ngxFilePreview]="file" themeMode="dark" (previewEvent)="handlePreviewEvent($event)">点击预览单个文件</div>
     <!--自动切换主题(可以自定义切换暗黑模式的时间段)-->
     <div [ngxFilePreview]="file" themeMode="auto" [autoConfig]="{dark: {
     start: 19,
@@ -112,15 +112,32 @@ import { PreviewDirective } from '@eternalheart/ngx-file-preview';
   `
 })
 export class YourComponent {
+  // 支持多种文件传入的方式
+  // 1. 单个文件或者文件列表都支持
+  // 2. 列表或者文件的类型支持:文件地址/文件对象/标准PreviewFile对象
   file: PreviewFile = {
     name: 'example.jpg',
     type: 'image',
     url: 'path/to/file.jpg'
   };
-
+ 
   files: PreviewFile[] = [
     // ... 文件数组
   ];
+
+  handlePreviewEvent(event: PreviewEvent) {
+    const {type, message, event:targetEvent} = event;
+    if(type==="error"){
+      // 一些报错提示会以error事件传递出来,如非法操作
+      console.log(message);
+    }
+    if(type==="select"){
+      // 选中事件会以select事件传出,event(当前别名targetEvent)是对应的文件对象
+      // 注意: 可能和传入的原文件或者对象不同 返回的对象类型为PreviewFile
+      console.log(targetEvent);
+    }
+  }
+
 }
 ```
 
@@ -263,13 +280,3 @@ MIT
 ```
 
 这些依赖项需要在安装 ngx-file-preview 的时候同步安装。如果您的项目中已经包含了某些依赖，可以根据需要手动管理版本。
-
-### 可选依赖
-
-某些预览功能需要额外的依赖支持：
-
-- PDF预览：需要 `ng2-pdf-viewer`
-- Office文档预览：需要 `docx-preview`、`pptx-preview` 和 `xlsx`
-- HLS视频流：需要 `hls.js`
-
-如果您不需要某些预览功能，可以选择不安装相应的依赖包，这样可以减小最终打包体积。
