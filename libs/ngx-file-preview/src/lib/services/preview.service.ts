@@ -10,7 +10,11 @@ import {
 import {PreviewFile, PreviewOptions} from '../types/preview.types';
 import {BehaviorSubject} from 'rxjs';
 import {PreviewModalComponent} from '../components/preview-modal/preview-modal.component';
-
+export const INITIAL_PREVIEW_STATE = {
+  isVisible: false,
+  currentIndex: 0,
+  files: []
+}
 export interface PreviewState {
   isVisible: boolean;
   currentFile?: PreviewFile;

@@ -7,6 +7,7 @@ export * from './preview-icon/preview-icon.component';
  * 预览组件
  */
 export * from "./base/preview-base.component"
+export * from "./preview/preview.component"
 export * from "./excel-preview/excel-preview.component"
 export * from "./archive-preview/archive-preview.component"
 export * from "./word-preview/word-preview.component"
