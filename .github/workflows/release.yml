@@ -1,0 +1,37 @@
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # 仅匹配 vX.Y.Z 格式的标签
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检查出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 获取从上一个 tag 到当前 tag 的变更日志
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          echo "Previous tag: $PREVIOUS_TAG"
+          CHANGELOG=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"* %s (%h)")
+          echo "Changelog: $CHANGELOG"
+          echo "::set-output name=changelog::$CHANGELOG"
+
+      # 创建 GitHub Release
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
