@@ -36,16 +36,21 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
       </div>
       <!-- PDF查看器 -->
       <div class="viewer-container" #viewerContainer>
+        <div *ngIf="isLoading" class="loading-overlay">
+          <div class="loading-spinner"></div>
+        </div>
         <pdf-viewer
+          [class.hidden]="isLoading"
           [src]="file.url"
           [rotation]="rotation"
           [zoom]="zoom"
           [page]="currentPage"
+          [autoresize]="true"
           [show-all]="true"
+          [render-text]="true"
+          [original-size]="false"
           (after-load-complete)="onPdfLoaded($event)"
           (page-rendered)="pageRendered()"
-          [render-text]="true"
-          [original-size]="true"
           style="width: 100%; height: 100%;"
         ></pdf-viewer>
       </div>

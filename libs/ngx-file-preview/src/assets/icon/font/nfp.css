@@ -1,6 +1,6 @@
 @font-face {
   font-family: "NGX-FILE-PREVIEW"; /* Project id 4798386 */
-  src: url('nfp.ttf?t=1735980093059') format('truetype');
+  src: url('nfp.ttf?t=1739247193388') format('truetype');
 }
 
 .NGX-FILE-PREVIEW {
@@ -9,6 +9,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nfp-origin-size:before {
+  content: "\e72b";
+}
+
+.nfp-auto-fit:before {
+  content: "\e6a0";
 }
 
 .nfp-plus:before {

@@ -63,6 +63,12 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
         <div class="divider"></div>
 
         <div class="tool-group">
+          <div class="control" (click)="autoFit()">
+            <preview-icon [themeMode]="themeMode" name="auto-fit"></preview-icon>
+          </div>
+          <div class="control" (click)="originSize()">
+            <preview-icon [themeMode]="themeMode" name="origin-size"></preview-icon>
+          </div>
           <div class="control" (click)="resetView()">
             <preview-icon [themeMode]="themeMode" name="reset"></preview-icon>
           </div>
@@ -99,7 +105,7 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
   private dragStartX = 0;
   private dragStartY = 0;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef, private el: ElementRef) {
     super();
   }
 
@@ -181,35 +187,13 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
 
   rotate(angle: number) {
     this.rotation += angle;
-
-    // if (this.imageWidth && this.imageHeight && this.imageWrapper?.nativeElement) {
-    //   const wrapper = this.imageWrapper.nativeElement;
-    //   const wrapperWidth = wrapper.clientWidth;
-    //   const wrapperHeight = wrapper.clientHeight;
-    //
-    //   const displayRotation = Math.abs(this.rotation % 360);
-    //   const rad = (displayRotation % 180) * Math.PI / 180;
-    //   const rotatedWidth = Math.abs(this.imageWidth * Math.cos(rad) + this.imageHeight * Math.sin(rad));
-    //   const rotatedHeight = Math.abs(this.imageWidth * Math.sin(rad) + this.imageHeight * Math.cos(rad));
-    //
-    //   const scaleX = wrapperWidth / rotatedWidth;
-    //   const scaleY = wrapperHeight / rotatedHeight;
-    //   const newZoom = Math.min(scaleX, scaleY) * 0.9;
-    //
-    //   this.zoom = newZoom;
-    //   this.translateX = 0;
-    //   this.translateY = 0;
-    // }
-
     this.updateTransformStyle();
   }
 
   resetView() {
-    this.zoom = 1;
     this.rotation = 0;
-    this.translateX = 0;
-    this.translateY = 0;
     this.centerImage();
+    this.autoFit()
   }
 
   onImageLoad() {
@@ -218,8 +202,31 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
       const image = this.previewImage.nativeElement;
       this.imageWidth = image.naturalWidth;
       this.imageHeight = image.naturalHeight;
-      this.centerImage();
+      this.autoFit()
     }
+  }
+
+  autoFit() {
+    if (!this.previewImage?.nativeElement) return;
+    const image = this.previewImage.nativeElement;
+    const container = this.el.nativeElement
+    const imageWidth = image.naturalWidth;
+    const imageHeight = image.naturalHeight;
+    const containerWidth = container.clientWidth
+    const containerHeight = container.clientHeight
+    if (!imageWidth || !imageHeight || !containerWidth || !containerHeight) return;
+    // 计算基于容器的缩放比例
+    const scaleX = containerWidth / imageWidth;
+    const scaleY = containerHeight / imageHeight;
+    // 取较小的缩放值，保证完整展示（等效 `object-fit: contain`）
+    const zoom = Math.min(scaleX, scaleY);
+    this.zoom = zoom > 0 ? zoom : 1;
+    setTimeout(() => this.updateTransformStyle());
+  }
+
+  originSize() {
+    this.zoom = 1;
+    setTimeout(() => this.updateTransformStyle());
   }
 
   private centerImage() {
@@ -228,20 +235,32 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
     const wrapper = this.imageWrapper.nativeElement;
     const image = this.previewImage.nativeElement;
 
-    const wrapperRatio = wrapper.clientWidth / wrapper.clientHeight;
-    const imageRatio = image.naturalWidth / image.naturalHeight;
+    const wrapperWidth = wrapper.clientWidth;
+    const wrapperHeight = wrapper.clientHeight;
+    const imageWidth = image.naturalWidth;
+    const imageHeight = image.naturalHeight;
 
-    if (wrapperRatio > imageRatio) {
-      this.zoom = (wrapper.clientHeight * 0.9) / image.naturalHeight;
-    } else {
-      this.zoom = (wrapper.clientWidth * 0.9) / image.naturalWidth;
+    if (!wrapperWidth || !wrapperHeight || !imageWidth || !imageHeight) return;
+
+    const wrapperRatio = wrapperWidth / wrapperHeight;
+    const imageRatio = imageWidth / imageHeight;
+
+    // 计算缩放比例，确保图片完整展示
+    this.zoom = imageRatio > wrapperRatio
+      ? wrapperWidth / imageWidth  // 以宽度为基准缩放
+      : wrapperHeight / imageHeight; // 以高度为基准缩放
+
+    // 避免 zoom = 0
+    if (!this.zoom || this.zoom <= 0) {
+      this.zoom = 1;
     }
-    this.zoom ||= 1;
 
+    // 居中图片
     this.translateX = 0;
     this.translateY = 0;
 
-    this.updateTransformStyle();
+    // 确保样式更新
+    setTimeout(() => this.updateTransformStyle());
   }
 
   download() {
