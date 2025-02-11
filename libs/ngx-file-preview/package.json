@@ -1,6 +1,6 @@
 {
   "name": "@eternalheart/ngx-file-preview",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A powerful Angular file preview component library supporting multiple file formats including images, videos, PDFs, Office documents, text files and more.",
   "keywords": [
     "angular",
