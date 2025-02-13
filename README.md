@@ -1,48 +1,51 @@
-# NGX File Preview <div style="display: inline-flex; gap:8px;"><a href="https://www.npmjs.com/package/@eternalheart/ngx-file-preview" target="__blank"><img src="https://img.shields.io/npm/v/@eternalheart/ngx-file-preview?color=a1b858&label=" alt="NPM version"></a><a href="https://www.npmjs.com/package/@eternalheart/ngx-file-preview" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@eternalheart/ngx-file-preview?color=50a36f&label="></a><a href="https://wh131462.github.io/ngx-file-preview/" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=playground&color=1e8a7a" alt="Demos"></a> <a href="https://github.com/wh131462/ngx-file-preview" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/wh131462/ngx-file-preview?style=social"></a></div>
+# NGX File Preview [![版本](https://img.shields.io/npm/v/@eternalheart/ngx-file-preview?color=a1b858&label=)](https://www.npmjs.com/package/@eternalheart/ngx-file-preview) [![下载量](https://img.shields.io/npm/dm/@eternalheart/ngx-file-preview?color=50a36f&label=)](https://www.npmjs.com/package/@eternalheart/ngx-file-preview) [![playground](https://img.shields.io/static/v1?label=&message=playground&color=1e8a7a)](https://wh131462.github.io/ngx-file-preview/) [![github](https://img.shields.io/github/stars/wh131462/ngx-file-preview?style=social)](https://github.com/wh131462/ngx-file-preview)
 
-一个功能强大的 Angular 文件预览组件库，支持多种文件格式的预览，提供灵活的自定义选项。
+[中文](./README_CN.md) · **English**
 
-## 预览效果
+**NGX File Preview** is a powerful Angular file preview component library that supports previewing a wide variety of file formats and offers flexible customization options, providing an efficient and user-friendly solution for developers.
 
-### 默认列表视图
-![默认列表视图](assets/readme/default-list.png)
+## Preview Examples
 
-### 自定义模板(仅示例,可自由定义)
-![自定义模板](assets/readme/custom-template.png)
+### Default List View
+![Default List View](assets/readme/default-list.png)
 
-### 各类型文件预览效果
+### Custom Template (Example, fully customizable)
+![Custom Template](assets/readme/custom-template.png)
 
-| 文件类型 | 预览效果                                                                                                    |
-|---------|---------------------------------------------------------------------------------------------------------|
-| 图片预览 | ![图片预览-dark](assets/readme/image-preview-dark.png) ![图片预览-light](assets/readme/image-preview-light.png) |
-| 视频预览 | ![视频预览-dark](assets/readme/video-preview-dark.png) ![视频预览-light](assets/readme/video-preview-light.png) |
-| 音频预览 | ![音频预览-dark](assets/readme/audio-preview-dark.png) ![音频预览-light](assets/readme/audio-preview-light.png) |
-| PPT预览 | ![PPT预览-dark](assets/readme/ppt-preview-dark.png) ![PPT预览-light](assets/readme/ppt-preview-light.png) |
-| Word预览 | ![Word预览-dark](assets/readme/word-preview-dark.png) ![Word预览-light](assets/readme/word-preview-light.png) |
-| Excel预览 | ![Excel预览-dark](assets/readme/excel-preview-dark.png) ![Excel预览-light](assets/readme/excel-preview-light.png) |
-| 文本预览 | ![文本预览-dark](assets/readme/text-preview-dark.png) ![文本预览-light](assets/readme/text-preview-light.png) |
-| 压缩包预览 | ![压缩包预览-dark](assets/readme/zip-preview-dark.png) ![压缩包预览-light](assets/readme/zip-preview-light.png) |
-| 未知类型 | ![未知类型-dark](assets/readme/unknown-preview-dark.png) ![未知类型-light](assets/readme/unknown-preview-light.png) |
+### Preview Effects for Different File Types
 
-## 特性
+| File Type | Preview Effect                                                                                              |
+|-----------|------------------------------------------------------------------------------------------------------------|
+| Image     | ![Image Preview-dark](assets/readme/image-preview-dark.png) ![Image Preview-light](assets/readme/image-preview-light.png) |
+| Video     | ![Video Preview-dark](assets/readme/video-preview-dark.png) ![Video Preview-light](assets/readme/video-preview-light.png) |
+| Audio     | ![Audio Preview-dark](assets/readme/audio-preview-dark.png) ![Audio Preview-light](assets/readme/audio-preview-light.png) |
+| PPT       | ![PPT Preview-dark](assets/readme/ppt-preview-dark.png) ![PPT Preview-light](assets/readme/ppt-preview-light.png) |
+| Word      | ![Word Preview-dark](assets/readme/word-preview-dark.png) ![Word Preview-light](assets/readme/word-preview-light.png) |
+| Excel     | ![Excel Preview-dark](assets/readme/excel-preview-dark.png) ![Excel Preview-light](assets/readme/excel-preview-light.png) |
+| Text      | ![Text Preview-dark](assets/readme/text-preview-dark.png) ![Text Preview-light](assets/readme/text-preview-light.png) |
+| Zip       | ![Zip Preview-dark](assets/readme/zip-preview-dark.png) ![Zip Preview-light](assets/readme/zip-preview-light.png) |
+| Unknown   | ![Unknown Preview-dark](assets/readme/unknown-preview-dark.png) ![Unknown Preview-light](assets/readme/unknown-preview-light.png) |
 
-- 🎯 支持多种文件格式预览：全面兼容图片、PDF、PPT、Word、文本、视频等常见文件类型。
-- 👬🏻 友好的交互体验：提示未知文件类型，对不同的文件类型提供友好的交互操作。
-- 🎨 暗黑模式与浅色模式：满足不同使用场景的视觉需求。
-- 💪 多样化使用方式：同时支持指令式和组件式调用，灵活适配开发需求。
-- 🚀 轻量化设计：高效性能，轻松集成到各类项目中。
-- ⌨️ 键盘快捷操作支持：提升操作效率，让使用更加顺畅。
+## Features
 
-## 安装
+- **Support for Multiple File Formats**: Fully compatible with image, PDF, PPT, Word, text, video, and many other common file types.
+- **Intuitive User Experience**: Provides clear indicators for unknown file types and supports user-friendly interactions for different file formats.
+- **Dark Mode and Light Mode**: Adapts to various use cases with visual preferences for both dark and light modes, including auto mode switching.
+- **Flexible Usage**: Supports both directive-based and component-based usage, offering flexibility to meet different development requirements.
+- **Lightweight Design**: Optimized for performance and easy integration into any project, ensuring smooth and efficient operation.
+- **Keyboard Shortcut Support**: Increases efficiency by allowing easy navigation and closing of the preview with keyboard shortcuts.
+
+## Installation
+
 ```bash
 npm install @eternalheart/ngx-file-preview --save docx-preview hls.js ng2-pdf-viewer pptx-preview xlsx
 ```
 
-## 配置
+## Configuration
 
-### 1. 字体图标配置
+### 1. Font Icon Configuration
 
-在 `angular.json` 文件中添加必要的样式和脚本：
+Add the necessary styles and scripts to your `angular.json` file:
 
 ```json
 {
@@ -65,9 +68,9 @@ npm install @eternalheart/ngx-file-preview --save docx-preview hls.js ng2-pdf-vi
 }
 ```
 
-### 2. 模块导入
+### 2. Module Imports
 
-在需要使用的模块中导入相关组件：
+Import the required components in your Angular module:
 
 ```typescript
 import { 
@@ -77,7 +80,6 @@ import {
 } from '@eternalheart/ngx-file-preview';
 
 @Component({
-  // ... 其他配置
   imports: [
     PreviewDirective,
     PreviewComponent,
@@ -85,65 +87,51 @@ import {
 })
 ```
 
-## 使用方法
+## Usage
 
-### 1. 指令方式
+### 1. Directive Method
 
-最简单的使用方式，直接在元素上添加指令：
+The simplest usage method: Apply the directive directly to an element:
 
 ```typescript
-import {PreviewDirective,PreviewEvent} from '@eternalheart/ngx-file-preview';
+import { PreviewDirective, PreviewEvent } from '@eternalheart/ngx-file-preview';
 
 @Component({
   imports: [PreviewDirective],
   template: `
-    <!--可以通过themeMode指定组件显示暗黑模式/浅色模式 默认按时间自动切换模式 也可以在预览页面内切换模式 -->
-    <!--浅色模式-->
-    <div [ngxFilePreview]="file" themeMode="light">点击预览单个文件</div>
-    <!--暗黑模式-->
-    <div [ngxFilePreview]="file" themeMode="dark" (previewEvent)="handlePreviewEvent($event)">点击预览单个文件</div>
-    <!--自动切换主题(可以自定义切换暗黑模式的时间段)-->
-    <div [ngxFilePreview]="file" themeMode="auto" [autoConfig]="{dark: {
-    start: 19,
-    end: 7
-  }}">点击预览单个文件</div>
-    <!--预览文件列表-->
-    <div [ngxFilePreview]="files">点击预览多个文件</div>
+    <!-- Use themeMode to specify the display mode (dark/light). By default, it automatically switches based on time, but can also be manually toggled inside the preview page -->
+    <div [ngxFilePreview]="file" themeMode="light">Click to preview a single file</div>
+    <div [ngxFilePreview]="file" themeMode="dark" (previewEvent)="handlePreviewEvent($event)">Click to preview a single file</div>
+    <div [ngxFilePreview]="file" themeMode="auto" [autoConfig]="{dark: {start: 19, end: 7}}">Click to preview a single file</div>
+    <div [ngxFilePreview]="files">Click to preview multiple files</div>
   `
 })
 export class YourComponent {
-  // 支持多种文件传入的方式
-  // 1. 单个文件或者文件列表都支持
-  // 2. 列表或者文件的类型支持:文件地址/文件对象/标准PreviewFile对象
   file: PreviewFile = {
     name: 'example.jpg',
     type: 'image',
     url: 'path/to/file.jpg'
   };
- 
+
   files: PreviewFile[] = [
-    // ... 文件数组
+    // ... file array
   ];
 
   handlePreviewEvent(event: PreviewEvent) {
-    const {type, message, event:targetEvent} = event;
-    if(type==="error"){
-      // 一些报错提示会以error事件传递出来,如非法操作
-      console.log(message);
+    const { type, message, event: targetEvent } = event;
+    if (type === "error") {
+      console.log(message); // Handle error event
     }
-    if(type==="select"){
-      // 选中事件会以select事件传出,event(当前别名targetEvent)是对应的文件对象
-      // 注意: 可能和传入的原文件或者对象不同 返回的对象类型为PreviewFile
-      console.log(targetEvent);
+    if (type === "select") {
+      console.log(targetEvent); // Handle file selection event
     }
   }
-
 }
 ```
 
-### 2. 组件方式
+### 2. Component Method
 
-#### 使用默认列表模板：
+#### Using the Default List Template:
 
 ```typescript
 import { PreviewComponent } from '@eternalheart/ngx-file-preview';
@@ -151,16 +139,13 @@ import { PreviewComponent } from '@eternalheart/ngx-file-preview';
 @Component({
   imports: [PreviewComponent],
   template: `
-    <!--主题切换与指令的设置方式相同-->
-    <ngx-file-preview 
-      [files]="files"
-      (fileSelect)="onFileSelect($event)">
+    <ngx-file-preview [files]="files" (fileSelect)="onFileSelect($event)">
     </ngx-file-preview>
   `
 })
 ```
 
-#### 使用自定义模板：
+#### Using a Custom Template:
 
 ```typescript
 @Component({
@@ -183,100 +168,87 @@ import { PreviewComponent } from '@eternalheart/ngx-file-preview';
 })
 ```
 
-## 文件配置
+## File Configuration
 
-### PreviewFile 接口
+### `PreviewFile` Interface
+
 ```typescript
 interface PreviewFile {
-  url: string;          // 文件URL
-  type: PreviewType;    // 文件类型
-  name: string;         // 文件名
-  size?: number;        // 文件大小（可选）
-  lastModified?: number;// 最后修改时间（可选）
-  coverUrl?: string;    // 封面图URL（视频/音频可用，可选）
+  url: string;          // File URL
+  type: PreviewType;    // File type
+  name: string;         // File name
+  size?: number;        // File size (optional)
+  lastModified?: number;// Last modified time (optional)
+  coverUrl?: string;    // Cover image URL (for video/audio, optional)
 }
 ```
 
-### 支持的文件类型 (PreviewType)
+### Supported File Types (`PreviewType`)
+
 ```typescript
 type PreviewType = 
-  | 'image'   // 图片
-  | 'pdf'     // PDF文档
-  | 'ppt'     // PPT演示文稿
-  | 'word'    // Word文档
-  | 'txt'     // 文本文件
-  | 'video'   // 视频
-  | 'excel'   // Excel表格
-  | 'audio'   // 音频
-  | 'zip'     // 压缩包
-  | 'unknown' // 未知类型
+  | 'image'   // Image
+  | 'pdf'     // PDF Document
+  | 'ppt'     // PPT Presentation
+  | 'word'    // Word Document
+  | 'txt'     // Text File
+  | 'video'   // Video
+  | 'excel'   // Excel Spreadsheet
+  | 'audio'   // Audio
+  | 'zip'     // Compressed File
+  | 'unknown' // Unknown Type
 ```
 
-## 键盘快捷键
+## Keyboard Shortcuts
 
-预览模式下支持以下快捷键：
+In preview mode, the following shortcuts are available:
 
-- `←` 上一个文件
-- `→` 下一个文件
-- `Esc` 关闭预览
+- `←` Previous file
+- `→` Next file
+- `Esc` Close preview
 
-## 开发指南
+## Development Guide
 
-1. 克隆项目
+1. Clone the repository:
+
 ```bash
 git clone https://github.com/wh131462/ngx-file-preview.git
 ```
 
-2. 安装依赖
+2. Install dependencies:
+
 ```bash
 npm install
 ```
 
-3. 启动开发服务器
+3. Start the development server:
+
 ```bash
 npm run start
 ```
 
-4. 构建库
+4. Build the library:
+
 ```bash
 npm run build
 ```
 
-## 贡献指南
+## Contribution Guidelines
 
-欢迎提交 Issue 和 Pull Request 来帮助改进这个项目！
+Feel free to submit [Issues](https://github.com/wh131462/ngx-file-preview/issues) and [Pull Requests](https://github.com/wh131462/ngx-file-preview/pulls) to help improve this project!
 
 ## License
 
 MIT
 
-## 鸣谢
+## Acknowledgments
 
-本项目使用了以下优秀的开源项目：
+This project uses the following excellent open-source libraries:
 
-### 文档预览
-- [docx-preview](https://github.com/VolodymyrBaydalka/docx-preview) - Word文档预览
-- [pptx-preview](https://github.com/SheetJS/sheetjs) - PPT演示文稿预览
-- [xlsx](https://github.com/SheetJS/sheetjs) - Excel表格预览
-- [ng2-pdf-viewer](https://github.com/VadimDez/ng2-pdf-viewer) - PDF文档预览
+- [docx-preview](https://github.com/VolodymyrBaydalka/docx-preview) - Word document preview
+- [pptx-preview](https://github.com/SheetJS/sheetjs) - PPT presentation preview
+- [xlsx](https://github.com/SheetJS/sheetjs) - Excel spreadsheet preview
+- [ng2-pdf-viewer](https://github.com/VadimDez/ng2-pdf-viewer) - PDF document preview
+- [hls.js](https://github.com/video-dev/hls.js/) - HLS video stream support
 
-### 媒体播放
-- [hls.js](https://github.com/video-dev/hls.js/) - HLS视频流播放支持
-
-感谢这些项目的贡献者们为开源社区作出的贡献！
-
-## 依赖说明
-
-```json
-{
-  "dependencies": {
-    "docx-preview": "^0.3.3",
-    "hls.js": "^1.4.12",
-    "ng2-pdf-viewer": "^10.0.0",
-    "pptx-preview": "^1.0.1",
-    "xlsx": "^0.18.5"
-  }
-}
-```
-
-这些依赖项需要在安装 ngx-file-preview 的时候同步安装。如果您的项目中已经包含了某些依赖，可以根据需要手动管理版本。
+We appreciate the contributions from these open-source projects to the community!
