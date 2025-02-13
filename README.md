@@ -1,21 +1,4 @@
-<p style="font-family: Arial, sans-serif;
-    font-size: 64px;
-    font-weight: 700;
-    background: linear-gradient(90deg, #ff007f, #fc0, #0fc, #06f, #8e2eff, #ff007f);
-    background-size: 200% 100%;
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-">NGX-FILE-PREVIEW</p>  
-
-<p align="center">
-  <a href="https://www.npmjs.com/package/@eternalheart/ngx-file-preview" target="__blank"><img src="https://img.shields.io/npm/v/@eternalheart/ngx-file-preview?color=a1b858&label=" alt="NPM version"></a>
-  <a href="https://www.npmjs.com/package/@eternalheart/ngx-file-preview" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@eternalheart/ngx-file-preview?color=50a36f&label="></a>
-  <a href="https://wh131462.github.io/ngx-file-preview/" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=playground&color=1e8a7a" alt="Demos"></a>
-  <a href="https://github.com/wh131462/ngx-file-preview" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/wh131462/ngx-file-preview?style=social"></a>
-</p>
-
-# NGX File Preview
+# NGX File Preview <div style="display: inline-flex; gap:8px;"><a href="https://www.npmjs.com/package/@eternalheart/ngx-file-preview" target="__blank"><img src="https://img.shields.io/npm/v/@eternalheart/ngx-file-preview?color=a1b858&label=" alt="NPM version"></a><a href="https://www.npmjs.com/package/@eternalheart/ngx-file-preview" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@eternalheart/ngx-file-preview?color=50a36f&label="></a><a href="https://wh131462.github.io/ngx-file-preview/" target="__blank"><img src="https://img.shields.io/static/v1?label=&message=playground&color=1e8a7a" alt="Demos"></a> <a href="https://github.com/wh131462/ngx-file-preview" target="__blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/wh131462/ngx-file-preview?style=social"></a></div>
 
 一个功能强大的 Angular 文件预览组件库，支持多种文件格式的预览，提供灵活的自定义选项。
 
