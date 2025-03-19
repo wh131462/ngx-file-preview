@@ -11,11 +11,37 @@
   flex-direction: column;
   gap: 16px;
 
-  .title{
+  .github-logo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+
+  .title {
     font-family: Arial, sans-serif;
     font-size: 64px;
     font-weight: bold;
-    background: linear-gradient(90deg, #ff007f, #ffcc00, #00ffcc, #0066ff, #8e2eff,#ff007f);
+    background: linear-gradient(90deg, #ff007f, #ffcc00, #00ffcc, #0066ff, #8e2eff, #ff007f);
     background-size: 200% 100%;
     color: transparent;
     -webkit-background-clip: text;
