@@ -38,14 +38,14 @@
 ## Installation
 
 ```bash
-npm install @eternalheart/ngx-file-preview --save docx-preview hls.js ng2-pdf-viewer pptx-preview xlsx
+npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer
 ```
 
 ## Configuration
 
-### 1. Font Icon Configuration
+### 1. Font Icon Configuration and Resources
 
-Add the necessary styles and scripts to your `angular.json` file:
+Add the necessary assets , styles and scripts to your `angular.json` file:
 
 ```json
 {
@@ -54,6 +54,13 @@ Add the necessary styles and scripts to your `angular.json` file:
       "architect": {
         "build": {
           "options": {
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets",
+                "output": "assets"
+              }
+            ],
             "styles": [
               "node_modules/@eternalheart/ngx-file-preview/src/assets/icon/font/nfp.css"
             ],
@@ -175,8 +182,8 @@ import { PreviewComponent } from '@eternalheart/ngx-file-preview';
 ```typescript
 interface PreviewFile {
   url: string;          // File URL
-  type: PreviewType;    // File type
   name: string;         // File name
+  type?: PreviewType;    // File type - Not nessary
   size?: number;        // File size (optional)
   lastModified?: number;// Last modified time (optional)
   coverUrl?: string;    // Cover image URL (for video/audio, optional)
@@ -248,7 +255,7 @@ This project uses the following excellent open-source libraries:
 - [docx-preview](https://github.com/VolodymyrBaydalka/docx-preview) - Word document preview
 - [pptx-preview](https://github.com/SheetJS/sheetjs) - PPT presentation preview
 - [xlsx](https://github.com/SheetJS/sheetjs) - Excel spreadsheet preview
-- [ng2-pdf-viewer](https://github.com/VadimDez/ng2-pdf-viewer) - PDF document preview
+- [ngx-extended-pdf-viewer](https://github.com/stephanrauh/ngx-extended-pdf-viewer) - PDF document preview
 - [hls.js](https://github.com/video-dev/hls.js/) - HLS video stream support
 
 We appreciate the contributions from these open-source projects to the community!

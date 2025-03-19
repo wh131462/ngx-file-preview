@@ -118,6 +118,15 @@ export class PreviewUtils {
         type: PreviewUtils.getFileTypeFromUrl(input)
       };
     }
+    // 自推测类型
+    if (typeof input === 'object' && 'url' in input) {
+      return {
+        url: input.url as string,
+        name: input.name as string,
+        type: PreviewUtils.getFileTypeFromUrl(input.url as string)
+      }
+    }
+
 
     throw new Error('Invalid file input');
   }

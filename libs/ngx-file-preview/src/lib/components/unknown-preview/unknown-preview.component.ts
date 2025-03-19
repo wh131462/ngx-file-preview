@@ -1,13 +1,12 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PdfViewerModule} from 'ng2-pdf-viewer';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewBaseComponent} from "../base/preview-base.component";
 
 @Component({
   selector: 'fp-unknown-preview',
   standalone: true,
-  imports: [CommonModule, PdfViewerModule, PreviewIconComponent],
+  imports: [CommonModule, PreviewIconComponent],
   template: `
     <div class="unknown-preview">
       <div class="unknown-message">

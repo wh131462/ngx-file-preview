@@ -60,7 +60,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "libs/demo/src/favicon.ico",
-              "libs/demo/src/assets"
+              "libs/demo/src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets",
+                "output": "assets"
+              }
             ],
             "styles": [
               "libs/demo/src/styles.scss",

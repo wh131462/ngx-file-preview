@@ -1,13 +1,13 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PdfViewerModule} from 'ng2-pdf-viewer';
+import {NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule} from 'ngx-extended-pdf-viewer';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewBaseComponent} from "../base/preview-base.component";
 
 @Component({
   selector: 'fp-pdf-preview',
   standalone: true,
-  imports: [CommonModule, PdfViewerModule, PreviewIconComponent],
+  imports: [CommonModule, NgxExtendedPdfViewerModule, PreviewIconComponent],
   template: `
     <div class="pdf-container">
       <!-- 工具栏 -->
@@ -16,7 +16,7 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
           <div class="control" (click)="zoomOut()">
             <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
           </div>
-          <span (click)="resetZoom()">{{ (zoom * 100).toFixed(0) }}%</span>
+          <span (click)="resetZoom()">{{ zoom }}%</span>
           <div class="control" (click)="zoomIn()">
             <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
           </div>
@@ -39,20 +39,34 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
         <div *ngIf="isLoading" class="loading-overlay">
           <div class="loading-spinner"></div>
         </div>
-        <pdf-viewer
+        <ngx-extended-pdf-viewer
           [class.hidden]="isLoading"
           [src]="file.url"
           [rotation]="rotation"
           [zoom]="zoom"
+          (zoomChange)="onZoomChange($event)"
           [page]="currentPage"
-          [autoresize]="true"
-          [show-all]="true"
-          [render-text]="true"
-          [original-size]="false"
-          (after-load-complete)="onPdfLoaded($event)"
-          (page-rendered)="pageRendered()"
+          [backgroundColor]="'rgba(0,0,0,0)'"
+          [showSidebarButton]="false"
+          [textLayer]="true"
+          [showToolbar]="false"
+          [showTextEditor]="false"
+          [showHandToolButton]="false"
+          [showFindButton]="false"
+          [showPagingButtons]="false"
+          [showZoomButtons]="false"
+          [showPresentationModeButton]="false"
+          [showOpenFileButton]="false"
+          [showPrintButton]="false"
+          [showDownloadButton]="false"
+          [showSecondaryToolbarButton]="false"
+          [showRotateButton]="false"
+          [showSpreadButton]="false"
+          [showPropertiesButton]="false"
+          (pagesLoaded)="onPdfLoaded($event)"
+          (pageRendered)="pageRendered()"
           style="width: 100%; height: 100%;"
-        ></pdf-viewer>
+        ></ngx-extended-pdf-viewer>
       </div>
     </div>
   `,
@@ -60,47 +74,54 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PdfPreviewComponent extends PreviewBaseComponent {
-  zoom = 1;
-  rotation = 0;
+  zoom: any = 100;
+  rotation: 0 | 90 | 180 | 270 = 0;
   currentPage = 1;
   totalPages = 0;
+  @ViewChild(NgxExtendedPdfViewerComponent) pdfViewer!: NgxExtendedPdfViewerComponent;
 
   constructor(private cdr: ChangeDetectorRef) {
     super();
   }
 
   onPdfLoaded(pdf: any) {
-    this.totalPages = pdf.numPages;
+    this.totalPages = pdf.pagesCount;
+    this.zoom = "auto"
+    setTimeout(()=>{
+      this.zoom = this.pdfViewer.zoom;
+    })
     this.isLoading = false;
     this.cdr.markForCheck();
   }
 
   pageRendered() {
-    // 页面渲染完成后的回调
     this.isLoading = false;
     this.cdr.markForCheck();
   }
 
-  // 缩放控制
   zoomIn() {
-    this.zoom = Math.min(this.zoom * 1.2, 3);
+    this.zoom = Math.floor(Math.min(this.zoom * 1.2, 300));
   }
 
   zoomOut() {
-    this.zoom = Math.max(this.zoom / 1.2, 0.5);
+    this.zoom = Math.floor(Math.max(this.zoom / 1.2, 10));
   }
 
   resetZoom() {
-    this.zoom = 1;
+    this.zoom = 100;
   }
 
   reset() {
-    this.resetZoom()
+    this.resetZoom();
     this.rotation = 0;
   }
 
-  // 旋转控制
   rotate(degrees: number) {
-    this.rotation = (this.rotation + degrees) % 360;
+    this.rotation = (this.rotation + degrees + 360) % 360 as 0 | 90 | 180 | 270;
+  }
+
+  onZoomChange($event: string | number) {
+    console.log($event)
+    this.zoom = Math.floor(Number($event))
   }
 }

@@ -42,7 +42,7 @@
   "peerDependencies": {
     "docx-preview": "^0.3.3",
     "hls.js": "^1.4.12",
-    "ng2-pdf-viewer": "^10.0.0",
+    "ngx-extended-pdf-viewer": "^23.0.0-alpha.6",
     "pptx-preview": "^1.0.1",
     "xlsx": "^0.18.5"
   },

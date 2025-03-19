@@ -37,14 +37,14 @@
 ## 安装
 
 ```bash
-npm install @eternalheart/ngx-file-preview --save docx-preview hls.js ng2-pdf-viewer pptx-preview xlsx
+npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer
 ```
 
 ## 配置
 
-### 1. 字体图标配置
+### 1. 字体图标配置和资源
 
-在 `angular.json` 文件中添加所需的样式和脚本：
+在 `angular.json` 文件中添加所需的样式,资源和脚本：
 
 ```json
 {
@@ -53,6 +53,13 @@ npm install @eternalheart/ngx-file-preview --save docx-preview hls.js ng2-pdf-vi
       "architect": {
         "build": {
           "options": {
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-extended-pdf-viewer/assets",
+                "output": "assets"
+              }
+            ],
             "styles": [
               "node_modules/@eternalheart/ngx-file-preview/src/assets/icon/font/nfp.css"
             ],
@@ -174,8 +181,8 @@ import { PreviewComponent } from '@eternalheart/ngx-file-preview';
 ```typescript
 interface PreviewFile {
   url: string;          // 文件URL
-  type: PreviewType;    // 文件类型
   name: string;         // 文件名
+  type?: PreviewType;    // 文件类型 - 非必要 会自己推断
   size?: number;        // 文件大小（可选）
   lastModified?: number;// 最后修改时间（可选）
   coverUrl?: string;    // 封面图URL（适用于视频/音频，可选）
@@ -249,7 +256,7 @@ MIT
 - [docx-preview](https://github.com/VolodymyrBaydalka/docx-preview) - Word文档预览
 - [pptx-preview](https://github.com/SheetJS/sheetjs) - PPT演示文稿预览
 - [xlsx](https://github.com/SheetJS/sheetjs) - Excel表格预览
-- [ng2-pdf-viewer](https://github.com/VadimDez/ng2-pdf-viewer) - PDF文档预览
+- [ngx-extended-pdf-viewer](https://github.com/stephanrauh/ngx-extended-pdf-viewer) - PDF文档预览
 - [hls.js](https://github.com/video-dev/hls.js/) - HLS视频流播放支持
 
 感谢这些项目的贡献者们为开源社区作出的贡献！
