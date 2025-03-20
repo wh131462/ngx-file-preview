@@ -56,7 +56,6 @@ export class AppComponent {
     this.isDragging = isDragging;
   }
 
-
   // 显示源码
   showSourceCode(type: string) {
     let code = '';

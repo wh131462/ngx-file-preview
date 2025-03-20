@@ -1,5 +1,6 @@
 import {AfterViewInit, Directive, ElementRef, Input, OnChanges} from '@angular/core';
 import hljs from 'highlight.js';
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Directive({
     selector: '[highlight]',
@@ -26,16 +27,13 @@ export class HighlightCodeDirective implements AfterViewInit, OnChanges {
 
     private highlight(): void {
         const element = this.el.nativeElement as HTMLElement;
-
+        element.removeAttribute('data-highlighted')
         // 清理旧内容
-        element.textContent = this.code || element.textContent || '';
-
+        element.textContent = this.code || element.textContent || '' ;
         // 重置语言样式
         this.cleanLanguageClass(element);
-
         // 设置语言类
         this.setLanguageClass(element);
-
         // 执行高亮
         hljs.highlightElement(element);
     }
