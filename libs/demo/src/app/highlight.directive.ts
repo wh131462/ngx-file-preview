@@ -1,6 +1,5 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnChanges } from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Input, OnChanges} from '@angular/core';
 import hljs from 'highlight.js';
-import 'highlightjs-line-numbers.js';
 
 @Directive({
     selector: '[highlight]',
@@ -14,7 +13,8 @@ export class HighlightCodeDirective implements AfterViewInit, OnChanges {
     @Input() lineNumbersEnabled = true;
     private currentLanguageClass?: string;
 
-    constructor(private readonly el: ElementRef) {}
+    constructor(private readonly el: ElementRef) {
+    }
 
     ngAfterViewInit(): void {
         this.highlight();
@@ -38,9 +38,6 @@ export class HighlightCodeDirective implements AfterViewInit, OnChanges {
 
         // 执行高亮
         hljs.highlightElement(element);
-
-        // 添加行号（仅在首次或内容变化时）
-        this.handleLineNumbers(element);
     }
 
     private cleanLanguageClass(element: HTMLElement): void {
@@ -54,17 +51,6 @@ export class HighlightCodeDirective implements AfterViewInit, OnChanges {
         if (this.language) {
             this.currentLanguageClass = `language-${this.language}`;
             element.classList.add(this.currentLanguageClass);
-        }
-    }
-
-    private handleLineNumbers(element: HTMLElement): void {
-        if (this.lineNumbersEnabled) {
-            // 先移除已有行号（如果存在）
-            if (element.closest('.hljs-line-numbers')) {
-                (hljs as any).lineNumbersBlock(element, true); // 第二个参数true表示强制刷新
-            } else {
-                (hljs as any).lineNumbersBlock(element);
-            }
         }
     }
 }
