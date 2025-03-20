@@ -265,17 +265,27 @@
         }
       }
     }
-
-    pre {
-      font-family: 'Courier New', Courier, monospace;
-      background-color: #f5f5f5;
-      padding: 16px;
-      border-radius: 4px;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: 14px;
-      color: #333;
-    }
   }
+}
+/* 行号列样式 */
+.hljs-line-numbers {
+  text-align: right;
+  border-right: 1px solid #ddd;
+  color: #999;
+  padding-right: 0.8em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* 代码块容器样式 */
+.pre-wrapper {
+  position: relative;
+  overflow-x: auto;
+}
+
+/* 行号对齐修正 */
+.hljs-line {
+  display: inline-block;
+  min-width: 100%;
 }

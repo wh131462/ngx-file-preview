@@ -1,6 +1,6 @@
 <div class="file-upload-container"> <!-- GitHub Logo -->
   <a href="https://github.com/wh131462/ngx-file-preview" target="_blank" class="github-logo">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" />
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"/>
   </a>
 
   <div class="title">
@@ -25,7 +25,8 @@
   <div class="title-container"><span class="title">指令预览模式</span><span class="source-code"
                                                                             (click)="showSourceCode('directive')">查看源码</span>
   </div>
-  <div class="directive" [ngxFilePreview]="files" themeMode="light" (previewEvent)="handleError($event)">点击预览文件</div>
+  <div class="directive" [ngxFilePreview]="files" themeMode="light" (previewEvent)="handleError($event)">点击预览文件
+  </div>
   <div class="title-container"><span class="title">组件预览模式</span><span class="source-code"
                                                                             (click)="showSourceCode('component')">查看源码</span>
   </div>
@@ -74,6 +75,6 @@
       <span class="title">源码</span>
       <i class="close NGX-FILE-PREVIEW nfp-close" (click)="closeSourceCode()"></i>
     </div>
-    <pre>{{ sourceCode }}</pre>
+    <pre><code [highlight]="sourceCode" language="html" [lineNumbersEnabled]="true"></code></pre>
   </div>
 </div>

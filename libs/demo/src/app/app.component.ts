@@ -2,31 +2,22 @@ import {Component} from '@angular/core';
 import {
   PreviewComponent,
   PreviewDirective,
-  PreviewIconComponent,
   PreviewEvent,
-  PreviewFileInput, PreviewFile
+  PreviewFile,
+  PreviewIconComponent
 } from '@eternalheart/ngx-file-preview';
 import {NgForOf, NgIf} from "@angular/common";
+import {HighlightCodeDirective} from "./highlight.directive";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PreviewDirective, PreviewComponent, PreviewIconComponent, NgForOf, NgIf],
+  imports: [PreviewDirective, PreviewComponent, PreviewIconComponent, NgForOf, NgIf, HighlightCodeDirective],
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  files: (Partial<PreviewFile>|File)[] = [{
-    name: '12323',
-    url: 'http://ppt.jinqidongli.com/666/67c595e28004bb19cfc5179b.pptx'
-  },{
-    name: '12323',
-    url: 'http://ppt.jinqidongli.com/666/67c67e188667a56822b98f7e.pptx'
-  },
-    {
-      name: '21321333',
-      url: 'http://pdf.jinqidongli.com/666/67c5981f8667a56822b61f05.pdf'
-    }]; // 文件列表
+  files: (Partial<PreviewFile> | File)[] = []; // 文件列表
   isDragging = false;
 
   sourceCodeVisible = false;
@@ -46,7 +37,7 @@ export class AppComponent {
   }
 
   deleteFile(i: number) {
-    if(Array.isArray(this.files)){
+    if (Array.isArray(this.files)) {
       this.files.splice(i, 1);
       this.files = [...this.files]
     }
@@ -54,7 +45,7 @@ export class AppComponent {
 
   onDrop(event: DragEvent) {
     event.preventDefault()
-    if(Array.isArray(this.files)){
+    if (Array.isArray(this.files)) {
       this.files = [...this.files, ...Array.from(event.dataTransfer?.files || [])];
       this.isDragging = false;
     }
