@@ -1,37 +1,82 @@
-name: Auto Release
+name: Commit Driven Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*' # 仅匹配 vX.Y.Z 格式的标签
+    branches:
+      - master  # 监听主分支的推送事件
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 允许创建Release
 
     steps:
-      # 检查出代码
+      # 检出代码并获取完整提交历史
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}  # 需要仓库写入权限的token
 
-      # 获取从上一个 tag 到当前 tag 的变更日志
+      # 从提交消息中提取版本号
+      - name: Extract version
+        id: extract-version
+        run: |
+          # 获取本次推送的所有提交消息
+          COMMIT_MESSAGES=$(git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%s")
+
+          # 使用严格的正则匹配语义化版本号
+          VERSION=$(echo "$COMMIT_MESSAGES" | grep -oE 'v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)' | head -1)
+
+          if [ -z "$VERSION" ]; then
+            echo "::warning::未在提交消息中找到版本号 (格式要求：vX.Y.Z)"
+            exit 0
+          fi
+
+          echo "发现新版本: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # 创建Git标签
+      - name: Create version tag
+        if: steps.extract-version.outputs.version != ''
+        run: |
+          git config user.name "Release Bot"
+          git config user.email "bot@example.com"
+          git tag ${{ steps.extract-version.outputs.version }}
+          git push origin ${{ steps.extract-version.outputs.version }}
+
+      # 生成变更日志
       - name: Generate changelog
         id: changelog
+        if: steps.extract-version.outputs.version != ''
         run: |
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
-          echo "Previous tag: $PREVIOUS_TAG"
-          CHANGELOG=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"* %s (%h)")
-          echo "Changelog: $CHANGELOG"
-          echo "::set-output name=changelog::$CHANGELOG"
+          CURRENT_TAG=${{ steps.extract-version.outputs.version }}
 
-      # 创建 GitHub Release
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 获取最近的合法版本标签
+          git fetch --tags
+          PREVIOUS_TAG=$(git tag --sort=-v:refname | grep -E '^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$' | sed -n 2p)
+
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "生成首个版本说明"
+            CHANGELOG="## 初始版本"
+          else
+            echo "生成变更：$PREVIOUS_TAG → $CURRENT_TAG"
+            CHANGELOG=$(git log $PREVIOUS_TAG..HEAD --format="* %s (%h)" --reverse)
+          fi
+
+          # 安全输出多行内容
+          DELIMITER="EOF_$(openssl rand -hex 8)"
+          echo "changelog<<$DELIMITER" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "$DELIMITER" >> $GITHUB_OUTPUT
+
+      # 创建GitHub Release
+      - name: Publish Release
+        if: steps.extract-version.outputs.version != ''
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          tag_name: ${{ steps.extract-version.outputs.version }}
+          name: "Release ${{ steps.extract-version.outputs.version }}"
           body: ${{ steps.changelog.outputs.changelog }}
-          draft: false
           prerelease: false
