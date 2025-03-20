@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, SimpleChanges, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
@@ -80,9 +73,10 @@ export class PptPreviewComponent extends PreviewBaseComponent {
   constructor(private elementRef: ElementRef) {
     super();
   }
+
   ngOnChanges(simpleChanges: SimpleChanges) {
     if (simpleChanges['file'] && this.file) {
-      this.loadFile().then(()=>{
+      this.loadFile().then(() => {
         console.log("ppt loaded")
       });
     }
@@ -100,17 +94,21 @@ export class PptPreviewComponent extends PreviewBaseComponent {
 
 
   protected override async handleFileContent(content: FileReaderResponse) {
-    const {data} = content;
-    console.log("data", data)
-    const container = this.previewContainer.nativeElement;
-    const {width} = container.getBoundingClientRect();
-
-    this.pptxPreviewer = init(this.content.nativeElement, {
-      width: Math.min(1200, width),
-    });
-
-    await this.pptxPreviewer.preview(data);
+    try {
+      const {data} = content;
+      console.log(data)
+      const container = this.previewContainer.nativeElement;
+      const {width} = container.getBoundingClientRect();
+      this.pptxPreviewer = init(this.content.nativeElement, {
+        width: Math.min(1200, width),
+        renderer: 'canvas'
+      });
+      await this.pptxPreviewer.preview(data);
+    } catch (e) {
+      console.log("error", e)
+    }
   }
+
   private setupResizeObserver() {
     const resizeObserver = new ResizeObserver(() => {
       if (this.pptxPreviewer) {
@@ -126,7 +124,7 @@ export class PptPreviewComponent extends PreviewBaseComponent {
     const scaledWidth = Math.min(1200, width) * this.scale;
 
     if (this.pptxPreviewer) {
-      this.pptxPreviewer?.resize(scaledWidth);
+      this.pptxPreviewer?.resize?.(scaledWidth);
     }
   }
 

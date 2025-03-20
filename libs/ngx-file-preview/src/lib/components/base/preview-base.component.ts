@@ -16,7 +16,6 @@ export abstract class PreviewBaseComponent {
   protected cdr = inject(ChangeDetectorRef);
 
   protected async loadFile(fileType?: 'arraybuffer' | 'text' | 'json'): Promise<void> {
-    console.log("file", this.file)
     if (!this.file) return;
     this.isLoading = true;
     try {

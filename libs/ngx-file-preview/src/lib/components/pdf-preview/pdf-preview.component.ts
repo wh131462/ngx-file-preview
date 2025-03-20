@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule} from 'ngx-extended-pdf-viewer';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
@@ -120,7 +120,6 @@ export class PdfPreviewComponent extends PreviewBaseComponent {
   }
 
   onZoomChange($event: string | number) {
-    console.log($event)
     this.zoom = Math.floor(Number($event))
   }
 }

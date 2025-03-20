@@ -1,15 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HttpClient} from '@angular/common/http';
-import {firstValueFrom} from 'rxjs';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewBaseComponent} from "../base/preview-base.component";
 import {FileReaderResponse} from "../../workers/file-reader.worker";
