@@ -9,6 +9,7 @@ import {
 import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-image-preview',
@@ -29,7 +30,6 @@ import {PreviewIconComponent} from "../preview-icon/preview-icon.component";
              [src]="file.url"
              [style.display]="isLoading ? 'none' : 'block'"
              (load)="onImageLoad()"
-             (error)="handleError($event)"
              alt="preview"/>
       </div>
 
@@ -105,12 +105,15 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
   private dragStartX = 0;
   private dragStartY = 0;
 
-  constructor(private cdr: ChangeDetectorRef, private el: ElementRef) {
+  constructor(private el: ElementRef) {
     super();
   }
 
   ngAfterViewInit() {
     this.updateTransformStyle();
+  }
+
+  protected override handleFileContent(content: FileReaderResponse) {
   }
 
   private updateTransformStyle() {
@@ -197,7 +200,6 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
   }
 
   onImageLoad() {
-    super.onLoadComplete();
     if (this.previewImage?.nativeElement) {
       const image = this.previewImage.nativeElement;
       this.imageWidth = image.naturalWidth;

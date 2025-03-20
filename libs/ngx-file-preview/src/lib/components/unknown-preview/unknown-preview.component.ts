@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewBaseComponent} from "../base/preview-base.component";
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-unknown-preview',
@@ -19,4 +20,5 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
   styleUrls: ['../../styles/_theme.scss', 'unknown-preview.component.scss'],
 })
 export class UnknownPreviewComponent extends PreviewBaseComponent {
+  protected override handleFileContent(content: FileReaderResponse) {}
 }

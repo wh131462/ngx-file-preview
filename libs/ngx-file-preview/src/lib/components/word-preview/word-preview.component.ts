@@ -11,6 +11,7 @@ import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {renderAsync} from 'docx-preview';
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-word-preview',
@@ -80,27 +81,14 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
   private scrollLeft = 0;
   private scrollTop = 0;
 
-  constructor(private cdr: ChangeDetectorRef) {
-    super();
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['file']) {
-      this.loadDocument();
+      this.loadFile()
     }
   }
-
-  private async loadDocument() {
-    if (!this.file?.url) return;
-
-    this.isLoading = true;
-    this.cdr.markForCheck();
-
+  override async handleFileContent(content: FileReaderResponse) {
     try {
-      const response = await fetch(this.file.url);
-      const arrayBuffer = await response.arrayBuffer();
-
-      await renderAsync(arrayBuffer, this.content.nativeElement, undefined, {
+      await renderAsync(content.data, this.content.nativeElement, undefined, {
         className: 'docx-content',
         inWrapper: false,
         ignoreWidth: false,
@@ -109,12 +97,9 @@ export class WordPreviewComponent extends PreviewBaseComponent implements OnChan
         breakPages: true,
         useBase64URL: true,
       });
-
-      this.onLoadComplete();
     } catch (error) {
-      this.handleError(error);
+      console.log("error", error)
     }
-
     this.cdr.markForCheck();
   }
 

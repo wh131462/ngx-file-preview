@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule} from 'ngx-extended-pdf-viewer';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewBaseComponent} from "../base/preview-base.component";
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-pdf-preview',
@@ -80,9 +81,7 @@ export class PdfPreviewComponent extends PreviewBaseComponent {
   totalPages = 0;
   @ViewChild(NgxExtendedPdfViewerComponent) pdfViewer!: NgxExtendedPdfViewerComponent;
 
-  constructor(private cdr: ChangeDetectorRef) {
-    super();
-  }
+  protected override handleFileContent(content: FileReaderResponse) {}
 
   onPdfLoaded(pdf: any) {
     this.totalPages = pdf.pagesCount;

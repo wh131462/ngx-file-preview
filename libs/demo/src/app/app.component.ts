@@ -1,5 +1,11 @@
 import {Component} from '@angular/core';
-import {PreviewComponent, PreviewDirective, PreviewIconComponent,PreviewEvent} from '@eternalheart/ngx-file-preview';
+import {
+  PreviewComponent,
+  PreviewDirective,
+  PreviewIconComponent,
+  PreviewEvent,
+  PreviewFileInput, PreviewFile
+} from '@eternalheart/ngx-file-preview';
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
@@ -10,7 +16,7 @@ import {NgForOf, NgIf} from "@angular/common";
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  files: File[] = []; // 文件列表
+  files: (Partial<PreviewFile>|File)[] = []; // 文件列表
   isDragging = false;
 
   sourceCodeVisible = false;
@@ -18,7 +24,7 @@ export class AppComponent {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files) {
+    if (input.files && Array.isArray(this.files)) {
       this.files = [...this.files, ...Array.from(input.files)]
     }
   }
@@ -30,14 +36,18 @@ export class AppComponent {
   }
 
   deleteFile(i: number) {
-    this.files.splice(i, 1);
-    this.files = [...this.files]
+    if(Array.isArray(this.files)){
+      this.files.splice(i, 1);
+      this.files = [...this.files]
+    }
   }
 
   onDrop(event: DragEvent) {
     event.preventDefault()
-    this.files = [...this.files, ...Array.from(event.dataTransfer?.files || [])];
-    this.isDragging = false;
+    if(Array.isArray(this.files)){
+      this.files = [...this.files, ...Array.from(event.dataTransfer?.files || [])];
+      this.isDragging = false;
+    }
   }
 
   setDragging(isDragging: boolean, e: DragEvent) {

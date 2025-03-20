@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewBaseComponent} from "../base/preview-base.component";
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-archive-preview',
@@ -37,6 +38,9 @@ export class ArchivePreviewComponent extends PreviewBaseComponent {
       'gz': 'GZip 压缩文件'
     };
     return types[extension || ''] || '压缩文件';
+  }
+
+  protected override handleFileContent(content: FileReaderResponse) {
   }
 
   formatFileSize(bytes?: number): string {

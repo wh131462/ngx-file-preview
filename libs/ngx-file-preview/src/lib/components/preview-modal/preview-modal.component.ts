@@ -25,6 +25,7 @@ import {UnknownPreviewComponent} from "../unknown-preview/unknown-preview.compon
 import {ThemeService} from '../../services/theme.service';
 import {ThemeMode} from "../../types/theme.types";
 import {PreviewBaseComponent} from '../base/preview-base.component';
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'ngx-file-preview-modal',
@@ -170,7 +171,6 @@ export class PreviewModalComponent extends PreviewBaseComponent implements OnIni
 
   constructor(
     private previewService: PreviewService,
-    private cdr: ChangeDetectorRef,
     private themeService: ThemeService,
   ) {
     super();
@@ -213,6 +213,9 @@ export class PreviewModalComponent extends PreviewBaseComponent implements OnIni
         this.next();
         break;
     }
+  }
+
+  protected override handleFileContent(content: FileReaderResponse) {
   }
 
   close() {

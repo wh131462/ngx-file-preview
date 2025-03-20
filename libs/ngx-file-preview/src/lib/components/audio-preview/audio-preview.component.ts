@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-audio-preview',
@@ -13,7 +14,6 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
       <audio #audioPlayer
              [src]="file.url"
              (loadeddata)="onAudioLoad()"
-             (error)="handleError($event)"
              (timeupdate)="onTimeUpdate()">
       </audio>
 
@@ -126,13 +126,6 @@ export class AudioPreviewComponent extends PreviewBaseComponent implements OnIni
     this.cdr.markForCheck();
   };
 
-  constructor(
-    private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
-  ) {
-    super();
-  }
-
   ngOnInit() {
     this.isLoading = true;
     this.loadCover();
@@ -146,7 +139,6 @@ export class AudioPreviewComponent extends PreviewBaseComponent implements OnIni
         this.coverUrl = this.file.coverUrl;
         return;
       }
-
       // 如果没有封面，使用默认图标
       this.coverUrl = null;
       this.cdr.markForCheck();
@@ -294,5 +286,8 @@ export class AudioPreviewComponent extends PreviewBaseComponent implements OnIni
       audio.removeEventListener('ended', this.endedHandler);
     }
     this.stopDragging();
+  }
+
+  protected override handleFileContent(content: FileReaderResponse) {
   }
 }

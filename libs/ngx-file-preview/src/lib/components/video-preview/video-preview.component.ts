@@ -12,6 +12,7 @@ import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import Hls from 'hls.js';
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-video-preview',
@@ -21,7 +22,6 @@ import Hls from 'hls.js';
     <div class="video-container" #videoContainer [class.pip-mode]="isPiPMode">
       <video #videoPlayer
              (loadeddata)="onVideoLoad()"
-             (error)="handleError($event)"
              (timeupdate)="onTimeUpdate()"
              (ended)="onVideoEnded()"
              (pause)="onVideoPause()"
@@ -139,10 +139,6 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
   showSpeedControl = false;
   isDragging = false;
 
-  constructor(private cdr: ChangeDetectorRef) {
-    super();
-  }
-
   ngOnInit() {
     this.isLoading = true;
     this.cdr.markForCheck();
@@ -259,7 +255,6 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
       this.hls.on(Hls.Events.ERROR, (event, data) => {
         if (data.fatal) {
           console.error('HLS error:', data);
-          this.handleError(new Error('视频加载失败'));
         }
       });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -267,6 +262,8 @@ export class VideoPreviewComponent extends PreviewBaseComponent implements OnIni
       video.src = url;
     }
   }
+
+  protected override handleFileContent(content: FileReaderResponse) {}
 
   toggleFullscreen() {
     const video = this.videoContainer.nativeElement;

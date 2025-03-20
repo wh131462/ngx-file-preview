@@ -1,9 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {firstValueFrom} from 'rxjs';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {PreviewBaseComponent} from "../base/preview-base.component";
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-text-preview',
@@ -52,7 +61,7 @@ import {PreviewBaseComponent} from "../base/preview-base.component";
   styleUrls: ['../../styles/_theme.scss', './text-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextPreviewComponent extends PreviewBaseComponent implements OnInit, OnDestroy {
+export class TextPreviewComponent extends PreviewBaseComponent implements OnInit, OnDestroy, OnChanges {
 
   content = '';
   isWrapped = false;
@@ -64,21 +73,28 @@ export class TextPreviewComponent extends PreviewBaseComponent implements OnInit
   private readonly DEFAULT_SCALE = 1;
   private keydownListener?: (e: KeyboardEvent) => void;
 
-  constructor(
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef
-  ) {
-    super();
-  }
-
   ngOnInit() {
-    this.loadContent();
     this.setupKeyboardListeners();
   }
 
   ngOnDestroy() {
     this.removeKeyboardListeners();
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['file']) {
+      this.loadFile('text')
+    }
+  }
+
+  protected override handleFileContent(content: FileReaderResponse) {
+    if (content.error) {
+      this.content = '文件加载失败:' + content.error;
+    } else {
+      this.content = content.text || '文件内容为空';
+    }
+  }
+
 
   private setupKeyboardListeners() {
     this.keydownListener = (e: KeyboardEvent) => {
@@ -131,25 +147,6 @@ export class TextPreviewComponent extends PreviewBaseComponent implements OnInit
 
   private applyZoom() {
     this.cdr.markForCheck();
-  }
-
-  private async loadContent() {
-    try {
-      this.isLoading = true;
-      this.cdr.markForCheck();
-
-      const response = await firstValueFrom(
-        this.http.get(this.file.url, {responseType: 'text'})
-      );
-
-      this.content = response || '文件内容为空';
-    } catch (error) {
-      this.content = '文件加载失败';
-      console.error('Failed to load text file:', error);
-    } finally {
-      this.isLoading = false;
-      this.cdr.markForCheck();
-    }
   }
 
   toggleWrap() {

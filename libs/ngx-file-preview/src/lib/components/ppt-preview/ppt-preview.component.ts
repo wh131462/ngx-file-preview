@@ -10,6 +10,7 @@ import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import {init} from "pptx-preview";
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 @Component({
   selector: 'fp-ppt-preview',
@@ -76,13 +77,14 @@ export class PptPreviewComponent extends PreviewBaseComponent {
   private mouseMoveListener?: (e: MouseEvent) => void;
   private mouseUpListener?: (e: MouseEvent) => void;
 
-  constructor(private cdr: ChangeDetectorRef, private elementRef: ElementRef) {
+  constructor(private elementRef: ElementRef) {
     super();
   }
-
   ngOnChanges(simpleChanges: SimpleChanges) {
     if (simpleChanges['file'] && this.file) {
-      this.handleFile();
+      this.loadFile().then(()=>{
+        console.log("ppt loaded")
+      });
     }
   }
 
@@ -96,6 +98,19 @@ export class PptPreviewComponent extends PreviewBaseComponent {
     this.removeDragListeners();
   }
 
+
+  protected override async handleFileContent(content: FileReaderResponse) {
+    const {data} = content;
+    console.log("data", data)
+    const container = this.previewContainer.nativeElement;
+    const {width} = container.getBoundingClientRect();
+
+    this.pptxPreviewer = init(this.content.nativeElement, {
+      width: Math.min(1200, width),
+    });
+
+    await this.pptxPreviewer.preview(data);
+  }
   private setupResizeObserver() {
     const resizeObserver = new ResizeObserver(() => {
       if (this.pptxPreviewer) {
@@ -225,53 +240,6 @@ export class PptPreviewComponent extends PreviewBaseComponent {
     }
   }
 
-
-  private adjustScroll(mouseX: number, mouseY: number, oldScale: number) {
-    const container = this.previewContainer.nativeElement;
-    const contentWrapper = this.content.nativeElement;
-
-    // 获取内容的缩放变换比例
-    const scaleChange = this.scale / oldScale;
-
-    // 计算鼠标位置在内容中的原始坐标
-    const contentX = (container.scrollLeft + mouseX) / oldScale;
-    const contentY = (container.scrollTop + mouseY) / oldScale;
-
-    // 计算缩放后鼠标位置对应的新坐标
-    const newContentX = contentX * this.scale;
-    const newContentY = contentY * this.scale;
-
-    // 调整滚动条位置以对齐鼠标位置
-    container.scrollLeft = newContentX - mouseX;
-    container.scrollTop = newContentY - mouseY;
-
-    // 更新内容的缩放样式
-    contentWrapper.style.transform = `scale(${this.scale})`;
-    contentWrapper.style.transformOrigin = 'top left';
-  }
-
-  async handleFile() {
-    this.isLoading = true;
-    try {
-      const response = await fetch(this.file.url);
-      const arrayBuffer = await response.arrayBuffer();
-
-      const container = this.previewContainer.nativeElement;
-      const {width} = container.getBoundingClientRect();
-
-      this.pptxPreviewer = init(this.content.nativeElement, {
-        width: Math.min(1200, width),
-      });
-
-      await this.pptxPreviewer.preview(arrayBuffer);
-    } catch (error) {
-      console.error('PPT预览失败:', error);
-      this.handleError(error);
-    } finally {
-      this.isLoading = false;
-      this.cdr.markForCheck();
-    }
-  }
 
   zoomIn() {
     if (this.scale < this.MAX_SCALE) {

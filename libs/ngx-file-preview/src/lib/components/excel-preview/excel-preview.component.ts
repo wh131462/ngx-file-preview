@@ -13,6 +13,7 @@ import {CommonModule} from '@angular/common';
 import {PreviewBaseComponent} from '../base/preview-base.component';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
 import * as XLSX from 'xlsx';
+import {FileReaderResponse} from "../../workers/file-reader.worker";
 
 interface TableData {
   headers: string[];
@@ -130,13 +131,9 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
     return Array(total).fill(0);
   }
 
-  constructor(private cdr: ChangeDetectorRef) {
-    super();
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['file'] && this.file) {
-      this.handleFile();
+      this.loadFile();
     }
   }
 
@@ -148,6 +145,15 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
   ngOnDestroy() {
     this.removeDragListeners();
     this.removeKeyboardListeners();
+  }
+
+  protected override async handleFileContent(content: FileReaderResponse) {
+    const {data} = content
+    this.workbook = XLSX.read(data, {type: 'array'});
+    this.sheets = this.workbook.SheetNames;
+    if (this.sheets.length > 0) {
+      await this.switchSheet(this.sheets[0]);
+    }
   }
 
   private setupDragListeners() {
@@ -203,28 +209,6 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
     this.isDragging = false;
   }
 
-  async handleFile() {
-    this.isLoading = true;
-    try {
-      const response = await fetch(this.file.url);
-      console.log("response", response);
-      const arrayBuffer = await response.arrayBuffer();
-
-      this.workbook = XLSX.read(arrayBuffer, {type: 'array'});
-      this.sheets = this.workbook.SheetNames;
-
-      if (this.sheets.length > 0) {
-        await this.switchSheet(this.sheets[0]);
-      }
-    } catch (error) {
-      console.error('Excel文件预览失败:', error);
-      this.handleError(error);
-    } finally {
-      this.isLoading = false;
-      this.cdr.markForCheck();
-    }
-  }
-
   async switchSheet(sheetName: string) {
     if (!this.workbook) return;
 
@@ -255,7 +239,6 @@ export class ExcelPreviewComponent extends PreviewBaseComponent implements OnCha
       this.cdr.markForCheck();
     } catch (error) {
       console.error('切换工作表失败:', error);
-      this.handleError(error);
     }
   }
 
