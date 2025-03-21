@@ -106,7 +106,7 @@ export class ImagePreviewComponent extends PreviewBaseComponent implements After
     this.updateTransformStyle();
   }
 
-  protected override handleFileContent(content: FileReaderResponse) {
+  protected override async handleFileContent(content: FileReaderResponse) {
   }
 
   private updateTransformStyle() {

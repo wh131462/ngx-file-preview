@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule} from 'ngx-extended-pdf-viewer';
 import {PreviewIconComponent} from '../preview-icon/preview-icon.component';
@@ -17,9 +17,12 @@ import {FileReaderResponse} from "../../workers/file-reader.worker";
           <div class="control" (click)="zoomOut()">
             <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
           </div>
-          <span (click)="resetZoom()">{{ zoom }}%</span>
+          <span (click)="resetZoom()">{{ zoom == "page-fit" ? "100%" : zoom }}%</span>
           <div class="control" (click)="zoomIn()">
             <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
+          </div>
+          <div class="control" (click)="autoFit()">
+            <preview-icon [themeMode]="themeMode" name="auto-fit"></preview-icon>
           </div>
         </div>
 
@@ -45,7 +48,7 @@ import {FileReaderResponse} from "../../workers/file-reader.worker";
           [src]="file.url"
           [rotation]="rotation"
           [zoom]="zoom"
-          (zoomChange)="onZoomChange($event)"
+          (currentZoomFactor)="onZoomChange($event)"
           [page]="currentPage"
           [backgroundColor]="'rgba(0,0,0,0)'"
           [showSidebarButton]="false"
@@ -64,8 +67,7 @@ import {FileReaderResponse} from "../../workers/file-reader.worker";
           [showRotateButton]="false"
           [showSpreadButton]="false"
           [showPropertiesButton]="false"
-          (pagesLoaded)="onPdfLoaded($event)"
-          (pageRendered)="pageRendered()"
+          (pdfLoaded)="pdfLoaded()"
           style="width: 100%; height: 100%;"
         ></ngx-extended-pdf-viewer>
       </div>
@@ -75,27 +77,17 @@ import {FileReaderResponse} from "../../workers/file-reader.worker";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PdfPreviewComponent extends PreviewBaseComponent {
-  zoom: any = 100;
+  zoom: any = "page-fit";// 'auto'|'page-actual'|'page-fit'|'page-width'|
   rotation: 0 | 90 | 180 | 270 = 0;
   currentPage = 1;
-  totalPages = 0;
   @ViewChild(NgxExtendedPdfViewerComponent) pdfViewer!: NgxExtendedPdfViewerComponent;
+  @ViewChild('viewerContainer') viewerContainer?: ElementRef<HTMLDivElement>
 
-  protected override handleFileContent(content: FileReaderResponse) {}
-
-  onPdfLoaded(pdf: any) {
-    this.totalPages = pdf.pagesCount;
-    this.zoom = "auto"
-    setTimeout(()=>{
-      this.zoom = this.pdfViewer.zoom;
-    })
-    this.isLoading = false;
-    this.cdr.markForCheck();
+  protected override async handleFileContent(content: FileReaderResponse) {
   }
 
-  pageRendered() {
+  pdfLoaded() {
     this.isLoading = false;
-    this.cdr.markForCheck();
   }
 
   zoomIn() {
@@ -104,6 +96,10 @@ export class PdfPreviewComponent extends PreviewBaseComponent {
 
   zoomOut() {
     this.zoom = Math.floor(Math.max(this.zoom / 1.2, 10));
+  }
+
+  autoFit() {
+    this.zoom = 'page-fit';
   }
 
   resetZoom() {
@@ -120,6 +116,12 @@ export class PdfPreviewComponent extends PreviewBaseComponent {
   }
 
   onZoomChange($event: string | number) {
-    this.zoom = Math.floor(Number($event))
+    const zoomNum = Math.floor(Number($event) * 100);
+    if (Number.isNaN(zoomNum)) {
+      return
+    }
+    this.zoom = zoomNum
+    this.cdr.markForCheck();
   }
+
 }

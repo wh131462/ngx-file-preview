@@ -40,7 +40,7 @@ export class ArchivePreviewComponent extends PreviewBaseComponent {
     return types[extension || ''] || '压缩文件';
   }
 
-  protected override handleFileContent(content: FileReaderResponse) {
+  protected override async handleFileContent(content: FileReaderResponse) {
   }
 
   formatFileSize(bytes?: number): string {

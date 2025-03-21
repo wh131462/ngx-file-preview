@@ -20,5 +20,6 @@ import {FileReaderResponse} from "../../workers/file-reader.worker";
   styleUrls: ['../../styles/_theme.scss', 'unknown-preview.component.scss'],
 })
 export class UnknownPreviewComponent extends PreviewBaseComponent {
-  protected override handleFileContent(content: FileReaderResponse) {}
+  protected override async handleFileContent(content: FileReaderResponse) {
+  }
 }

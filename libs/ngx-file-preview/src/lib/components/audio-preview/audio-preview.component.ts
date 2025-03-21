@@ -288,6 +288,6 @@ export class AudioPreviewComponent extends PreviewBaseComponent implements OnIni
     this.stopDragging();
   }
 
-  protected override handleFileContent(content: FileReaderResponse) {
+  protected override async handleFileContent(content: FileReaderResponse) {
   }
 }

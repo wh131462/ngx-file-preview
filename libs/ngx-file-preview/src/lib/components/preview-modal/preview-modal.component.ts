@@ -207,7 +207,7 @@ export class PreviewModalComponent extends PreviewBaseComponent implements OnIni
     }
   }
 
-  protected override handleFileContent(content: FileReaderResponse) {
+  protected override async handleFileContent(content: FileReaderResponse) {
   }
 
   close() {

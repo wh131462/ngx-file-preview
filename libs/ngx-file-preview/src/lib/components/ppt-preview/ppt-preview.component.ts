@@ -96,7 +96,6 @@ export class PptPreviewComponent extends PreviewBaseComponent {
   protected override async handleFileContent(content: FileReaderResponse) {
     try {
       const {data} = content;
-      console.log(data)
       const container = this.previewContainer.nativeElement;
       const {width} = container.getBoundingClientRect();
       this.pptxPreviewer = init(this.content.nativeElement, {

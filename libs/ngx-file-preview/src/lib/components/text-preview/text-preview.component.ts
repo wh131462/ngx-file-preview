@@ -77,7 +77,7 @@ export class TextPreviewComponent extends PreviewBaseComponent implements OnInit
     }
   }
 
-  protected override handleFileContent(content: FileReaderResponse) {
+  protected override async handleFileContent(content: FileReaderResponse) {
     if (content.error) {
       this.content = '文件加载失败:' + content.error;
     } else {

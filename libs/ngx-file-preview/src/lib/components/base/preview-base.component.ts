@@ -17,17 +17,26 @@ export abstract class PreviewBaseComponent {
 
   protected async loadFile(fileType?: 'arraybuffer' | 'text' | 'json'): Promise<void> {
     if (!this.file) return;
-    this.isLoading = true;
+    this.startLoading();
     try {
       const content = await firstValueFrom(this.fileReader.readFile(this.file,fileType));
-      this.handleFileContent(content);
+      await this.handleFileContent(content);
     } catch (error) {
       console.error('Failed to read file:', error);
     } finally {
-      this.isLoading = false;
-      this.cdr.detectChanges()
+      this.stopLoading();
     }
   }
 
-  protected abstract handleFileContent(content: FileReaderResponse): void;
+  protected abstract handleFileContent(content: FileReaderResponse): Promise<any>;
+
+  protected startLoading(){
+    this.isLoading = true;
+    this.cdr.detectChanges();
+  }
+
+  protected stopLoading(){
+    this.isLoading = false;
+    this.cdr.detectChanges();
+  }
 }
