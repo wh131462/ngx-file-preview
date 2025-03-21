@@ -1,6 +1,6 @@
 @font-face {
   font-family: "NGX-FILE-PREVIEW"; /* Project id 4798817 */
-  src: url('nfp.svg?t=1735569144532#NGX-FILE-PREVIEW') format('svg');
+  src: url('nfp.svg?t=1742551827025#NGX-FILE-PREVIEW') format('svg');
 }
 
 .NGX-FILE-PREVIEW {
@@ -9,6 +9,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.nfp-markdown:before {
+  content: "\ebb1";
 }
 
 .nfp-download:before {

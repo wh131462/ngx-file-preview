@@ -1,20 +1,36 @@
-import {Directive, EventEmitter, HostListener, Input, Output} from '@angular/core';
-import {PreviewService} from '../services/preview.service';
-import {PreviewEvent, PreviewFileInput} from '../types/preview.types';
-import {PreviewUtils} from '../utils/preview.utils';
-import {AutoThemeConfig, ThemeMode} from '../types/theme.types';
+import {
+  Directive,
+  ElementRef,
+  EnvironmentInjector,
+  EventEmitter,
+  HostListener,
+  Injector,
+  Input,
+  OnDestroy,
+  Output
+} from '@angular/core';
+import {FileReaderService, PreviewService, ThemeService} from '../services';
+import {AutoThemeConfig, PreviewEvent, PreviewFileInput, ThemeMode} from '../types';
+import {PreviewUtils} from '../utils';
 
+/**
+ * 所有依赖服务 都是指令级别的
+ * directive -> modal -> preview
+ */
 @Directive({
   selector: '[ngxFilePreview]',
   standalone: true,
+  providers: [PreviewService, ThemeService, FileReaderService]
 })
-export class PreviewDirective {
+export class PreviewDirective implements OnDestroy {
   @Input('ngxFilePreview') fileInput: PreviewFileInput;
   @Input() previewIndex = 0;
   @Input() themeMode: ThemeMode = 'auto';
   @Input() autoConfig?: AutoThemeConfig;
   @Output() previewEvent = new EventEmitter<PreviewEvent>();
-  constructor(private previewService: PreviewService) {
+
+  constructor(private previewService: PreviewService, private injector: Injector, private envInjector: EnvironmentInjector) {
+    this.previewService.init(this.injector, this.envInjector);
   }
 
   @HostListener('click')
@@ -28,8 +44,8 @@ export class PreviewDirective {
         themeMode: this.themeMode,
         autoThemeConfig: this.autoConfig
       });
-    }else{
-      this.previewEvent.emit({type:'error', message: '没有文件可预览!'})
+    } else {
+      this.previewEvent.emit({type: 'error', message: '没有文件可预览!'})
     }
   }
 

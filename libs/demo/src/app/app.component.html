@@ -31,16 +31,16 @@
                                                                             (click)="showSourceCode('component')">查看源码</span>
   </div>
   <!-- 使用默认模板 -->
-  <ngx-file-preview
+  <ngx-preview-list
     [files]="files"
     themeMode="auto"
     [autoConfig]="{dark: { start: 18, end: 6 }}"
-  ></ngx-file-preview>
+  ></ngx-preview-list>
   <div class="title-container"><span class="title">自定义模板列表</span><span class="source-code"
                                                                               (click)="showSourceCode('custom')">查看源码</span>
   </div>
   <!-- 使用自定义模板 -->
-  <ngx-file-preview [files]="files" themeMode="light">
+  <ngx-preview-list [files]="files" themeMode="light">
     <ng-template
       #itemTemplate
       let-file
@@ -65,7 +65,7 @@
         </button>
       </div>
     </ng-template>
-  </ngx-file-preview>
+  </ngx-preview-list>
 </div>
 
 <!-- 弹窗显示源码 -->

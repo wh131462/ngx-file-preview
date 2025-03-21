@@ -8,11 +8,9 @@ interface FileReaderResponse {
   error?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class FileReaderService {
-  private worker: Worker;
+  private readonly worker: Worker;
   private responseSubject = new Subject<FileReaderResponse>();
 
   constructor() {

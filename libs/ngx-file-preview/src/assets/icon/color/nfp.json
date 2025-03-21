@@ -6,78 +6,85 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "19702974",
+      "name": "markdown",
+      "font_class": "markdown",
+      "unicode": "ebb1",
+      "unicode_decimal": 60337
+    },
+    {
       "icon_id": "16102756",
-      "name": "明细下载",
+      "name": "download",
       "font_class": "download",
       "unicode": "e6c6",
       "unicode_decimal": 59078
     },
     {
       "icon_id": "41105353",
-      "name": "folder icon-7",
+      "name": "ppt",
       "font_class": "ppt",
       "unicode": "e904",
       "unicode_decimal": 59652
     },
     {
       "icon_id": "41105354",
-      "name": "folder icon-9",
+      "name": "word",
       "font_class": "word",
       "unicode": "e902",
       "unicode_decimal": 59650
     },
     {
       "icon_id": "41105355",
-      "name": "folder icon-8",
+      "name": "excel",
       "font_class": "excel",
       "unicode": "e907",
       "unicode_decimal": 59655
     },
     {
       "icon_id": "41105356",
-      "name": "folder icon-4",
+      "name": "txt",
       "font_class": "txt",
       "unicode": "e903",
       "unicode_decimal": 59651
     },
     {
       "icon_id": "41105357",
-      "name": "folder icon-6",
+      "name": "unknown",
       "font_class": "unknown",
       "unicode": "e901",
       "unicode_decimal": 59649
     },
     {
       "icon_id": "41105358",
-      "name": "folder icon-2",
+      "name": "video",
       "font_class": "video",
       "unicode": "e900",
       "unicode_decimal": 59648
     },
     {
       "icon_id": "41105359",
-      "name": "folder icon-5",
+      "name": "zip",
       "font_class": "zip",
       "unicode": "e908",
       "unicode_decimal": 59656
     },
     {
       "icon_id": "41105360",
-      "name": "folder icon-1",
+      "name": "image",
       "font_class": "image",
       "unicode": "e909",
       "unicode_decimal": 59657
     },
     {
       "icon_id": "41105361",
-      "name": "folder icon-3",
+      "name": "audio",
       "font_class": "audio",
       "unicode": "e905",
       "unicode_decimal": 59653
     },
     {
       "icon_id": "41105362",
-      "name": "folder icon",
+      "name": "pdf",
       "font_class": "pdf",
       "unicode": "e906",
       "unicode_decimal": 59654

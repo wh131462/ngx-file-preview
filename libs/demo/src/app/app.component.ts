@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {
-  PreviewComponent,
+  PreviewListComponent,
   PreviewDirective,
   PreviewEvent,
   PreviewFile,
@@ -12,7 +12,7 @@ import {HighlightCodeDirective} from "./highlight.directive";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PreviewDirective, PreviewComponent, PreviewIconComponent, NgForOf, NgIf, HighlightCodeDirective],
+  imports: [PreviewDirective, PreviewListComponent, PreviewIconComponent, NgForOf, NgIf, HighlightCodeDirective],
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
@@ -65,15 +65,15 @@ export class AppComponent {
       `;
     } else if (type === 'component') {
       code = `
-        <ngx-file-preview
+        <ngx-preview-list
           [files]="files"
           themeMode="auto"
           [autoConfig]="{dark: { start: 18, end: 6 }}"
-        ></ngx-file-preview>
+        ></ngx-preview-list>
       `;
     } else if (type === 'custom') {
       code = `
-        <ngx-file-preview [files]="files" themeMode="light">
+        <ngx-preview-list [files]="files" themeMode="light">
           <ng-template
             #itemTemplate
             let-file
@@ -98,7 +98,7 @@ export class AppComponent {
               </button>
             </div>
           </ng-template>
-        </ngx-file-preview>
+        </ngx-preview-list>
       `;
     }
 

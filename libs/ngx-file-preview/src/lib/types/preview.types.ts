@@ -11,7 +11,7 @@ export interface PreviewFile {
   coverUrl?: string;
 }
 
-export type PreviewType = 'image' | 'audio' | 'video' | 'pdf' | 'ppt' | 'word' | 'excel' | 'txt' | 'zip' | 'unknown';
+export type PreviewType = 'image' | 'audio' | 'video' | 'pdf' | 'ppt' | 'word' | 'excel' | 'markdown'| 'txt' | 'zip' | 'unknown';
 
 export const PreviewTypeEnum: Record<PreviewType, string> = {
   audio: "音频文件",
@@ -23,7 +23,8 @@ export const PreviewTypeEnum: Record<PreviewType, string> = {
   unknown: "未知文件",
   video: "视频文件",
   word: "WORD文档",
-  zip: "压缩文件"
+  zip: "压缩文件",
+  markdown: "Markdown文件"
 };
 
 export interface PreviewOptions {

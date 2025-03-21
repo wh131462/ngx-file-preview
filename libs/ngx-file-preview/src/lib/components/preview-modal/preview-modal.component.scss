@@ -22,8 +22,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--bg-elevated);
-  color: var(--text-primary);
+  background: var(--nfp-bg-elevated);
+  color: var(--nfp-text-primary);
 }
 
 .preview-modal-header {
@@ -36,12 +36,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--bg-elevated);
+  background: var(--nfp-bg-elevated);
   backdrop-filter: blur(8px);
   z-index: 10;
   opacity: 0.8;
   transition: opacity 0.3s;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--nfp-border-color);
 
   &:hover {
     opacity: 1;
@@ -59,12 +59,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      color: var(--text-primary);
+      color: var(--nfp-text-primary);
     }
 
     .file-index {
       font-size: 12px;
-      color: var(--text-secondary);
+      color: var(--nfp-text-secondary);
     }
   }
 
@@ -76,7 +76,7 @@
     .theme-toggle, preview-icon {
       width: 20px;
       height: 20px;
-      color: var(--text-primary);
+      color: var(--nfp-text-primary);
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -97,7 +97,7 @@
   position: relative;
   overflow: hidden;
   margin-top: 44px;
-  background: var(--bg-container);
+  background: var(--nfp-bg-container);
 }
 
 .preview-content {
@@ -118,7 +118,7 @@
   border: none;
   padding: 8px;
   border-radius: 50%;
-  color: var(--text-primary);
+  color: var(--nfp-text-primary);
   cursor: pointer;
   z-index: 5;
   transition: all 0.3s;
@@ -151,16 +151,16 @@
 }
 
 :host ::ng-deep {
-  fp-image-preview,
-  fp-video-preview,
-  fp-pdf-preview,
-  fp-word-preview,
-  fp-excel-preview,
-  fp-ppt-preview,
-  fp-text-preview,
-  fp-archive-preview,
-  fp-audio-preview,
-  fp-unknown-preview {
+  ngx-image-preview,
+  ngx-video-preview,
+  ngx-pdf-preview,
+  ngx-word-preview,
+  ngx-excel-preview,
+  ngx-ppt-preview,
+  ngx-text-preview,
+  ngx-archive-preview,
+  ngx-audio-preview,
+  ngx-unknown-preview {
     width: 100%;
     height: 100%;
     display: block;

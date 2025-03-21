@@ -1,89 +1,91 @@
 // 首先定义所有变量的默认值（暗色主题）
 :root {
   // 基础色板
-  --primary-color: #177ddc;
-  --primary-hover: #1890ff;
-  --primary-active: #0050b3;
-  --error-color: #d32029;
-  --warning-color: #d89614;
-  --success-color: #49aa19;
+  --nfp-primary-color: #177ddc;
+  --nfp-primary-hover: #1890ff;
+  --nfp-primary-active: #0050b3;
+  --nfp-error-color: #d32029;
+  --nfp-warning-color: #d89614;
+  --nfp-success-color: #49aa19;
 
   // 文本颜色
-  --text-primary: rgba(0, 0, 0, 0.85);
-  --text-secondary: rgba(0, 0, 0, 0.65);
-  --text-disabled: rgba(0, 0, 0, 0.25);
+  --nfp-text-primary: rgba(0, 0, 0, 0.85);
+  --nfp-text-secondary: rgba(0, 0, 0, 0.65);
+  --nfp-text-disabled: rgba(0, 0, 0, 0.25);
 
   // 背景色
-  --bg-container: #ffffff;
-  --bg-elevated: #fafafa;
-  --bg-layout: #f0f2f5;
-  --hover-bg: rgba(0, 0, 0, 0.04);
+  --nfp-bg-container: #ffffff;
+  --nfp-bg-elevated: #fafafa;
+  --nfp-bg-layout: #f0f2f5;
+  --nfp-hover-bg: rgba(0, 0, 0, 0.04);
 
   // 边框和分割线
-  --border-color: #d9d9d9;
-  --split-color: rgba(0, 0, 0, 0.06);
+  --nfp-border-color: #d9d9d9;
+  --nfp-split-color: rgba(0, 0, 0, 0.06);
 
   // 滚动条
-  --scrollbar-bg: #f5f5f5;
-  --scrollbar-thumb: #d9d9d9;
+  --nfp-scrollbar-bg: #f5f5f5;
+  --nfp-scrollbar-thumb: #d9d9d9;
 
   // 工具栏
-  --toolbar-bg: #fafafa;
-  --toolbar-border: #d9d9d9;
-  --toolbar-hover: rgba(0, 0, 0, 0.04);
-  --toolbar-active: #e6f4ff;
+  --nfp-toolbar-bg: #fafafa;
+  --nfp-toolbar-border: #d9d9d9;
+  --nfp-toolbar-hover: rgba(0, 0, 0, 0.04);
+  --nfp-toolbar-active: #e6f4ff;
 
   // 预览组件特定
-  --preview-mask: rgba(0, 0, 0, 0.45);
-  --preview-loading-bg: rgba(255, 255, 255, 0.8);
-  --preview-toolbar-bg: rgba(0, 0, 0, 0.1);
+  --nfp-preview-mask: rgba(0, 0, 0, 0.45);
+  --nfp-preview-loading-bg: rgba(255, 255, 255, 0.8);
+  --nfp-preview-toolbar-bg: rgba(0, 0, 0, 0.1);
+
+  --nfp-theme-transition-duration: 0.3s;
 }
 
-[data-theme="dark"] {
+[data-nfp-theme="dark"] {
   // 基础色板
-  --primary-color: #177ddc;
-  --primary-hover: #1890ff;
-  --primary-active: #0050b3;
-  --error-color: #a61d24;
-  --warning-color: #d89614;
-  --success-color: #49aa19;
+  --nfp-primary-color: #177ddc;
+  --nfp-primary-hover: #1890ff;
+  --nfp-primary-active: #0050b3;
+  --nfp-error-color: #a61d24;
+  --nfp-warning-color: #d89614;
+  --nfp-success-color: #49aa19;
 
   // 文本颜色
-  --text-primary: rgba(255, 255, 255, 0.85);
-  --text-secondary: rgba(255, 255, 255, 0.65);
-  --text-disabled: rgba(255, 255, 255, 0.25);
+  --nfp-text-primary: rgba(255, 255, 255, 0.85);
+  --nfp-text-secondary: rgba(255, 255, 255, 0.65);
+  --nfp-text-disabled: rgba(255, 255, 255, 0.25);
 
   // 背景色
-  --bg-container: #1a1a1a;
-  --bg-elevated: #262626;
-  --bg-layout: #141414;
-  --hover-bg: rgba(255, 255, 255, 0.08);
+  --nfp-bg-container: #1a1a1a;
+  --nfp-bg-elevated: #262626;
+  --nfp-bg-layout: #141414;
+  --nfp-hover-bg: rgba(255, 255, 255, 0.08);
 
   // 边框和分割线
-  --border-color: #303030;
-  --split-color: rgba(255, 255, 255, 0.12);
+  --nfp-border-color: #303030;
+  --nfp-split-color: rgba(255, 255, 255, 0.12);
 
   // 滚动条
-  --scrollbar-bg: #1a1a1a;
-  --scrollbar-thumb: #404040;
+  --nfp-scrollbar-bg: #1a1a1a;
+  --nfp-scrollbar-thumb: #404040;
 
   // 工具栏
-  --toolbar-bg: #262626;
-  --toolbar-border: #303030;
-  --toolbar-hover: rgba(255, 255, 255, 0.08);
-  --toolbar-active: #111b26;
+  --nfp-toolbar-bg: #262626;
+  --nfp-toolbar-border: #303030;
+  --nfp-toolbar-hover: rgba(255, 255, 255, 0.08);
+  --nfp-toolbar-active: #111b26;
 
   // 预览组件特定
-  --preview-mask: rgba(0, 0, 0, 0.65);
-  --preview-loading-bg: rgba(0, 0, 0, 0.8);
-  --preview-toolbar-bg: rgba(0, 0, 0, 0.4);
+  --nfp-preview-mask: rgba(0, 0, 0, 0.65);
+  --nfp-preview-loading-bg: rgba(0, 0, 0, 0.8);
+  --nfp-preview-toolbar-bg: rgba(0, 0, 0, 0.4);
+  --nfp-theme-transition-duration: 0.3s;
 }
-
 // 添加过渡动画
 * {
-  transition: background-color var(--theme-transition-duration) var(--theme-transition-timing),
-  border-color var(--theme-transition-duration) var(--theme-transition-timing),
-  color var(--theme-transition-duration) var(--theme-transition-timing);
+  transition: background-color var(--nfp-theme-transition-duration) var(--theme-transition-timing),
+  border-color var(--nfp-theme-transition-duration) var(--theme-transition-timing),
+  color var(--nfp-theme-transition-duration) var(--theme-transition-timing);
 }
 
 // 某些元素不需要过渡动画

@@ -37,7 +37,7 @@
 ## 安装
 
 ```bash
-npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer
+npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer markdown-it
 ```
 
 ## 配置
@@ -81,14 +81,14 @@ npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-previ
 ```typescript
 import { 
   PreviewDirective, 
-  PreviewComponent, 
+  PreviewListComponent, 
   PreviewModalComponent 
 } from '@eternalheart/ngx-file-preview';
 
 @Component({
   imports: [
     PreviewDirective,
-    PreviewComponent,
+    PreviewListComponent,
   ]
 })
 ```
@@ -140,13 +140,13 @@ export class YourComponent {
 #### 使用默认列表模板：
 
 ```typescript
-import { PreviewComponent } from '@eternalheart/ngx-file-preview';
+import { PreviewListComponent } from '@eternalheart/ngx-file-preview';
 
 @Component({
-  imports: [PreviewComponent],
+  imports: [PreviewListComponent],
   template: `
-    <ngx-file-preview [files]="files" (fileSelect)="onFileSelect($event)">
-    </ngx-file-preview>
+    <ngx-preview-list [files]="files" (fileSelect)="onFileSelect($event)">
+    </ngx-preview-list>
   `
 })
 ```
@@ -156,7 +156,7 @@ import { PreviewComponent } from '@eternalheart/ngx-file-preview';
 ```typescript
 @Component({
   template: `
-    <ngx-file-preview [files]="files">
+    <ngx-preview-list [files]="files">
       <ng-template #itemTemplate 
                    let-file 
                    let-index="index"
@@ -169,7 +169,7 @@ import { PreviewComponent } from '@eternalheart/ngx-file-preview';
           <span>{{ formatFileSize(file.size) }}</span>
         </div>
       </ng-template>
-    </ngx-file-preview>
+    </ngx-preview-list>
   `
 })
 ```

@@ -1,45 +1,53 @@
-import {ElementRef, Injectable, Renderer2, RendererFactory2} from '@angular/core';
+import {Injectable, Renderer2} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {AutoThemeConfig, ThemeMode} from '../types/theme.types';
 
 @Injectable()
 export class ThemeService {
-  private renderer: Renderer2
   private readonly THEME_KEY = 'fp-theme-mode';
-
-  // 当前主题模式（light/dark/auto）
-  private themeSubject = new BehaviorSubject<ThemeMode>('dark');
-  // 实际应用的主题（只有light/dark）
-  private currentTheme = new BehaviorSubject<'light' | 'dark'>('dark');
-  currentTheme$ = this.currentTheme.asObservable();
-
+  private themeSubject$ = new BehaviorSubject<ThemeMode>('dark');
   private autoConfig: AutoThemeConfig = {
     dark: {start: 18, end: 6}
   };
 
   private autoChangeTimer: any;
-  private systemThemeQuery: MediaQueryList | null = null;
+  systemThemeQuery: MediaQueryList | null = null;
   private systemThemeListener: ((e: MediaQueryListEvent) => void) | null = null;
+  private localDomElement: HTMLElement | null = null;
+  constructor(private renderer: Renderer2) {
+  }
 
-  constructor(renderFactory: RendererFactory2, private elementRef: ElementRef) {
-    this.renderer = renderFactory.createRenderer(null, null);
-    // 初始化系统主题监听
+  /**
+   * 绑定最外围元素
+   * @param domElement
+   */
+  bindElement(domElement: HTMLElement) {
+    this.localDomElement = domElement;
+  }
+
+  ngOnInit() {
     if (window.matchMedia) {
       this.systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
       this.systemThemeListener = (e) => {
-        if (this.themeSubject.getValue() === 'auto') {
+        if (this.theme === 'auto') {
           this.checkAndApplyAutoTheme();
         }
       };
       this.systemThemeQuery.addEventListener('change', this.systemThemeListener);
     }
-
-    // 应用初始主题
     this.applyTheme('dark');
   }
 
+  get theme() {
+    return this.themeSubject$.getValue();
+  }
+
+  getThemeObservable() {
+    return this.themeSubject$.asObservable();
+  }
+
   setMode(mode: ThemeMode) {
-    this.themeSubject.next(mode);
+    this.themeSubject$.next(mode);
 
     if (mode === 'auto') {
       this.startAutoCheck();
@@ -51,7 +59,7 @@ export class ThemeService {
 
   setAutoConfig(config: AutoThemeConfig) {
     this.autoConfig = {...this.autoConfig, ...config};
-    if (this.themeSubject.getValue() === 'auto') {
+    if (this.themeSubject$.getValue() === 'auto') {
       this.checkAndApplyAutoTheme();
     }
   }
@@ -88,21 +96,21 @@ export class ThemeService {
 
   private applyTheme(theme: 'light' | 'dark') {
     // 更新当前主题
-    this.currentTheme.next(theme);
+    this.themeSubject$.next(theme);
     // 移除现有主题
-    this.renderer.removeAttribute(this.elementRef.nativeElement, 'data-theme');
+    this.renderer.removeAttribute(this.localDomElement, 'data-nfp-theme');
     // 应用新主题
     if (theme === 'dark') {
-      this.renderer.setAttribute(this.elementRef.nativeElement, 'data-theme', 'dark');
+      this.renderer.setAttribute(this.localDomElement, 'data-nfp-theme', 'dark');
     } else {
-      this.renderer.setAttribute(this.elementRef.nativeElement, 'data-theme', 'light');
+      this.renderer.setAttribute(this.localDomElement, 'data-nfp-theme', 'light');
     }
     // 保存到本地存储
     localStorage.setItem(this.THEME_KEY, theme);
   }
 
   toggleTheme() {
-    const newTheme = this.currentTheme.getValue() === 'light' ? 'dark' : 'light';
+    const newTheme = this.theme === 'light' ? 'dark' : 'light';
     this.setMode(newTheme);
   }
 

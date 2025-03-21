@@ -73,12 +73,15 @@ export class PreviewUtils {
       case 'xlsx':
         return 'excel';
       case 'txt':
-      case 'md':
+      case 'json':
         return 'txt';
+      case 'md':
+        return 'markdown';
       case 'zip':
       case 'rar':
       case '7z':
         return 'zip';
+
       default:
         return 'unknown';
     }
