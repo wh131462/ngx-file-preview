@@ -37,7 +37,7 @@
 ## 安装
 
 ```bash
-npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer markdown-it
+npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer markdown-it highlight.js
 ```
 
 ## 配置

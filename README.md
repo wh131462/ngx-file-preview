@@ -38,7 +38,7 @@
 ## Installation
 
 ```bash
-npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer markdown-it
+npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer markdown-it highlight.js
 ```
 
 ## Configuration
@@ -257,5 +257,7 @@ This project uses the following excellent open-source libraries:
 - [xlsx](https://github.com/SheetJS/sheetjs) - Excel spreadsheet preview
 - [ngx-extended-pdf-viewer](https://github.com/stephanrauh/ngx-extended-pdf-viewer) - PDF document preview
 - [hls.js](https://github.com/video-dev/hls.js/) - HLS video stream support
+- [markdown-it](https://github.com/video-dev/hls.js/) - HLS video stream support
+- [markdown-it](https://github.com/video-dev/hls.js/) - HLS video stream support
 
 We appreciate the contributions from these open-source projects to the community!
