@@ -23,13 +23,26 @@ import {PreviewUtils} from '../utils';
   providers: [PreviewService, ThemeService, FileReaderService]
 })
 export class PreviewDirective implements OnDestroy {
+
   @Input('ngxFilePreview') fileInput: PreviewFileInput;
   @Input() previewIndex = 0;
-  @Input() themeMode: ThemeMode = 'auto';
+  private _themeMode: ThemeMode = 'auto';
+  @Input()
+  get themeMode(): ThemeMode {
+    return this._themeMode;
+  }
+
+  set themeMode(value: ThemeMode) {
+    this._themeMode = value;
+    this.themeService.setMode(this._themeMode);
+    if (this._themeMode === 'auto' && this.autoConfig) {
+      this.themeService.setAutoConfig(this.autoConfig);
+    }
+  }
   @Input() autoConfig?: AutoThemeConfig;
   @Output() previewEvent = new EventEmitter<PreviewEvent>();
 
-  constructor(private previewService: PreviewService, private injector: Injector, private envInjector: EnvironmentInjector) {
+  constructor(private previewService: PreviewService,private themeService: ThemeService, private injector: Injector, private envInjector: EnvironmentInjector) {
     this.previewService.init(this.injector, this.envInjector);
   }
 
@@ -41,7 +54,7 @@ export class PreviewDirective implements OnDestroy {
       this.previewService.open({
         files,
         index: this.previewIndex,
-        themeMode: this.themeMode,
+        themeMode: this._themeMode,
         autoThemeConfig: this.autoConfig
       });
     } else {

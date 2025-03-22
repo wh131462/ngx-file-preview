@@ -24,6 +24,7 @@ import {
 import {PreviewIconComponent} from '../preview-icon';
 import {Observable, Subscription} from 'rxjs';
 import {AutoThemeConfig, PreviewFile, ThemeMode} from '../../types';
+import {ThemeIconComponent} from "../theme-icon/theme-icon.component";
 
 @Component({
   selector: 'ngx-file-preview-modal',
@@ -41,7 +42,8 @@ import {AutoThemeConfig, PreviewFile, ThemeMode} from '../../types';
     PptPreviewComponent,
     AudioPreviewComponent,
     UnknownPreviewComponent,
-    MarkdownPreviewComponent
+    MarkdownPreviewComponent,
+    ThemeIconComponent
   ],
   templateUrl: 'preview-modal.component.html',
   styleUrls: [

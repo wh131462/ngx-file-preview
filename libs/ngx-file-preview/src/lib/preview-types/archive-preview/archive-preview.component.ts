@@ -58,10 +58,4 @@ export class ArchivePreviewComponent extends BasePreviewComponent {
     return `${size.toFixed(2)} ${units[unitIndex]}`;
   }
 
-  formatDate(date?: string): string {
-    if (!date) return '未知时间';
-
-    const formattedDate = new Date(date).toLocaleString();
-    return formattedDate;
-  }
 }

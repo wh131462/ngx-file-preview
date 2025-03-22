@@ -1,0 +1,14 @@
+:host {
+  width: 20px;
+  height: 20px;
+  color: var(--nfp-text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}

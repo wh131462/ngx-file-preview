@@ -48,7 +48,6 @@ export class ThemeService {
 
   setMode(mode: ThemeMode) {
     this.themeSubject$.next(mode);
-
     if (mode === 'auto') {
       this.startAutoCheck();
     } else {
@@ -97,13 +96,15 @@ export class ThemeService {
   private applyTheme(theme: 'light' | 'dark') {
     // 更新当前主题
     this.themeSubject$.next(theme);
-    // 移除现有主题
-    this.renderer.removeAttribute(this.localDomElement, 'data-nfp-theme');
-    // 应用新主题
-    if (theme === 'dark') {
-      this.renderer.setAttribute(this.localDomElement, 'data-nfp-theme', 'dark');
-    } else {
-      this.renderer.setAttribute(this.localDomElement, 'data-nfp-theme', 'light');
+    if(this.localDomElement){
+      // 移除现有主题
+      this.renderer.removeAttribute(this.localDomElement, 'data-nfp-theme');
+      // 应用新主题
+      if (theme === 'dark') {
+        this.renderer.setAttribute(this.localDomElement, 'data-nfp-theme', 'dark');
+      } else {
+        this.renderer.setAttribute(this.localDomElement, 'data-nfp-theme', 'light');
+      }
     }
     // 保存到本地存储
     localStorage.setItem(this.THEME_KEY, theme);

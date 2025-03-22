@@ -18,6 +18,7 @@ import {PreviewIconComponent} from '../components';
 import {PreviewDirective} from "../directives";
 import {PreviewUtils} from "../utils";
 import {ThemeService} from '../services';
+import {timestamp} from "rxjs";
 
 @Component({
   selector: 'ngx-preview-list',
@@ -36,7 +37,8 @@ import {ThemeService} from '../services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class PreviewListComponent implements OnInit {
+export class PreviewListComponent {
+
   private _files: PreviewFile[] = [];
   @Input()
   get files(): PreviewFile[] {
@@ -48,7 +50,19 @@ export class PreviewListComponent implements OnInit {
   }
 
   @Input() index = 0;
-  @Input() themeMode: ThemeMode = 'auto';
+  private _themeMode: ThemeMode = 'auto';
+  @Input()
+  get themeMode(): ThemeMode {
+    return this._themeMode;
+  }
+
+  set themeMode(value: ThemeMode) {
+    this._themeMode = value;
+    this.themeService.setMode(this._themeMode);
+    if (this._themeMode === 'auto' && this.autoConfig) {
+      this.themeService.setAutoConfig(this.autoConfig);
+    }
+  }
   @Input() autoConfig?: AutoThemeConfig;
   @Output() previewEvent = new EventEmitter<PreviewEvent>();
 
@@ -59,13 +73,6 @@ export class PreviewListComponent implements OnInit {
 
   constructor(private themeService: ThemeService, private elementRef: ElementRef) {
     this.themeService.bindElement(this.elementRef.nativeElement);
-  }
-
-  ngOnInit() {
-    this.themeService.setMode(this.themeMode);
-    if (this.themeMode === 'auto' && this.autoConfig) {
-      this.themeService.setAutoConfig(this.autoConfig);
-    }
   }
 
   triggerSelect(index: number) {

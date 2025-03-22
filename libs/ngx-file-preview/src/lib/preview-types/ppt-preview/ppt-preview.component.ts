@@ -283,7 +283,7 @@ export class PptPreviewComponent extends BasePreviewComponent {
 
   toggleFullscreen() {
     if (!document.fullscreenElement) {
-      this.elementRef.nativeElement.requestFullscreen();
+      document.documentElement.requestFullscreen();
     } else {
       document.exitFullscreen();
     }

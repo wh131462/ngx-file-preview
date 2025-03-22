@@ -7,28 +7,31 @@
 ## Preview Examples
 
 ### Default List View
+
 ![Default List View](assets/readme/default-list.png)
 
 ### Custom Template (Example, fully customizable)
+
 ![Custom Template](assets/readme/custom-template.png)
 
 ### Preview Effects for Different File Types
 
-| File Type | Preview Effect                                                                                              |
-|-----------|------------------------------------------------------------------------------------------------------------|
-| Image     | ![Image Preview-dark](assets/readme/image-preview-dark.png) ![Image Preview-light](assets/readme/image-preview-light.png) |
-| Video     | ![Video Preview-dark](assets/readme/video-preview-dark.png) ![Video Preview-light](assets/readme/video-preview-light.png) |
-| Audio     | ![Audio Preview-dark](assets/readme/audio-preview-dark.png) ![Audio Preview-light](assets/readme/audio-preview-light.png) |
-| PPT       | ![PPT Preview-dark](assets/readme/ppt-preview-dark.png) ![PPT Preview-light](assets/readme/ppt-preview-light.png) |
-| Word      | ![Word Preview-dark](assets/readme/word-preview-dark.png) ![Word Preview-light](assets/readme/word-preview-light.png) |
-| Excel     | ![Excel Preview-dark](assets/readme/excel-preview-dark.png) ![Excel Preview-light](assets/readme/excel-preview-light.png) |
-| Text      | ![Text Preview-dark](assets/readme/text-preview-dark.png) ![Text Preview-light](assets/readme/text-preview-light.png) |
-| Zip       | ![Zip Preview-dark](assets/readme/zip-preview-dark.png) ![Zip Preview-light](assets/readme/zip-preview-light.png) |
-| Unknown   | ![Unknown Preview-dark](assets/readme/unknown-preview-dark.png) ![Unknown Preview-light](assets/readme/unknown-preview-light.png) |
+| File Type | Preview Effect                                                                                                                        |
+|-----------|---------------------------------------------------------------------------------------------------------------------------------------|
+| Image     | ![Image Preview-dark](assets/readme/image-preview-dark.png) ![Image Preview-light](assets/readme/image-preview-light.png)             |
+| Video     | ![Video Preview-dark](assets/readme/video-preview-dark.png) ![Video Preview-light](assets/readme/video-preview-light.png)             |
+| Audio     | ![Audio Preview-dark](assets/readme/audio-preview-dark.png) ![Audio Preview-light](assets/readme/audio-preview-light.png)             |
+| PPT       | ![PPT Preview-dark](assets/readme/ppt-preview-dark.png) ![PPT Preview-light](assets/readme/ppt-preview-light.png)                     |
+| Word      | ![Word Preview-dark](assets/readme/word-preview-dark.png) ![Word Preview-light](assets/readme/word-preview-light.png)                 |
+| Excel     | ![Excel Preview-dark](assets/readme/excel-preview-dark.png) ![Excel Preview-light](assets/readme/excel-preview-light.png)             |
+| Text      | ![Text Preview-dark](assets/readme/text-preview-dark.png) ![Text Preview-light](assets/readme/text-preview-light.png)                 |
+| Markdown  | ![Markdown Preview-dark](assets/readme/markdown-preview-dark.png) ![Markdown Preview-light](assets/readme/markdown-preview-light.png) |
+| Zip       | ![Zip Preview-dark](assets/readme/zip-preview-dark.png) ![Zip Preview-light](assets/readme/zip-preview-light.png)                     |
+| Unknown   | ![Unknown Preview-dark](assets/readme/unknown-preview-dark.png) ![Unknown Preview-light](assets/readme/unknown-preview-light.png)     |
 
 ## Features
 
-- **Support for Multiple File Formats**: Fully compatible with image, PDF, PPT, Word, text, video, and many other common file types.
+- **Support for Multiple File Formats**: Fully compatible with image, PDF, PPT, Word, Excel, text, markdown, audio, video, and many other common file types.
 - **Intuitive User Experience**: Provides clear indicators for unknown file types and supports user-friendly interactions for different file formats.
 - **Dark Mode and Light Mode**: Adapts to various use cases with visual preferences for both dark and light modes, including auto mode switching.
 - **Flexible Usage**: Supports both directive-based and component-based usage, offering flexibility to meet different development requirements.
@@ -80,10 +83,10 @@ Add the necessary assets , styles and scripts to your `angular.json` file:
 Import the required components in your Angular module:
 
 ```typescript
-import { 
-  PreviewDirective, 
-  PreviewListComponent, 
-  PreviewModalComponent 
+import {
+  PreviewDirective,
+  PreviewListComponent,
+  PreviewModalComponent
 } from '@eternalheart/ngx-file-preview';
 
 @Component({
@@ -101,7 +104,7 @@ import {
 The simplest usage method: Apply the directive directly to an element:
 
 ```typescript
-import { PreviewDirective, PreviewEvent } from '@eternalheart/ngx-file-preview';
+import {PreviewDirective, PreviewEvent} from '@eternalheart/ngx-file-preview';
 
 @Component({
   imports: [PreviewDirective],
@@ -125,7 +128,7 @@ export class YourComponent {
   ];
 
   handlePreviewEvent(event: PreviewEvent) {
-    const { type, message, event: targetEvent } = event;
+    const {type, message, event: targetEvent} = event;
     if (type === "error") {
       console.log(message); // Handle error event
     }
@@ -141,7 +144,7 @@ export class YourComponent {
 #### Using the Default List Template:
 
 ```typescript
-import { PreviewListComponent } from '@eternalheart/ngx-file-preview';
+import {PreviewListComponent} from '@eternalheart/ngx-file-preview';
 
 @Component({
   imports: [PreviewListComponent],
@@ -193,7 +196,7 @@ interface PreviewFile {
 ### Supported File Types (`PreviewType`)
 
 ```typescript
-type PreviewType = 
+type PreviewType =
   | 'image'   // Image
   | 'pdf'     // PDF Document
   | 'ppt'     // PPT Presentation
@@ -257,7 +260,7 @@ This project uses the following excellent open-source libraries:
 - [xlsx](https://github.com/SheetJS/sheetjs) - Excel spreadsheet preview
 - [ngx-extended-pdf-viewer](https://github.com/stephanrauh/ngx-extended-pdf-viewer) - PDF document preview
 - [hls.js](https://github.com/video-dev/hls.js/) - HLS video stream support
-- [markdown-it](https://github.com/video-dev/hls.js/) - HLS video stream support
-- [markdown-it](https://github.com/video-dev/hls.js/) - HLS video stream support
+- [markdown-it](https://github.com/markdown-it/markdown-it) - Markdown support
+- [highlight.js](https://github.com/highlightjs/highlight.js) - The code in Markdown is highlighted by Markdown support
 
 We appreciate the contributions from these open-source projects to the community!
