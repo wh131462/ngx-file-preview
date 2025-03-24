@@ -1,4 +1,4 @@
-<div class="preview-list">
+<div class="ngx-preview-list">
   <!-- 隐藏的预览触发器 -->
   <div *ngIf="itemTemplate" style="display: none">
     <div *ngFor="let file of files; let i = index"
@@ -9,11 +9,11 @@
     </div>
   </div>
   <ng-content></ng-content>
-  <div class="file-list-header">
+  <div class="ngx-preview-list__header">
     <span>文件列表</span>
-    <span class="file-count">共 {{ files?.length || 0 }} 个文件</span>
+    <span class="count">共 {{ files?.length || 0 }} 个文件</span>
   </div>
-  <div class="file-list">
+  <div class="ngx-preview-list__content">
     <ng-container *ngFor="let file of files; let i = index">
       <!-- 使用自定义模板 -->
       <ng-container *ngIf="itemTemplate; else defaultTemplate">
@@ -32,22 +32,22 @@
 
       <!-- 默认模板 -->
       <ng-template #defaultTemplate>
-        <div class="file-item"
+        <div class="item"
              (click)="triggerSelect(i)"
              [ngxFilePreview]="file"
              [themeMode]="themeMode"
              [class.active]="i === index">
-              <span class="file-icon">
+              <span class="icon">
                 <preview-icon [themeMode]="themeMode" [size]="40" [svg]="file.type"></preview-icon>
               </span>
-          <div class="file-info">
-            <div class="file-main-info">
-              <span class="file-name">{{ file.name }}</span>
-              <span class="file-size">{{ formatFileSize(file.size) }}</span>
+          <div class="info">
+            <div class="main-info">
+              <span class="name">{{ file.name }}</span>
+              <span class="size">{{ formatFileSize(file.size) }}</span>
             </div>
-            <div class="file-sub-info">
-              <span class="file-type">{{ PreviewTypeEnum[file.type] }}</span>
-              <span class="file-date" *ngIf="file.lastModified">
+            <div class="sub-info">
+              <span class="type">{{ PreviewTypeEnum[file.type] }}</span>
+              <span class="date" *ngIf="file.lastModified">
                     {{ formatDate(file.lastModified) }}
                   </span>
             </div>
