@@ -3,6 +3,7 @@
 }
 
 .preview-modal-overlay {
+  z-index: 2147483647; isolation: isolate;
   position: fixed;
   top: 0;
   left: 0;

@@ -23,20 +23,18 @@ self.addEventListener('message', async (e: MessageEvent<FileReaderMessage>) => {
       }
 
       let result: FileReaderResponse = { type: 'success' };
-      const clonedResponse = response.clone();
-
       switch (fileType) {
         case 'arraybuffer':
-          result.data = await clonedResponse.arrayBuffer();
+          result.data = await response.arrayBuffer();
           break;
 
         case 'text':
-          result.text = await clonedResponse.text();
+          result.text = await response.text();
           break;
 
         case 'json':
           // 先获取文本用于错误提示，再解析JSON
-          const textData = await clonedResponse.text();
+          const textData = await response.text();
           try {
             result.json = JSON.parse(textData);
           } catch (parseError:any) {
