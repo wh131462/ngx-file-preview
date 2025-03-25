@@ -12,7 +12,7 @@ import {CommonModule} from '@angular/common';
 import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import * as XLSX from 'xlsx';
-import {FileReaderResponse} from "../../workers/file-reader.worker";
+import {FileReaderResponse} from "../../services";
 
 interface TableData {
   headers: string[];

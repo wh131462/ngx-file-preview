@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
-import {FileReaderResponse} from "../../workers/file-reader.worker";
+import {FileReaderResponse} from "../../services";
 
 @Component({
   selector: 'ngx-archive-preview',

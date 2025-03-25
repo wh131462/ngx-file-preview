@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import {renderAsync} from 'docx-preview';
-import {FileReaderResponse} from "../../workers/file-reader.worker";
+import {FileReaderResponse} from "../../services";
 
 @Component({
   selector: 'ngx-word-preview',

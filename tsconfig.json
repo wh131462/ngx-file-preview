@@ -4,7 +4,8 @@
   "compilerOptions": {
     "paths": {
       "@eternalheart/ngx-file-preview": [
-        "./libs/ngx-file-preview/src"
+//        "./libs/ngx-file-preview/src"
+        "./dist/ngx-file-preview"
       ]
     },
     "outDir": "./dist/out-tsc",
@@ -25,7 +26,8 @@
     "useDefineForClassFields": false,
     "lib": [
       "ES2022",
-      "dom"
+      "dom",
+      "webworker"
     ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true

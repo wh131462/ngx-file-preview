@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule} from 'ngx-extended-pdf-viewer';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
-import {FileReaderResponse} from "../../workers/file-reader.worker";
+import {FileReaderResponse} from "../../services";
 
 @Component({
   selector: 'ngx-pdf-preview',

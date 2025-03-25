@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, Simple
 import {CommonModule} from '@angular/common';
 import {PreviewIconComponent} from '../../components';
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
-import {FileReaderResponse} from "../../workers";
+import {FileReaderResponse} from "../../services";
 
 @Component({
   selector: 'ngx-text-preview',

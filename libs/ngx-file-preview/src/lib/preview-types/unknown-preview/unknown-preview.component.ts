@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import { PreviewIconComponent} from '../../components';
-import {FileReaderResponse} from "../../workers";
+import {FileReaderResponse} from "../../services";
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
 
 @Component({

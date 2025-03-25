@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Directive, inject, Input} from '@angular/core';
 import {AutoThemeConfig, PreviewFile, ThemeMode} from '../../types';
 import {FileReaderService} from "../../services";
 import {firstValueFrom} from "rxjs";
-import {FileReaderResponse} from "../../workers";
+import {FileReaderResponse} from "../../services";
 
 @Directive({
   standalone: true,

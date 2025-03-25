@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, SimpleChanges} from '@angular/core';
 import {NgIf} from "@angular/common";
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
-import {FileReaderResponse} from '../../workers';
 import {MarkdownPipe} from "./markdown.pipe";
 import {PreviewIconComponent} from '../../components';
+import {FileReaderResponse} from "../../services";
 
 @Component({
   selector: 'ngx-markdown-preview',

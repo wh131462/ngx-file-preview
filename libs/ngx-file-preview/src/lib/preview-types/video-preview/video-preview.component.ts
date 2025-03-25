@@ -11,7 +11,7 @@ import {CommonModule} from '@angular/common';
 import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import Hls from 'hls.js';
-import {FileReaderResponse} from "../../workers/file-reader.worker";
+import {FileReaderResponse} from "../../services";
 
 @Component({
   selector: 'ngx-video-preview',

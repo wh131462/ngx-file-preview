@@ -5,9 +5,9 @@
 /**
  * 列表组件
  */
-export * from "./lib/preview-list"
+export * from './lib/preview-list'
 
 export * from './lib/types';
-export * from "./lib/components"
+export * from './lib/components'
 export * from './lib/directives';
 export * from './lib/services';

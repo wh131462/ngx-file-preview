@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import {init} from "pptx-preview";
-import {FileReaderResponse} from "../../workers/file-reader.worker";
+import {FileReaderResponse} from "../../services";
 
 @Component({
   selector: 'ngx-ppt-preview',

@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from
 import {CommonModule} from '@angular/common';
 import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {SafeUrl} from '@angular/platform-browser';
-import {FileReaderResponse} from "../../workers";
+import {FileReaderResponse} from "../../services";
 import {PreviewIconComponent} from '../../components';
 
 @Component({
