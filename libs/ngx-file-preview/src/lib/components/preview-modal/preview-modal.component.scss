@@ -2,167 +2,174 @@
   display: contents;
 }
 
-.preview-modal-overlay {
-  z-index: 2147483647; isolation: isolate;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: var(--mask-color);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  -webkit-app-region: no-drag; //electron 防止被拖动部分影响
-}
-
-.preview-modal-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: var(--nfp-bg-elevated);
-  color: var(--nfp-text-primary);
-}
-
-.preview-modal-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 44px;
-  padding: 0 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--nfp-bg-elevated);
-  backdrop-filter: blur(8px);
-  z-index: 10;
-  opacity: 0.8;
-  transition: opacity 0.3s;
-  border-bottom: 1px solid var(--nfp-border-color);
-
-  &:hover {
-    opacity: 1;
-  }
-
-  .header-left {
+.nfp-modal {
+  &__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--nfp-preview-mask);
+    z-index: 2147483647;
+    isolation: isolate;
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
-
-    .file-name {
-      font-size: 14px;
-      font-weight: 500;
-      max-width: 500px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      color: var(--nfp-text-primary);
-    }
-
-    .file-index {
-      font-size: 12px;
-      color: var(--nfp-text-secondary);
-    }
+    -webkit-app-region: no-drag;
   }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    preview-icon{
-      cursor: pointer;
-    }
-  }
-}
-
-.preview-modal-body {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  margin-top: 44px;
-  background: var(--nfp-bg-container);
-}
-
-.preview-content {
-  flex: 1;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--mask-color);
-  border: none;
-  padding: 8px;
-  border-radius: 50%;
-  color: var(--nfp-text-primary);
-  cursor: pointer;
-  z-index: 5;
-  transition: all 0.3s;
-  opacity: 0;
-  pointer-events: none;
-
-  &.visible {
-    opacity: 0.8;
-    pointer-events: auto;
-  }
-
-  &:hover {
-    opacity: 1;
-    color: #fff;
-    transform: translateY(-50%) scale(1.1);
-  }
-
-  &.prev {
-    left: 16px;
-  }
-
-  &.next {
-    right: 16px;
-  }
-
-  preview-icon {
-    display: block;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  }
-}
-
-:host ::ng-deep {
-  ngx-image-preview,
-  ngx-video-preview,
-  ngx-pdf-preview,
-  ngx-word-preview,
-  ngx-excel-preview,
-  ngx-ppt-preview,
-  ngx-text-preview,
-  ngx-archive-preview,
-  ngx-audio-preview,
-  ngx-unknown-preview {
+  &__content {
+    position: relative;
     width: 100%;
     height: 100%;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    background: var(--nfp-bg-elevated);
+    color: var(--nfp-text-primary);
+    transition: all 0.3s ease;
+  }
+
+  &__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 44px;
+    padding: 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--nfp-bg-elevated);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+    border-bottom: 1px solid var(--nfp-border-color);
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &--multiple {
+      // 多文件时的特殊样式
+    }
+  }
+
+  &__header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__filename {
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--nfp-text-primary);
+  }
+
+  &__fileindex {
+    font-size: 12px;
+    color: var(--nfp-text-secondary);
+  }
+
+  &__header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+
+  }
+
+  &__theme-toggle {
+    cursor: pointer;
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 44px;
+    background: var(--nfp-bg-container);
+  }
+
+  &__preview {
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--mask-color);
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    color: var(--nfp-text-primary);
+    cursor: pointer;
+    z-index: 5;
+    transition: all 0.3s;
+    opacity: 0;
+    pointer-events: none;
+
+    &--visible {
+      opacity: 0.8;
+      pointer-events: auto;
+    }
+
+    &:hover {
+      opacity: 1;
+      color: #fff;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &--prev {
+      left: 16px;
+    }
+
+    &--next {
+      right: 16px;
+    }
+
+    preview-icon {
+      display: block;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
   }
 }
 
-body:has(.preview-modal-overlay) {
-  overflow: hidden;
+// 预览组件样式
+.nfp-modal__preview {
+  :host ::ng-deep {
+    ngx-image-preview,
+    ngx-video-preview,
+    ngx-pdf-preview,
+    ngx-word-preview,
+    ngx-excel-preview,
+    ngx-ppt-preview,
+    ngx-text-preview,
+    ngx-archive-preview,
+    ngx-audio-preview,
+    ngx-unknown-preview {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
 }
 
-.preview-modal-overlay,
-.preview-modal-content,
-.preview-modal-header,
-.nav-button {
-  transition: all 0.3s ease;
+// 全局样式隔离
+body:has(.nfp-modal__overlay) {
+  overflow: hidden;
 }

@@ -1,4 +1,4 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, Input, NO_ERRORS_SCHEMA} from "@angular/core";
+import {Component, CUSTOM_ELEMENTS_SCHEMA, HostBinding, Input, NO_ERRORS_SCHEMA} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ThemeMode} from "../../types/theme.types";
 
@@ -48,4 +48,7 @@ export class PreviewIconComponent {
   @Input({transform: (v: any) => typeof v === 'number' ? `${v}px` : v}) size: number | string = '16px';
   @Input() color?: string;
   @Input() themeMode?: ThemeMode | null;
+  @Input()
+  @HostBinding('style.cursor')
+  cursor = 'pointer'
 }

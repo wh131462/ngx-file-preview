@@ -1,29 +1,29 @@
-<div class="preview-modal-overlay" *ngIf="isVisible" (click)="close()">
-  <div class="preview-modal-content"
+<div class="nfp-modal__overlay" *ngIf="isVisible" (click)="close()">
+  <div class="nfp-modal__content"
        (click)="$event.stopPropagation()"
        (mousemove)="handleMouseMove()"
        (mouseleave)="hideControls()">
-    <div class="preview-modal-header" [class.has-multiple]="hasMultipleFiles">
-      <div class="header-left">
-        <span class="file-name">{{ currentFile?.name }}</span>
-        <span class="file-index" *ngIf="hasMultipleFiles">{{ getCurrentFileInfo() }}</span>
+    <div class="nfp-modal__header" [class.nfp-modal__header--multiple]="hasMultipleFiles">
+      <div class="nfp-modal__header-left">
+        <span class="nfp-modal__filename">{{ currentFile?.name }}</span>
+        <span class="nfp-modal__fileindex" *ngIf="hasMultipleFiles">{{ getCurrentFileInfo() }}</span>
       </div>
-      <div class="header-right">
-        <div class="theme-toggle" (click)="toggleTheme()">
+      <div class="nfp-modal__header-right">
+        <div class="nfp-modal__theme-toggle" (click)="toggleTheme()">
          <ngx-theme-icon [themeMode]="theme$|async"></ngx-theme-icon>
         </div>
-        <preview-icon name="close" [themeMode]="theme$|async" (click)="close()"></preview-icon>
+        <preview-icon cursor="pointer" name="close" [themeMode]="theme$|async" (click)="close()"></preview-icon>
       </div>
     </div>
-    <div class="preview-modal-body">
-      <button class="nav-button prev"
+    <div class="nfp-modal__body">
+      <button class="nfp-modal__nav-btn nfp-modal__nav-btn--prev"
               *ngIf="canShowPrevious()"
-              [class.visible]="isControlsVisible"
+              [class.nfp-modal__nav-btn--visible]="isControlsVisible"
               (click)="previous()">
         <preview-icon [themeMode]="themeMode" [size]="36" name="previous"></preview-icon>
       </button>
 
-      <div class="preview-content">
+      <div class="nfp-modal__preview">
         <ng-container [ngSwitch]="currentFile?.type">
           <ngx-image-preview
             *ngSwitchCase="'image'"
@@ -93,9 +93,9 @@
         </ng-container>
       </div>
 
-      <button class="nav-button next"
+      <button class="nfp-modal__nav-btn nfp-modal__nav-btn--next"
               *ngIf="canShowNext()"
-              [class.visible]="isControlsVisible"
+              [class.nfp-modal__nav-btn--visible]="isControlsVisible"
               (click)="next()">
         <preview-icon [themeMode]="themeMode" [size]="36" name="next"></preview-icon>
       </button>
