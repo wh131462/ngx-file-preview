@@ -28,10 +28,14 @@ export class PreviewUtils {
   static getFileTypeFromUrl(url: string): PreviewType {
     try {
       const extension = url.split('.').pop()?.toLowerCase();
-      return this.getFileTypeFromExtension(extension);
+      return PreviewUtils.isBase64Url(url) ? "image" : this.getFileTypeFromExtension(extension);
     } catch {
       return 'unknown';
     }
+  }
+
+  static isBase64Url(url: string): boolean {
+    return url.startsWith('data:');
   }
 
   private static getFileTypeFromExtension(extension?: string): PreviewType {

@@ -34,8 +34,8 @@ export class PreviewDirective implements OnDestroy {
 
   set themeMode(value: ThemeMode) {
     this._themeMode = value;
-    this.themeService.setMode(this._themeMode);
-    if (this._themeMode === 'auto' && this.autoConfig) {
+    this.themeService.setMode(this.themeMode);
+    if (this.themeMode === 'auto' && this.autoConfig) {
       this.themeService.setAutoConfig(this.autoConfig);
     }
   }
@@ -54,7 +54,7 @@ export class PreviewDirective implements OnDestroy {
       this.previewService.open({
         files,
         index: this.previewIndex,
-        themeMode: this._themeMode,
+        themeMode: this.themeMode,
         autoThemeConfig: this.autoConfig
       });
     } else {
