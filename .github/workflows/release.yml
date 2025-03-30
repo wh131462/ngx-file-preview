@@ -59,7 +59,7 @@ jobs:
 
           if [ -z "$PREVIOUS_TAG" ]; then
             echo "生成首个版本说明"
-            CHANGELOG="\nnpm:$NPM"
+            CHANGELOG="npm:$NPM"
           else
             echo "生成变更：$PREVIOUS_TAG → $CURRENT_TAG"
             CHANGELOG=$(git log $PREVIOUS_TAG..HEAD --format="* %s (%h)" --reverse) + "\nnpm:$NPM"
