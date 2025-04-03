@@ -62,7 +62,7 @@ jobs:
             CHANGELOG="npm:$NPM"
           else
             echo "生成变更：$PREVIOUS_TAG → $CURRENT_TAG"
-            CHANGELOG=$(git log $PREVIOUS_TAG..HEAD --format="* %s (%h)" --reverse) + "\nnpm:$NPM"
+            CHANGELOG="$(git log $PREVIOUS_TAG..HEAD --format="* %s (%h)" --reverse)"$'\nnpm:'"$NPM"
           fi
 
           # 安全输出多行内容
