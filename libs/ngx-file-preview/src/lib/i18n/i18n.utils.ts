@@ -5,6 +5,10 @@ const LangMapping: Record<string, any> = {
   'zh': ZH,
 }
 export const I18nUtils = {
+  /**
+   * 获取语言包
+   * @param locale
+   */
   get(locale: string) {
     return new I18nParser(locale || 'zh')
   },

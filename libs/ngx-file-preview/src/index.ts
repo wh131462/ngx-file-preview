@@ -9,3 +9,5 @@ export * from './lib/types';
 export * from './lib/preview-list'
 export {ThemeIconComponent} from './lib/components'
 export {PreviewDirective} from './lib/directives';
+export {I18nUtils} from "./lib/i18n"
+export {version} from "./version"

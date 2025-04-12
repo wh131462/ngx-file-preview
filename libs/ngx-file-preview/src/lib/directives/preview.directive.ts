@@ -62,10 +62,8 @@ export class PreviewDirective implements OnDestroy {
 
   @HostListener('click',['$event'])
   onClick(e:MouseEvent) {
-    console.log("click")
     e.preventDefault()
     e.stopImmediatePropagation();
-    console.trace("lllllll")
     if (!this.fileInput) return;
     const files = PreviewUtils.normalizeFiles(this.fileInput);
     if (files.length > 0) {

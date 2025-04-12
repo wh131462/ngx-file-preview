@@ -1,9 +1,18 @@
-<div class="file-upload-container"> <!-- GitHub Logo -->
-  <a href="https://github.com/wh131462/ngx-file-preview" target="_blank" class="github-logo">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"/>
-  </a>
-  <div class="title">
+<div class="file-upload-container">
+  <div class="top-icons">
+    <a href="https://github.com/wh131462/ngx-file-preview" target="_blank" class="icon-link">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"/>
+    </a>
+    <a href="https://www.npmjs.com/package/@eternalheart/ngx-file-preview" target="_blank" class="icon-link">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" alt="NPM"/>
+    </a>
+    <button class="icon-link" (click)="toggleLanguage()">
+      <span>{{currentLang=="zh"?"EN":"中文"}}</span>
+    </button>
+  </div>
+  <div class="global-title">
     NGX-FILE-PREVIEW
+    <span class="version">v{{version}}</span>
   </div>
   <input #file type="file" (change)="onFileSelected($event)" multiple/>
   <div class="upload" [class.upload-dragging]="isDragging" (click)="file.click()"
@@ -11,7 +20,7 @@
        (dragleave)="setDragging(false, $event)"
        (drop)="onDrop($event)">
     <i class="NGX-FILE-PREVIEW nfp-plus"></i>
-    <div class="upload-text">点击或者拖拽文件至此开始预览</div>
+    <div class="upload-text">{{i18nText[currentLang].uploadText}}</div>
   </div>
   <div class="file-list">
     <ng-container *ngFor="let file of files;let i = index">
@@ -21,79 +30,98 @@
       </div>
     </ng-container>
   </div>
-  <div class="title-container">
-    <div class="title"><span>指令预览模式</span>
-      <ngx-theme-icon [themeMode]="directiveTheme" (click)="changeDirectiveTheme()"></ngx-theme-icon>
-    </div>
-    <span class="source-code" (click)="showSourceCode('directive')">查看源码</span>
-  </div>
-  <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" (previewEvent)="handleError($event)">
-    点击预览文件
-  </div>
-  <div class="title-container">
-    <div class="title"><span>指令预览模式(i18n)</span>
-      <ngx-theme-icon [themeMode]="directiveI18nTheme" (click)="changeDirectiveI18nTheme()"></ngx-theme-icon>
-    </div>
-    <span class="source-code" (click)="showSourceCode('directive')">查看源码</span>
-  </div>
-  <div class="directive"
-       [ngxFilePreview]="files"
-       [themeMode]="directiveI18nTheme"
-       [lang]="'en'"
-       (previewEvent)="handleError($event)">
-    点击预览文件(English)
-  </div>
-  <div class="title-container">
-    <div class="title"><span>组件预览模式</span>
-      <ngx-theme-icon [themeMode]="list.themeMode" (click)="changeThemeForList(list)"></ngx-theme-icon>
-    </div>
-    <span class="source-code" (click)="showSourceCode('component')">查看源码</span>
-  </div>
-  <!-- 使用默认模板 -->
-  <ngx-preview-list
-    #list
-    [files]="files"
-    themeMode="auto"
-    [autoConfig]="{dark: { start: 18, end: 6 }}"
-  ></ngx-preview-list>
-  <div class="title-container">
-    <div class="title"><span>自定义模板列表</span>
-      <ngx-theme-icon [themeMode]="custom.themeMode" (click)="changeThemeForList(custom)"></ngx-theme-icon>
-    </div>
-    <span class="source-code" (click)="showSourceCode('custom')">查看源码</span>
-  </div>
-  <!-- 使用自定义模板 -->
-  <ngx-preview-list #custom [files]="files" themeMode="light" [lang]="'en'">
-    <ng-template
-      #itemTemplate
-      let-file
-      let-index="index"
-      let-type="type"
-      let-isActive="isActive"
-      let-select="select"
-      let-preview="preview"
-    >
-      <div class="custom-file-item" [class.active]="isActive" (click)="select()">
-        <div class="custom-info">
-          <h3>{{ file.name }}</h3>
-          <p>
-            <span>{{ type }}</span>
-            <span>{{ formatFileSize(file.size) }}</span>
-          </p>
+  <nz-tabset>
+    <nz-tab [nzTitle]="i18nText[currentLang].directiveTab">
+      <div class="tab-content">
+        <div class="preview-section">
+          <div class="title-container">
+            <div class="title">
+              <span>{{i18nText[currentLang].basicUsage}}</span>
+              <ngx-theme-icon [themeMode]="directiveTheme" (click)="changeDirectiveTheme()"></ngx-theme-icon>
+            </div>
+            <span class="source-code" (click)="showSourceCode('directive')">{{i18nText[currentLang].viewSourceCode}}</span>
+          </div>
+          <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" (previewEvent)="handleError($event)">
+            点击预览文件
+          </div>
         </div>
-        <button class="custom-preview-btn" (click)="preview()">
-          预览
-        </button>
+        <div class="preview-section">
+          <div class="title-container">
+            <div class="title">
+              <span>{{i18nText[currentLang].i18nDemo}}</span>
+              <ngx-theme-icon [themeMode]="directiveI18nTheme" (click)="changeDirectiveI18nTheme()"></ngx-theme-icon>
+            </div>
+          </div>
+          <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveI18nTheme" [lang]="'en'" (previewEvent)="handleError($event)">
+            点击预览文件(English)
+          </div>
+        </div>
       </div>
-    </ng-template>
-  </ngx-preview-list>
+    </nz-tab>
+
+    <nz-tab [nzTitle]="i18nText[currentLang].componentTab">
+      <div class="tab-content">
+        <div class="preview-section">
+          <div class="title-container">
+            <div class="title">
+              <span>{{i18nText[currentLang].defaultTemplate}}</span>
+              <ngx-theme-icon [themeMode]="list.themeMode" (click)="changeThemeForList(list)"></ngx-theme-icon>
+            </div>
+            <span class="source-code" (click)="showSourceCode('component')">{{i18nText[currentLang].viewSourceCode}}</span>
+          </div>
+          <ngx-preview-list
+            #list
+            [files]="files"
+            themeMode="auto"
+            [autoConfig]="{dark: { start: 18, end: 6 }}"
+          ></ngx-preview-list>
+        </div>
+
+        <div class="preview-section">
+          <div class="title-container">
+            <div class="title">
+              <span>{{i18nText[currentLang].customTemplate}}</span>
+              <ngx-theme-icon [themeMode]="custom.themeMode" (click)="changeThemeForList(custom)"></ngx-theme-icon>
+            </div>
+            <span class="source-code" (click)="showSourceCode('custom')">{{i18nText[currentLang].viewSourceCode}}</span>
+          </div>
+          <ngx-preview-list #custom [files]="files" themeMode="light" [lang]="'en'">
+            <ng-template
+              #itemTemplate
+              let-file
+              let-index="index"
+              let-type="type"
+              let-isActive="isActive"
+              let-select="select"
+              let-preview="preview"
+            >
+              <div class="custom-file-item" [class.active]="isActive" (click)="select()">
+                <div class="custom-info">
+                  <h3>{{ file.name }}</h3>
+                  <p>
+                    <span>{{ type }}</span>
+                    <span>{{ formatFileSize(file.size) }}</span>
+                  </p>
+                </div>
+                <button class="custom-preview-btn" (click)="preview()">
+                  {{i18nText[currentLang].previewButton}}
+                </button>
+              </div>
+            </ng-template>
+          </ngx-preview-list>
+        </div>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
+  <app-api-table [title]="currentLang === 'zh' ? '指令API' : 'Directive API'" [apiItems]="directiveApiItems[currentLang]" [lang]="currentLang"></app-api-table>
+  <app-api-table [title]="currentLang === 'zh' ? '组件API' : 'Component API'" [apiItems]="componentApiItems[currentLang]" [lang]="currentLang"></app-api-table>
 </div>
 
-<!-- 弹窗显示源码 -->
 <div class="source-code-modal" *ngIf="sourceCodeVisible">
   <div class="source-code-content">
     <div class="source-code-title">
-      <span class="title">源码</span>
+      <span class="title">{{i18nText[currentLang].sourceCodeTitle}}</span>
       <i class="close NGX-FILE-PREVIEW nfp-close" (click)="closeSourceCode()"></i>
     </div>
     <pre><code [highlight]="sourceCode" language="html" [lineNumbersEnabled]="true"></code></pre>

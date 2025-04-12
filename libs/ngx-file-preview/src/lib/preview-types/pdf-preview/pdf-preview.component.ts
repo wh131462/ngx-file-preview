@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule} from 'ngx-extended-pdf-viewer';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
@@ -42,7 +42,7 @@ import {I18nPipe} from "../../i18n";
       <!-- PDF查看器 -->
       <div class="viewer-container" #viewerContainer>
         <ngx-extended-pdf-viewer
-          [class.hidden]="isLoading"
+          [class.hidden]="isLoading|async"
           [src]="file.url"
           [rotation]="rotation"
           [zoom]="zoom"
@@ -74,13 +74,15 @@ import {I18nPipe} from "../../i18n";
   styleUrls: ["../../styles/_theme.scss", "./pdf-preview.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PdfPreviewComponent extends BasePreviewComponent {
+export class PdfPreviewComponent extends BasePreviewComponent implements OnInit{
   zoom: any = "page-fit";// 'auto'|'page-actual'|'page-fit'|'page-width'|
   rotation: 0 | 90 | 180 | 270 = 0;
   currentPage = 0;
   @ViewChild(NgxExtendedPdfViewerComponent) pdfViewer!: NgxExtendedPdfViewerComponent;
   @ViewChild('viewerContainer') viewerContainer?: ElementRef<HTMLDivElement>
-
+  ngOnInit(){
+    this.startLoading()
+  }
   protected override async handleFileContent(content: FileReaderResponse) {
   }
 

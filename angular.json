@@ -70,7 +70,8 @@
             "styles": [
               "libs/demo/src/styles.scss",
               "libs/ngx-file-preview/src/assets/icon/font/nfp.css",
-              "node_modules/highlight.js/styles/github-dark.css"
+              "node_modules/highlight.js/styles/github-dark.css",
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
             ],
             "scripts": [
               "libs/ngx-file-preview/src/assets/icon/color/nfp.js"
