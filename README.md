@@ -37,11 +37,57 @@
 - **Flexible Usage**: Supports both directive-based and component-based usage, offering flexibility to meet different development requirements.
 - **Lightweight Design**: Optimized for performance and easy integration into any project, ensuring smooth and efficient operation.
 - **Keyboard Shortcut Support**: Increases efficiency by allowing easy navigation and closing of the preview with keyboard shortcuts.
+- **Internationalization Support**: Built-in i18n support with easy language pack registration and switching capabilities.
 
 ## Installation
 
 ```bash
 npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer markdown-it highlight.js
+```
+
+## Internationalization (i18n)
+
+### Language Configuration
+
+You can specify the language when using the directive:
+
+```html
+<div [ngxFilePreview]="file" lang="en">Click to preview</div>
+```
+
+### Register New Language Pack
+
+Register a custom language pack using `I18nUtils.register`:
+
+```typescript
+import { I18nUtils } from '@eternalheart/ngx-file-preview';
+
+// Register a new language pack
+I18nUtils.register('fr', {
+  preview: {
+    error: {
+      noFiles: 'Aucun fichier à afficher'
+    },
+    toolbar: {
+      zoomIn: 'Zoom avant',
+      zoomOut: 'Zoom arrière'
+      // ... other translations
+    }
+  }
+  // ... more translation keys
+});
+```
+
+### Using i18n Pipe(For developers)
+
+Use the i18n pipe in templates to translate text:
+
+```html
+{{ 'preview.toolbar.zoomIn' | i18n }}
+// With parameters 
+// Use ${0} as a numeric placeholder in the corresponding text. The number of placeholders is unlimited, but you must pass the corresponding number of arguments when using them.
+// example: list.total ==> "共${0}个文件"
+{{ 'list.total' | i18n:filesCount }}
 ```
 
 ## Configuration
@@ -208,6 +254,47 @@ type PreviewType =
   | 'zip'     // Compressed File
   | 'unknown' // Unknown Type
 ```
+
+## API Reference
+
+### PreviewListComponent
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| files | PreviewFile[] | [] | List of files to preview |
+| themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | Theme mode for the preview |
+| autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | Auto theme mode configuration |
+| lang | string | 'zh' | Internationalization language setting, 'zh' and 'en' are registered by default |
+| (fileSelect) | EventEmitter<PreviewFile> | - | Event emitted when a file is selected |
+| (previewEvent) | EventEmitter<PreviewEvent> | - | Event emitted during preview actions |
+
+#### Template Context Variables
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| file | PreviewFile | Current file object |
+| index | number | Current file index |
+| type | string | File type |
+| isActive | boolean | Whether the current item is selected |
+| select | () => void | Method to select the current file |
+| preview | () => void | Method to preview the current file |
+
+### PreviewDirective
+
+| Selector | Property | Type | Default | Description |
+|----------|----------|------|---------|-------------|
+| [ngxFilePreview] | ngxFilePreview | PreviewFile \| PreviewFile[] | - | File(s) to preview |
+| | themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | Theme mode for the preview |
+| | autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | Auto theme mode configuration |
+| | lang | string | 'zh' | Internationalization language setting, 'zh' and 'en' are registered by default |
+| | (previewEvent) | EventEmitter<PreviewEvent> | - | Event emitted during preview actions |
+
+### PreviewEvent Types
+
+| Event Type | Description | Event Data |
+|------------|-------------|-------------|
+| error | Error event | { type: 'error', message: string } |
+| select | File selection event | { type: 'select', event: MouseEvent } |
 
 ## Keyboard Shortcuts
 

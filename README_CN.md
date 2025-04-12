@@ -37,11 +37,56 @@
 - **灵活的使用方式**：支持指令式和组件式调用，适应不同开发需求。
 - **高效性能**：轻量化设计，便于集成到各种项目中，保证高效流畅的使用体验。
 - **快捷键支持**：提升用户操作效率，快捷切换文件和关闭预览界面。
+- **国际化支持**：内置i18n支持，便捷的语言包注册和切换功能。
 
 ## 安装
 
 ```bash
 npm install @eternalheart/ngx-file-preview --save docx-preview hls.js pptx-preview xlsx ngx-extended-pdf-viewer markdown-it highlight.js
+```
+
+## 国际化 (i18n)
+
+### 语言配置
+
+你可以在使用指令时指定语言：
+
+```html
+<div [ngxFilePreview]="file" lang="en">点击预览</div>
+```
+
+### 注册新语言包
+
+使用 `I18nUtils.register` 注册自定义语言包：
+
+```typescript
+import { I18nUtils } from '@eternalheart/ngx-file-preview';
+
+// 注册新语言包
+I18nUtils.register('fr', {
+  preview: {
+    error: {
+      noFiles: 'Aucun fichier à afficher'
+    },
+    toolbar: {
+      zoomIn: 'Zoom avant',
+      zoomOut: 'Zoom arrière'
+      // ... 其他翻译
+    }
+  }
+  // ... 更多翻译键值
+});
+```
+
+### 使用i18n管道(开发者须知)
+
+在模板中使用i18n管道进行文本转换：
+
+```html
+{{ 'preview.toolbar.zoomIn' | i18n }}
+// 带参数的使用 在对应的文本中要使用 ${0} 来做数字占位符，数量不限，但是使用的时候也要传入对应数量
+// 例如: list.total ==> "共${0}个文件"
+{{ 'list.total' | i18n:filesCount }}
 ```
 
 ## 配置
@@ -208,6 +253,47 @@ type PreviewType =
   | 'zip'     // 压缩包
   | 'unknown' // 未知类型
 ```
+
+## API 参考
+
+### PreviewListComponent
+
+| 属性 | 类型 | 默认值 | 说明 |
+|----------|------|---------|-------------|
+| files | PreviewFile[] | [] | 预览文件列表 |
+| themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | 预览主题模式 |
+| autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | 自动主题模式配置 |
+| lang | string | 'zh' |  国际化语言设置,默认注册了`zh`和`en` |
+| (fileSelect) | EventEmitter<PreviewFile> | - | 文件选择事件 |
+| (previewEvent) | EventEmitter<PreviewEvent> | - | 预览操作事件 |
+
+#### 自定义模板上下文变量
+
+| 变量名 | 类型 | 说明 |
+|----------|------|-------------|
+| file | PreviewFile | 当前文件对象 |
+| index | number | 当前文件索引 |
+| type | string | 文件类型 |
+| isActive | boolean | 是否为当前选中项 |
+| select | () => void | 选择当前文件的方法 |
+| preview | () => void | 预览当前文件的方法 |
+
+### PreviewDirective
+
+| 选择器 | 属性 | 类型 | 默认值 | 说明 |
+|----------|----------|------|---------|-------------|
+| [ngxFilePreview] | ngxFilePreview | PreviewFile \| PreviewFile[] | - | 预览文件 |
+| | themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | 预览主题模式 |
+| | autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | 自动主题模式配置 |
+| | lang | string | 'zh' | 国际化语言设置,默认注册了`zh`和`en` |
+| | (previewEvent) | EventEmitter<PreviewEvent> | - | 预览操作事件 |
+
+### PreviewEvent 事件类型
+
+| 事件类型 | 说明 | 事件数据 |
+|----------|------|-------------|
+| error | 错误事件 | { type: 'error', message: string } |
+| select | 文件选择事件 | { type: 'select', event: MouseEvent } |
 
 ## 键盘快捷键
 
