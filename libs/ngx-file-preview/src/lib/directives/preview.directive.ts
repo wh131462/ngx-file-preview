@@ -13,6 +13,7 @@ import {FileReaderService, PreviewService, ThemeService} from '../services';
 import {AutoThemeConfig, PreviewEvent, PreviewFileInput, ThemeMode} from '../types';
 import {PreviewUtils} from '../utils';
 
+
 /**
  * 所有依赖服务 都是指令级别的
  * directive -> modal -> preview
@@ -23,7 +24,6 @@ import {PreviewUtils} from '../utils';
   providers: [PreviewService, ThemeService, FileReaderService]
 })
 export class PreviewDirective implements OnDestroy {
-
   @Input('ngxFilePreview') fileInput: PreviewFileInput;
   @Input() previewIndex = 0;
   private _themeMode: ThemeMode = 'auto';
@@ -40,14 +40,32 @@ export class PreviewDirective implements OnDestroy {
     }
   }
   @Input() autoConfig?: AutoThemeConfig;
+  private _lang:string = 'zh';
+  @Input()
+  get lang(): string {
+    return this._lang;
+  }
+
+  set lang(value: string) {
+    this._lang = value;
+    this.previewService.setLang(value);
+  }
   @Output() previewEvent = new EventEmitter<PreviewEvent>();
+
+  t(key: string, ...args: (string | number)[]) {
+    return this.previewService?.getLangParser()?.t(key, ...args);
+  }
 
   constructor(private previewService: PreviewService,private themeService: ThemeService, private injector: Injector, private envInjector: EnvironmentInjector) {
     this.previewService.init(this.injector, this.envInjector);
   }
 
-  @HostListener('click')
-  onClick() {
+  @HostListener('click',['$event'])
+  onClick(e:MouseEvent) {
+    console.log("click")
+    e.preventDefault()
+    e.stopImmediatePropagation();
+    console.trace("lllllll")
     if (!this.fileInput) return;
     const files = PreviewUtils.normalizeFiles(this.fileInput);
     if (files.length > 0) {
@@ -58,7 +76,7 @@ export class PreviewDirective implements OnDestroy {
         autoThemeConfig: this.autoConfig
       });
     } else {
-      this.previewEvent.emit({type: 'error', message: '没有文件可预览!'})
+      this.previewEvent.emit({type: 'error', message: this.t('preview.error.noFiles')})
     }
   }
 

@@ -1,17 +1,18 @@
 import {Component, CUSTOM_ELEMENTS_SCHEMA, HostBinding, Input, NO_ERRORS_SCHEMA} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {ThemeMode} from "../../types/theme.types";
+import {TooltipDirective} from "../../directives/tooltip.diretive";
 
 @Component({
   selector: "preview-icon",
   template: `
     <ng-container *ngIf="name">
-      <i class="fp-font-icon NGX-FILE-PREVIEW" [class]="'nfp-'+name"
+      <i [tooltip]="title" class="fp-font-icon NGX-FILE-PREVIEW" [class]="'nfp-'+name"
          [style.width]="size" [style.font-size]="size"
          [style.color]="color ? color: (themeMode=='light'?'#333333':'#FFFFFF')"></i>
     </ng-container>
     <ng-container *ngIf="svg">
-      <svg class="fp-svg-icon" [style.width]="size" [style.height]="size" aria-hidden="true">
+      <svg class="fp-svg-icon" [style.width]="size" [style.height]="size" [tooltip]="title" aria-hidden="true">
         <use [attr.xlink:href]="'#nfp-' + svg">"></use>
       </svg>
     </ng-container>
@@ -38,7 +39,7 @@ import {ThemeMode} from "../../types/theme.types";
     }
   }
   `],
-  imports: [CommonModule],
+  imports: [CommonModule, TooltipDirective],
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
@@ -48,6 +49,7 @@ export class PreviewIconComponent {
   @Input({transform: (v: any) => typeof v === 'number' ? `${v}px` : v}) size: number | string = '16px';
   @Input() color?: string;
   @Input() themeMode?: ThemeMode | null;
+  @Input() title: string = "";
   @Input()
   @HostBinding('style.cursor')
   cursor = 'pointer'

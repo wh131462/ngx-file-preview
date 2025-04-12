@@ -1,0 +1,65 @@
+{
+  "loading": "加载中...",
+  "list": {
+    "title": "文件列表",
+    "empty": "暂无文件",
+    "total": "共${0}个文件"
+  },
+  "preview": {
+    "toolbar": {
+      "resetZoom": "重置缩放",
+      "zoomIn": "放大",
+      "zoomOut": "缩小",
+      "fullscreen": "全屏",
+      "download": "下载",
+      "close": "关闭",
+      "previous": "上一个",
+      "next": "下一个",
+      "reset": "重置",
+      "rotate": "旋转",
+      "rotate90": "旋转90度",
+      "rotate-90": "旋转-90度",
+      "originSize": "原始尺寸",
+      "autoFit": "自适应",
+      "wrap": "换行",
+      "nowrap": "不换行",
+      "play": "播放",
+      "pause": "暂停",
+      "back15s": "后退15秒",
+      "forward15s": "前进15秒",
+      "pip": "画中画",
+      "light": "日间模式",
+      "dark": "夜间模式"
+    },
+    "error": {
+      "noFiles": "没有文件可预览!"
+    }
+  },
+  "zip": {
+    "type": "类型",
+    "size": "大小",
+    "unknownSize": "大小未知",
+    "types": {
+      "zip": "ZIP 压缩文件",
+      "rar": "RAR 压缩文件",
+      "7z": "7-Zip 压缩文件",
+      "tar": "TAR 归档文件",
+      "gz": "GZip 压缩文件",
+      "unknown": "压缩文件"
+    }
+  },
+  "types": {
+    "audio": "音频文件",
+    "image": "图片文件",
+    "video": "视频文件",
+    "pdf": "PDF文档",
+    "word": "WORD文档",
+    "excel": "Excel文档",
+    "ppt": "PPT文档",
+    "txt": "文本文件",
+    "markdown": "Markdown文件",
+    "zip": "压缩文件",
+    "unknown": "未知文件"
+  },
+  "unknownFileTips": "暂不支持该文件类型的预览"
+}

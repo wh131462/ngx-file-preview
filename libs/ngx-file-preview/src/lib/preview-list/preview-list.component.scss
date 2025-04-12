@@ -37,15 +37,11 @@
       border-radius: 3px;
       background-color: var(--nfp-scrollbar-thumb);
     }
-    &:empty {
+    .empty {
       padding: 32px;
       text-align: center;
       color: var(--nfp-text-secondary);
       font-size: 14px;
-
-      &::after {
-        content: '暂无文件';
-      }
     }
     &:not(:last-child) {
       border-bottom: 1px solid var(--nfp-border-color);

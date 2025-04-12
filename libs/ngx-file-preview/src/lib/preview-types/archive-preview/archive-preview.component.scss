@@ -144,7 +144,7 @@
 
     // Firefox 滚动条
     scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb, var(--nfp-border-color)) var(--scrollbar-bg, var(--nfp-bg-container));
+    scrollbar-color: var(--nfp-scrollbar-thumb) var(--nfp-scrollbar-bg);
   }
 
   // 文件项

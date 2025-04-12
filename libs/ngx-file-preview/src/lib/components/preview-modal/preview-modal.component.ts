@@ -25,6 +25,7 @@ import {PreviewIconComponent} from '../preview-icon';
 import {Observable, Subscription} from 'rxjs';
 import {AutoThemeConfig, PreviewFile, ThemeMode} from '../../types';
 import {ThemeIconComponent} from "../theme-icon/theme-icon.component";
+import {I18nPipe} from "../../i18n/i18n.pipe";
 
 @Component({
   selector: 'ngx-file-preview-modal',
@@ -43,7 +44,8 @@ import {ThemeIconComponent} from "../theme-icon/theme-icon.component";
     AudioPreviewComponent,
     UnknownPreviewComponent,
     MarkdownPreviewComponent,
-    ThemeIconComponent
+    ThemeIconComponent,
+    I18nPipe
   ],
   templateUrl: 'preview-modal.component.html',
   styleUrls: [
@@ -67,6 +69,7 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
   theme$!: Observable<ThemeMode>;
   private subscription?: Subscription;
 
+  public loading$:Observable<boolean> = this.previewService.getLoadingObservable();
   constructor(private cdr: ChangeDetectorRef, private themeService: ThemeService, private previewService: PreviewService) {
   }
 

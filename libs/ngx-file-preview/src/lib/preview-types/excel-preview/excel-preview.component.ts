@@ -13,6 +13,7 @@ import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import * as XLSX from 'xlsx';
 import {FileReaderResponse} from "../../services";
+import {I18nPipe} from "../../i18n";
 
 interface TableData {
   headers: string[];
@@ -22,19 +23,19 @@ interface TableData {
 @Component({
   selector: 'ngx-excel-preview',
   standalone: true,
-  imports: [CommonModule, PreviewIconComponent],
+  imports: [CommonModule, PreviewIconComponent, I18nPipe],
   template: `
     <div class="excel-container" #container>
       <div class="toolbar">
         <div class="left-controls">
           <button class="tool-btn" (click)="zoomOut()">
-            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-out" [title]="'preview.toolbar.zoomOut'|i18n"></preview-icon>
           </button>
-          <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
+          <span class="zoom-text" (click)="resetZoom()" [title]="'preview.toolbar.resetZoom'|i18n">
             {{ (scale * 100).toFixed(0) }}%
           </span>
           <button class="tool-btn" (click)="zoomIn()">
-            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-in" [title]="'preview.toolbar.zoomIn'|i18n"></preview-icon>
           </button>
         </div>
         <div class="sheet-controls" *ngIf="sheets.length > 0">
@@ -47,7 +48,7 @@ interface TableData {
         </div>
         <div class="right-controls">
           <button class="tool-btn" (click)="toggleFullscreen()">
-            <preview-icon [themeMode]="themeMode" name="fullscreen"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="fullscreen" [title]="'preview.toolbar.fullscreen'|i18n"></preview-icon>
           </button>
         </div>
       </div>

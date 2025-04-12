@@ -11,6 +11,7 @@ import {PreviewFile, PreviewOptions} from '../types/preview.types';
 import {BehaviorSubject} from 'rxjs';
 import {PreviewModalComponent} from '../components';
 import {ThemeService} from "./theme.service";
+import {I18nUtils} from "../i18n/i18n.utils";
 
 export const INITIAL_PREVIEW_STATE = {
   isVisible: false,
@@ -34,10 +35,32 @@ export class PreviewService {
   private injector!: Injector;
   private envInjector!: EnvironmentInjector;
   private appRef = inject(ApplicationRef)
+  private lang: string = 'zh';
+  private loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
+  /**
+   * 初始化
+   * @param injector
+   * @param envInjector
+   */
   init(injector: Injector, envInjector: EnvironmentInjector) {
     this.envInjector = envInjector;
     this.injector = injector;
+  }
+
+  /**
+   * 设置语言
+   * @param lang
+   */
+  setLang(lang: string) {
+    this.lang = lang;
+  }
+
+  /**
+   * 获取实际的lang parser
+   */
+  getLangParser() {
+    return I18nUtils.get(this.lang)
   }
 
   // endregion
@@ -74,15 +97,30 @@ export class PreviewService {
     });
   }
 
+  /**
+   * 设置加载中状态
+   * @param loading
+   */
+  setLoading(loading: boolean) {
+    this.loading.next(loading);
+  }
+
+  getLoadingObservable() {
+    return this.loading.asObservable();
+  }
+
   // endregion
   // region Modal管理
   private modalRef?: ComponentRef<PreviewModalComponent>;
 
+  get modalElement() {
+    return this.modalRef?.location.nativeElement
+  }
+
   open(options: PreviewOptions) {
     const {files, index = 0} = options;
     if (this.modalRef) {
-      this.updatePreviewState(true, files, index);
-      return;
+      this.cleanupModal()
     }
     try {
       this.modalRef = createComponent(PreviewModalComponent, {
@@ -111,17 +149,14 @@ export class PreviewService {
 
   private cleanupModal() {
     if (!this.modalRef) return;
-
     try {
       // 从 DOM 中移除模态框
       const element = this.modalRef.location.nativeElement;
       if (element.parentNode) {
         element.parentNode.removeChild(element);
       }
-
       // 从 ApplicationRef 中分离视图
       this.appRef.detachView(this.modalRef.hostView);
-
       // 销毁组件
       this.modalRef.destroy();
     } catch (error) {
@@ -132,4 +167,6 @@ export class PreviewService {
   }
 
   // endregion
+
+
 }

@@ -3,11 +3,12 @@ import {CommonModule} from '@angular/common';
 import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {PreviewIconComponent} from "../../components/preview-icon/preview-icon.component";
 import {FileReaderResponse} from "../../services";
+import {I18nPipe} from "../../i18n/i18n.pipe";
 
 @Component({
   selector: 'ngx-image-preview',
   standalone: true,
-  imports: [CommonModule, PreviewIconComponent],
+  imports: [CommonModule, PreviewIconComponent, I18nPipe],
   template: `
     <div class="image-preview"
          (mousedown)="startDrag($event)"
@@ -21,24 +22,24 @@ import {FileReaderResponse} from "../../services";
            [class.is-moving]="isDragging">
         <img #previewImage
              [src]="file.url"
-             [style.display]="isLoading ? 'none' : 'block'"
+             [style.display]="(isLoading|async) ? 'none' : 'block'"
              (load)="onImageLoad()"
              alt="preview"/>
       </div>
 
-      <div class="image-info" *ngIf="!isLoading">
+      <div class="image-info" *ngIf="!(isLoading|async)">
         <span class="filename">{{ file.name }}</span>
         <span class="dimensions">{{ imageWidth }} × {{ imageHeight }}</span>
       </div>
 
-      <div class="toolbar" *ngIf="!isLoading">
+      <div class="toolbar" *ngIf="!(isLoading|async)">
         <div class="tool-group">
           <div class="control" (click)="zoomOut()" [class.disabled]="zoom <= minZoom">
-            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-out" [title]="'preview.toolbar.zoomOut'|i18n"></preview-icon>
           </div>
           <span class="zoom-text">{{ (zoom * 100).toFixed(0) }}%</span>
           <div class="control" (click)="zoomIn()" [class.disabled]="zoom >= maxZoom">
-            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-in" [title]="'preview.toolbar.zoomIn'|i18n"></preview-icon>
           </div>
         </div>
 
@@ -46,10 +47,10 @@ import {FileReaderResponse} from "../../services";
 
         <div class="tool-group">
           <div class="control" (click)="rotate(-90)">
-            <preview-icon [themeMode]="themeMode" name="rotate-90"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="rotate-90" [title]="'preview.toolbar.rotate-90'|i18n"></preview-icon>
           </div>
           <div class="control" (click)="rotate(90)">
-            <preview-icon [themeMode]="themeMode" name="rotate90"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="rotate90" [title]="'preview.toolbar.rotate90'|i18n"></preview-icon>
           </div>
         </div>
 
@@ -57,16 +58,16 @@ import {FileReaderResponse} from "../../services";
 
         <div class="tool-group">
           <div class="control" (click)="autoFit()">
-            <preview-icon [themeMode]="themeMode" name="auto-fit"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="auto-fit" [title]="'preview.toolbar.autoFit'|i18n"></preview-icon>
           </div>
           <div class="control" (click)="originSize()">
-            <preview-icon [themeMode]="themeMode" name="origin-size"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="origin-size" [title]="'preview.toolbar.originSize'|i18n"></preview-icon>
           </div>
           <div class="control" (click)="resetView()">
-            <preview-icon [themeMode]="themeMode" name="reset"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="reset" [title]="'preview.toolbar.reset'|i18n"></preview-icon>
           </div>
           <div class="control" (click)="download()">
-            <preview-icon [themeMode]="themeMode" name="download"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="download" [title]="'preview.toolbar.download'|i18n"></preview-icon>
           </div>
         </div>
       </div>

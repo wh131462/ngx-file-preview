@@ -38,6 +38,9 @@
   position: relative;
   background: var(--nfp-bg-container);
   padding: 16px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--nfp-scrollbar-thumb) var(--nfp-scrollbar-bg);
 
   &.wrap {
     overflow-x: hidden;
@@ -62,9 +65,6 @@
     }
   }
 
-  // Firefox 滚动条
-  scrollbar-width: thin;
-  scrollbar-color: var(--nfp-scrollbar-thumb) var(--nfp-scrollbar-bg);
 }
 
 .content-wrapper {
@@ -137,38 +137,5 @@ pre {
   &:hover {
     background: var(--nfp-toolbar-hover);
     color: var(--nfp-primary-color);
-  }
-}
-
-.loading-overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--nfp-preview-loading-bg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--nfp-toolbar-bg);
-    border-top-color: var(--nfp-primary-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  span {
-    color: var(--nfp-text-primary);
-  }
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
   }
 }

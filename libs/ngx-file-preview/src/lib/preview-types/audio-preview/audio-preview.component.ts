@@ -4,11 +4,12 @@ import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {SafeUrl} from '@angular/platform-browser';
 import {FileReaderResponse} from "../../services";
 import {PreviewIconComponent} from '../../components';
+import {I18nPipe} from "../../i18n";
 
 @Component({
   selector: 'ngx-audio-preview',
   standalone: true,
-  imports: [CommonModule, PreviewIconComponent],
+  imports: [CommonModule, PreviewIconComponent, I18nPipe],
   template: `
     <div class="audio-container">
       <audio #audioPlayer
@@ -39,7 +40,7 @@ import {PreviewIconComponent} from '../../components';
           <div class="player-controls">
             <div class="main-controls">
               <button class="control-btn" (click)="togglePlay()">
-                <preview-icon [themeMode]="themeMode" [name]="isPlaying ? 'pause' : 'play'" [size]="24"></preview-icon>
+                <preview-icon [themeMode]="themeMode" [name]="isPlaying ? 'pause' : 'play'" [title]="(isPlaying ? 'preview.toolbar.pause' : 'preview.toolbar.play')|i18n" [size]="24"></preview-icon>
               </button>
             </div>
 
@@ -127,7 +128,7 @@ export class AudioPreviewComponent extends BasePreviewComponent implements OnIni
   };
 
   ngOnInit() {
-    this.isLoading = true;
+    this.startLoading()
     this.loadCover();
     this.cdr.markForCheck();
   }
@@ -158,7 +159,7 @@ export class AudioPreviewComponent extends BasePreviewComponent implements OnIni
   }
 
   onAudioLoad() {
-    this.isLoading = false;
+    this.stopLoading()
     this.duration = this.audioPlayer.nativeElement.duration;
     this.cdr.markForCheck();
   }

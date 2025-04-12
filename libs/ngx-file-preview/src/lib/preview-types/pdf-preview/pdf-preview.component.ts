@@ -4,45 +4,43 @@ import {NgxExtendedPdfViewerComponent, NgxExtendedPdfViewerModule} from 'ngx-ext
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
 import {FileReaderResponse} from "../../services";
+import {I18nPipe} from "../../i18n";
 
 @Component({
   selector: 'ngx-pdf-preview',
   standalone: true,
-  imports: [CommonModule, NgxExtendedPdfViewerModule, PreviewIconComponent],
+  imports: [CommonModule, NgxExtendedPdfViewerModule, PreviewIconComponent, I18nPipe],
   template: `
     <div class="pdf-container">
       <!-- 工具栏 -->
       <div class="toolbar">
         <div class="left-controls">
           <div class="control" (click)="zoomOut()">
-            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-out" [title]="'preview.toolbar.zoomOut'|i18n"></preview-icon>
           </div>
           <span (click)="resetZoom()">{{ zoom == "page-fit" ? "100%" : zoom }}%</span>
           <div class="control" (click)="zoomIn()">
-            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-in" [title]="'preview.toolbar.zoomIn'|i18n"></preview-icon>
           </div>
           <div class="control" (click)="autoFit()">
-            <preview-icon [themeMode]="themeMode" name="auto-fit"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="auto-fit" [title]="'preview.toolbar.autoFit'|i18n"></preview-icon>
           </div>
         </div>
 
         <div class="right-controls">
           <div class="control" (click)="rotate(-90)">
-            <preview-icon [themeMode]="themeMode" name="rotate-90"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="rotate-90" [title]="'preview.toolbar.rotate-90'|i18n"></preview-icon>
           </div>
           <div class="control" (click)="rotate(90)">
-            <preview-icon [themeMode]="themeMode" name="rotate90"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="rotate90" [title]="'preview.toolbar.rotate90'|i18n"></preview-icon>
           </div>
           <div class="control" (click)="reset()">
-            <preview-icon [themeMode]="themeMode" name="reset"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="reset" [title]="'preview.toolbar.reset'|i18n"></preview-icon>
           </div>
         </div>
       </div>
       <!-- PDF查看器 -->
       <div class="viewer-container" #viewerContainer>
-        <div *ngIf="isLoading" class="loading-overlay">
-          <div class="loading-spinner"></div>
-        </div>
         <ngx-extended-pdf-viewer
           [class.hidden]="isLoading"
           [src]="file.url"

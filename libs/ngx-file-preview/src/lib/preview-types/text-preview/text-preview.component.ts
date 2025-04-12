@@ -3,31 +3,33 @@ import {CommonModule} from '@angular/common';
 import {PreviewIconComponent} from '../../components';
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
 import {FileReaderResponse} from "../../services";
+import {I18nPipe} from "../../i18n/i18n.pipe";
+import {TooltipDirective} from "../../directives";
 
 @Component({
   selector: 'ngx-text-preview',
   standalone: true,
-  imports: [CommonModule, PreviewIconComponent],
+  imports: [CommonModule, PreviewIconComponent, I18nPipe, TooltipDirective],
   template: `
     <div class="text-container">
       <div class="toolbar">
         <div class="left-controls">
           <button class="tool-btn" (click)="zoomOut()">
-            <preview-icon [themeMode]="themeMode" name="zoom-out"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-out" [tooltip]="'preview.toolbar.zoomOut'|i18n"></preview-icon>
           </button>
-          <span class="zoom-text" (click)="resetZoom()" title="点击重置缩放">
+          <span class="zoom-text" (click)="resetZoom()" [tooltip]="'preview.toolbar.resetZoom'|i18n">
             {{ (scale * 100).toFixed(0) }}%
           </span>
           <button class="tool-btn" (click)="zoomIn()">
-            <preview-icon [themeMode]="themeMode" name="zoom-in"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="zoom-in" [tooltip]="'preview.toolbar.zoomIn'|i18n"></preview-icon>
           </button>
           <button class="tool-btn" (click)="toggleWrap()">
-            <preview-icon [themeMode]="themeMode" [name]="isWrapped ? 'nowrap' : 'wrap'"></preview-icon>
+            <preview-icon [themeMode]="themeMode" [name]="isWrapped ? 'nowrap' : 'wrap'" [tooltip]="(isWrapped ? 'preview.toolbar.nowrap' : 'preview.toolbar.wrap')|i18n"></preview-icon>
           </button>
         </div>
         <div class="right-controls">
           <button class="tool-btn" (click)="toggleFullscreen()">
-            <preview-icon [themeMode]="themeMode" name="fullscreen"></preview-icon>
+            <preview-icon [themeMode]="themeMode" name="fullscreen" [tooltip]="'preview.toolbar.fullscreen'|i18n"></preview-icon>
           </button>
         </div>
       </div>
@@ -41,10 +43,6 @@ import {FileReaderResponse} from "../../services";
             [class.wrap]="isWrapped"
           >{{ content }}</pre>
         </div>
-        <div class="loading-overlay" *ngIf="isLoading">
-          <div class="spinner"></div>
-          <span>加载中...</span>
-        </div>
       </div>
     </div>
   `,
@@ -52,7 +50,6 @@ import {FileReaderResponse} from "../../services";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TextPreviewComponent extends BasePreviewComponent implements OnInit, OnDestroy, OnChanges {
-
   content = '';
   isWrapped = false;
   scale = 1;

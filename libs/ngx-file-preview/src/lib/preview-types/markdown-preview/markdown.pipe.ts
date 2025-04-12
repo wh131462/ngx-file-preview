@@ -20,7 +20,6 @@ export class MarkdownPipe implements PipeTransform {
           } catch (__) {
           }
         }
-
         return ''; // use external default escaping
       }
     }); // 初始化 markdown-it 实例
@@ -29,7 +28,6 @@ export class MarkdownPipe implements PipeTransform {
   transform(value: string): any {
     if (!value) return '';
     const html = this.md.render(value); // 解析 Markdown 为 HTML
-    console.log("html", html)
     return this.sanitizer.bypassSecurityTrustHtml(html); // 信任 HTML 内容
   }
 }

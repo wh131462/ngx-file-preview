@@ -4,6 +4,7 @@ import {BasePreviewComponent} from "../base-preview/base-preview.component";
 import {MarkdownPipe} from "./markdown.pipe";
 import {PreviewIconComponent} from '../../components';
 import {FileReaderResponse} from "../../services";
+import {I18nPipe} from "../../i18n";
 
 @Component({
   selector: 'ngx-markdown-preview',
@@ -11,7 +12,8 @@ import {FileReaderResponse} from "../../services";
   imports: [
     NgIf,
     PreviewIconComponent,
-    MarkdownPipe
+    MarkdownPipe,
+    I18nPipe
   ],
   templateUrl: './markdown-preview.component.html',
   styleUrls: ['../../styles/_theme.scss', './markdown-preview.component.scss'],

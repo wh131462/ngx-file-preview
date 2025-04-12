@@ -1,0 +1,65 @@
+{
+  "loading": "Loading...",
+  "list": {
+    "title": "File list",
+    "empty": "No files",
+    "total": "A total of files is ${0}"
+  },
+  "preview": {
+    "toolbar": {
+      "resetZoom": "Reset Zoom",
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "fullscreen": "Full Screen",
+      "download": "Download",
+      "close": "Close",
+      "previous": "Previous",
+      "next": "Next",
+      "reset": "Reset",
+      "rotate": "Rotate",
+      "rotate90": "Rotate 90 degrees",
+      "rotate-90": "Rotate -90 degrees",
+      "originSize": "Original Size",
+      "autoFit": "Auto Fit",
+      "wrap": "Wrap",
+      "nowrap": "No Wrap",
+      "play": "Play",
+      "pause": "Pause",
+      "back15s": "Back 15 seconds",
+      "forward15s": "Forward 15 seconds",
+      "pip": "Picture in Picture",
+      "light": "Light Mode",
+      "dark": "Dark Mode"
+    },
+    "error": {
+      "noFiles": "No files can be previewed!"
+    }
+  },
+  "zip": {
+    "type": "Type",
+    "size": "Size",
+    "unknownSize": "Unknown Size",
+    "types": {
+      "zip": "ZIP Archive File",
+      "rar": "RAR Archive File",
+      "7z": "7-Zip Archive File",
+      "tar": "TAR Archive File",
+      "gz": "GZip Archive File",
+      "unknown": "Archive File"
+    }
+  },
+  "types": {
+    "audio": "Audio File",
+    "image": "Image File",
+    "video": "Video File",
+    "pdf": "PDF Document",
+    "word": "Word Document",
+    "excel": "Excel Document",
+    "ppt": "PPT Document",
+    "txt": "Text File",
+    "markdown": "Markdown File",
+    "zip": "Archive File",
+    "unknown": "Unknown File"
+  },
+  "unknownFileTips": "File preview is not supported for this file type."
+}

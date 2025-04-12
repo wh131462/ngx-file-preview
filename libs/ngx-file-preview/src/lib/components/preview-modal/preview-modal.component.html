@@ -24,6 +24,12 @@
       </button>
 
       <div class="nfp-modal__preview">
+        @if(loading$|async){
+          <div class="nfp-modal__loading-overlay">
+            <div class="spinner"></div>
+            <span>{{'loading'|i18n}}</span>
+          </div>
+        }
         <ng-container [ngSwitch]="currentFile?.type">
           <ngx-image-preview
             *ngSwitchCase="'image'"

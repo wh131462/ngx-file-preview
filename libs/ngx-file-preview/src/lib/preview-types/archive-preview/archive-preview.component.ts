@@ -3,11 +3,12 @@ import {CommonModule} from '@angular/common';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import {BasePreviewComponent} from "../base-preview/base-preview.component";
 import {FileReaderResponse} from "../../services";
+import {I18nPipe} from "../../i18n";
 
 @Component({
   selector: 'ngx-archive-preview',
   standalone: true,
-  imports: [CommonModule, PreviewIconComponent],
+  imports: [CommonModule, PreviewIconComponent, I18nPipe],
   template: `
     <div class="archive-container">
       <div class="archive-info">
@@ -17,8 +18,8 @@ import {FileReaderResponse} from "../../services";
         <div class="details">
           <h2>{{ file.name }}</h2>
           <div class="meta">
-            <span>类型: {{ getArchiveType() }}</span>
-            <span>大小: {{ formatFileSize(file.size) }}</span>
+            <span>{{ 'zip.type'|i18n }}: {{ getArchiveType() }}</span>
+            <span>{{ 'zip.size'|i18n }}: {{ formatFileSize(file.size) }}</span>
           </div>
         </div>
       </div>
@@ -30,21 +31,19 @@ import {FileReaderResponse} from "../../services";
 export class ArchivePreviewComponent extends BasePreviewComponent {
   getArchiveType(): string {
     const extension = this.file.name.split('.').pop()?.toLowerCase();
-    const types: { [key: string]: string } = {
-      'zip': 'ZIP 压缩文件',
-      'rar': 'RAR 压缩文件',
-      '7z': '7-Zip 压缩文件',
-      'tar': 'TAR 归档文件',
-      'gz': 'GZip 压缩文件'
-    };
-    return types[extension || ''] || '压缩文件';
+    const that = this;
+    const types: { [key: string]: string } = ['zip', 'rar', '7z', 'tar', 'gz'].reduce((ts, key) => Object.assign(ts, {
+      [key]: that.t('zip.types.' + key)
+    }), {});
+    console.log("types", types, this.t("zip.types.zip"))
+    return types[extension || ''] || this.t('zip.types.unknown');
   }
 
   protected override async handleFileContent(content: FileReaderResponse) {
   }
 
   formatFileSize(bytes?: number): string {
-    if (!bytes) return '未知大小';
+    if (!bytes) return this.t('zip.unknownSize');
 
     const units = ['B', 'KB', 'MB', 'GB', 'TB'];
     let size = bytes;

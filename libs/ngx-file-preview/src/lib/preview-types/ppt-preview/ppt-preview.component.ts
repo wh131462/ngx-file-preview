@@ -41,10 +41,6 @@ import {FileReaderResponse} from "../../services";
           </div>
         </div>
       </div>
-
-      <div *ngIf="isLoading" class="loading-overlay">
-        <div class="loading-spinner"></div>
-      </div>
     </div>
   `,
   styleUrls: ["../../styles/_theme.scss", "ppt-preview.component.scss"],

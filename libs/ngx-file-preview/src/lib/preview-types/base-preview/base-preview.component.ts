@@ -1,8 +1,7 @@
 import {ChangeDetectorRef, Directive, inject, Input} from '@angular/core';
 import {AutoThemeConfig, PreviewFile, ThemeMode} from '../../types';
-import {FileReaderService} from "../../services";
+import {FileReaderResponse, FileReaderService, PreviewService} from "../../services";
 import {firstValueFrom} from "rxjs";
-import {FileReaderResponse} from "../../services";
 
 @Directive({
   standalone: true,
@@ -12,9 +11,17 @@ export abstract class BasePreviewComponent {
   @Input({transform: (value: ThemeMode | null): ThemeMode => value!}) themeMode!: ThemeMode;
   @Input() autoThemeConfig?: AutoThemeConfig;
 
-  protected isLoading = false;
   protected fileReader = inject(FileReaderService);
+  protected previewService = inject(PreviewService);
   protected cdr = inject(ChangeDetectorRef);
+
+  get isLoading() {
+    return this.previewService.getLoadingObservable();
+  }
+
+  t(key: string, ...args: (string | number)[]) {
+    return this.previewService?.getLangParser()?.t(key, ...args);
+  }
 
   protected async loadFile(fileType?: 'arraybuffer' | 'text' | 'json'): Promise<void> {
     if (!this.file) return;
@@ -32,12 +39,12 @@ export abstract class BasePreviewComponent {
   protected abstract handleFileContent(content: FileReaderResponse): Promise<any>;
 
   protected startLoading() {
-    this.isLoading = true;
+    this.previewService.setLoading(true)
     this.cdr.markForCheck();
   }
 
   protected stopLoading() {
-    this.isLoading = false;
+    this.previewService.setLoading(false)
     this.cdr.markForCheck();
   }
 }

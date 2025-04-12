@@ -4,7 +4,7 @@ import {
   PreviewDirective,
   PreviewEvent,
   PreviewFile,
-  PreviewIconComponent, ThemeMode, ThemeIconComponent
+  ThemeMode, ThemeIconComponent
 } from '@eternalheart/ngx-file-preview';
 import {NgForOf, NgIf} from "@angular/common";
 import {HighlightCodeDirective} from "./highlight.directive";
@@ -12,7 +12,7 @@ import {HighlightCodeDirective} from "./highlight.directive";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PreviewDirective, PreviewListComponent, PreviewIconComponent, NgForOf, NgIf, HighlightCodeDirective, ThemeIconComponent],
+  imports: [PreviewDirective, PreviewListComponent, NgForOf, NgIf, HighlightCodeDirective, ThemeIconComponent],
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss']
 })
@@ -24,6 +24,7 @@ export class AppComponent {
   sourceCode = '';
 
   directiveTheme: ThemeMode = "light";
+  directiveI18nTheme: ThemeMode = "dark";
 
 
   onFileSelected(event: Event): void {
@@ -122,6 +123,9 @@ export class AppComponent {
 
   changeDirectiveTheme() {
     this.directiveTheme = this.directiveTheme === 'light' ? 'dark' : 'light';
+  }
+  changeDirectiveI18nTheme() {
+    this.directiveI18nTheme = this.directiveI18nTheme === 'light' ? 'dark' : 'light';
   }
 
   changeThemeForList(list: PreviewListComponent) {

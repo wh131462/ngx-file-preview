@@ -2,7 +2,6 @@
   <a href="https://github.com/wh131462/ngx-file-preview" target="_blank" class="github-logo">
     <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"/>
   </a>
-
   <div class="title">
     NGX-FILE-PREVIEW
   </div>
@@ -23,13 +22,31 @@
     </ng-container>
   </div>
   <div class="title-container">
-    <div class="title"><span>指令预览模式</span><ngx-theme-icon [themeMode]="directiveTheme" (click)="changeDirectiveTheme()"></ngx-theme-icon></div>
+    <div class="title"><span>指令预览模式</span>
+      <ngx-theme-icon [themeMode]="directiveTheme" (click)="changeDirectiveTheme()"></ngx-theme-icon>
+    </div>
     <span class="source-code" (click)="showSourceCode('directive')">查看源码</span>
   </div>
-  <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" (previewEvent)="handleError($event)">点击预览文件
+  <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" (previewEvent)="handleError($event)">
+    点击预览文件
   </div>
   <div class="title-container">
-    <div class="title"><span>组件预览模式</span><ngx-theme-icon [themeMode]="list.themeMode" (click)="changeThemeForList(list)"></ngx-theme-icon></div>
+    <div class="title"><span>指令预览模式(i18n)</span>
+      <ngx-theme-icon [themeMode]="directiveI18nTheme" (click)="changeDirectiveI18nTheme()"></ngx-theme-icon>
+    </div>
+    <span class="source-code" (click)="showSourceCode('directive')">查看源码</span>
+  </div>
+  <div class="directive"
+       [ngxFilePreview]="files"
+       [themeMode]="directiveI18nTheme"
+       [lang]="'en'"
+       (previewEvent)="handleError($event)">
+    点击预览文件(English)
+  </div>
+  <div class="title-container">
+    <div class="title"><span>组件预览模式</span>
+      <ngx-theme-icon [themeMode]="list.themeMode" (click)="changeThemeForList(list)"></ngx-theme-icon>
+    </div>
     <span class="source-code" (click)="showSourceCode('component')">查看源码</span>
   </div>
   <!-- 使用默认模板 -->
@@ -40,27 +57,27 @@
     [autoConfig]="{dark: { start: 18, end: 6 }}"
   ></ngx-preview-list>
   <div class="title-container">
-    <div class="title"><span>自定义模板列表</span><ngx-theme-icon [themeMode]="custom.themeMode" (click)="changeThemeForList(custom)"></ngx-theme-icon></div>
+    <div class="title"><span>自定义模板列表</span>
+      <ngx-theme-icon [themeMode]="custom.themeMode" (click)="changeThemeForList(custom)"></ngx-theme-icon>
+    </div>
     <span class="source-code" (click)="showSourceCode('custom')">查看源码</span>
   </div>
   <!-- 使用自定义模板 -->
-  <ngx-preview-list #custom [files]="files" themeMode="light">
+  <ngx-preview-list #custom [files]="files" themeMode="light" [lang]="'en'">
     <ng-template
       #itemTemplate
       let-file
       let-index="index"
+      let-type="type"
       let-isActive="isActive"
       let-select="select"
       let-preview="preview"
     >
       <div class="custom-file-item" [class.active]="isActive" (click)="select()">
-        <div class="custom-icon">
-          <preview-icon [svg]="file.type" [size]="'32px'"></preview-icon>
-        </div>
         <div class="custom-info">
           <h3>{{ file.name }}</h3>
           <p>
-            <span>{{ file.type }}</span>
+            <span>{{ type }}</span>
             <span>{{ formatFileSize(file.size) }}</span>
           </p>
         </div>

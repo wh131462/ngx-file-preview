@@ -2,12 +2,10 @@
 // export * from './lib/preview-types';
 // export * from "./lib/utils"
 // export * from "./lib/workers"
-/**
- * 列表组件
- */
-export * from './lib/preview-list'
-
+// export * from './lib/components'
+// export * from './lib/services';
+// 只导出必要组件
 export * from './lib/types';
-export * from './lib/components'
-export * from './lib/directives';
-export * from './lib/services';
+export * from './lib/preview-list'
+export {ThemeIconComponent} from './lib/components'
+export {PreviewDirective} from './lib/directives';

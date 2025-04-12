@@ -12,11 +12,12 @@ import {BasePreviewComponent} from '../base-preview/base-preview.component';
 import {PreviewIconComponent} from '../../components/preview-icon/preview-icon.component';
 import Hls from 'hls.js';
 import {FileReaderResponse} from "../../services";
+import {I18nPipe} from "../../i18n";
 
 @Component({
   selector: 'ngx-video-preview',
   standalone: true,
-  imports: [CommonModule, PreviewIconComponent],
+  imports: [CommonModule, PreviewIconComponent, I18nPipe],
   template: `
     <div class="video-container" #videoContainer [class.pip-mode]="isPiPMode">
       <video #videoPlayer
@@ -39,13 +40,13 @@ import {FileReaderResponse} from "../../services";
           <!-- 左侧控制按钮 -->
           <div class="left-controls">
             <button (click)="togglePlay()">
-              <preview-icon [name]="isPlaying ? 'pause' : 'play'"></preview-icon>
+              <preview-icon [name]="isPlaying ? 'pause' : 'play'" [title]="(isPlaying ? 'preview.toolbar.pause' : 'preview.toolbar.play')|i18n"></preview-icon>
             </button>
             <button (click)="back15s()">
-              <preview-icon name="back15s"></preview-icon>
+              <preview-icon name="back15s" [title]="'preview.toolbar.back15s'|i18n"></preview-icon>
             </button>
             <button (click)="forward15s()">
-              <preview-icon name="forward15s"></preview-icon>
+              <preview-icon name="forward15s" [title]="'preview.toolbar.forward15s'|i18n"></preview-icon>
             </button>
             <span class="time">
               {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
@@ -103,10 +104,10 @@ import {FileReaderResponse} from "../../services";
             </div>
 
             <button (click)="togglePip()">
-              <preview-icon name="pip"></preview-icon>
+              <preview-icon name="pip" [title]="'preview.toolbar.pip'|i18n"></preview-icon>
             </button>
             <button (click)="toggleFullscreen()">
-              <preview-icon name="fullscreen"></preview-icon>
+              <preview-icon name="fullscreen" [title]="'preview.toolbar.fullscreen'|i18n"></preview-icon>
             </button>
           </div>
         </div>
@@ -139,7 +140,7 @@ export class VideoPreviewComponent extends BasePreviewComponent implements OnIni
   isDragging = false;
 
   ngOnInit() {
-    this.isLoading = true;
+    this.startLoading();
     this.cdr.markForCheck();
   }
 
@@ -148,7 +149,7 @@ export class VideoPreviewComponent extends BasePreviewComponent implements OnIni
   }
 
   onVideoLoad() {
-    this.isLoading = false;
+    this.stopLoading()
     this.duration = this.videoPlayer.nativeElement.duration;
     this.cdr.markForCheck();
   }
