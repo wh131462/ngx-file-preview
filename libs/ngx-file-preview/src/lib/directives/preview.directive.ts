@@ -52,6 +52,9 @@ export class PreviewDirective implements OnDestroy {
   }
   @Output() previewEvent = new EventEmitter<PreviewEvent>();
 
+
+  @Input() doubleClick: boolean = false;
+
   t(key: string, ...args: (string | number)[]) {
     return this.previewService?.getLangParser()?.t(key, ...args);
   }
@@ -64,6 +67,21 @@ export class PreviewDirective implements OnDestroy {
   onClick(e:MouseEvent) {
     e.preventDefault()
     e.stopImmediatePropagation();
+    if (!this.doubleClick) {
+      this.clickHandler();
+    }
+  }
+
+  @HostListener('dblclick', ['$event'])
+  handleDoubleClick(e: MouseEvent) {
+    e.preventDefault()
+    e.stopImmediatePropagation();
+    if (this.doubleClick) {
+      this.clickHandler();
+    }
+  }
+
+  private clickHandler():void {
     if (!this.fileInput) return;
     const files = PreviewUtils.normalizeFiles(this.fileInput);
     if (files.length > 0) {

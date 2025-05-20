@@ -50,6 +50,7 @@ export class PreviewListComponent {
     this._files = PreviewUtils.normalizeFiles(value);
   }
 
+  @Input() doubleClick = false;
   @Input() index = 0;
   private _themeMode: ThemeMode = 'auto';
   @Input()

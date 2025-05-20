@@ -48,6 +48,18 @@
         <div class="preview-section">
           <div class="title-container">
             <div class="title">
+              <span>{{i18nText[currentLang].basicUsage}}</span>
+              <ngx-theme-icon [themeMode]="directiveTheme" (click)="changeDirectiveTheme()"></ngx-theme-icon>
+            </div>
+            <span class="source-code" (click)="showSourceCode('directive')">{{i18nText[currentLang].viewSourceCode}}</span>
+          </div>
+          <div class="directive" [ngxFilePreview]="files" [doubleClick]="true" [themeMode]="directiveTheme" (previewEvent)="handleError($event)">
+            Double click for preview
+          </div>
+        </div>
+        <div class="preview-section">
+          <div class="title-container">
+            <div class="title">
               <span>{{i18nText[currentLang].i18nDemo}}</span>
               <ngx-theme-icon [themeMode]="directiveI18nTheme" (click)="changeDirectiveI18nTheme()"></ngx-theme-icon>
             </div>
@@ -72,6 +84,7 @@
           <ngx-preview-list
             #list
             [files]="files"
+            [doubleClick]="true"
             themeMode="auto"
             [autoConfig]="{dark: { start: 18, end: 6 }}"
           ></ngx-preview-list>
@@ -85,7 +98,7 @@
             </div>
             <span class="source-code" (click)="showSourceCode('custom')">{{i18nText[currentLang].viewSourceCode}}</span>
           </div>
-          <ngx-preview-list #custom [files]="files" themeMode="light" [lang]="'en'">
+          <ngx-preview-list #custom [files]="files" [doubleClick]="true" themeMode="light" [lang]="'en'">
             <ng-template
               #itemTemplate
               let-file

@@ -84,7 +84,7 @@ Use the i18n pipe in templates to translate text:
 
 ```html
 {{ 'preview.toolbar.zoomIn' | i18n }}
-// With parameters 
+// With parameters
 // Use ${0} as a numeric placeholder in the corresponding text. The number of placeholders is unlimited, but you must pass the corresponding number of arguments when using them.
 // example: list.total ==> "共${0}个文件"
 {{ 'list.total' | i18n:filesCount }}
@@ -259,14 +259,15 @@ type PreviewType =
 
 ### PreviewListComponent
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| files | PreviewFile[] | [] | List of files to preview |
-| themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | Theme mode for the preview |
-| autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | Auto theme mode configuration |
+| Property | Type | Default | Description                                                                    |
+|----------|------|---------|--------------------------------------------------------------------------------|
+| files | PreviewFile[] | [] | List of files to preview                                                       |
+| doubleClick | boolean | false | Show a preview by double-clicking on an element                                |
+| themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | Theme mode for the preview                                                     |
+| autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | Auto theme mode configuration                                                  |
 | lang | string | 'zh' | Internationalization language setting, 'zh' and 'en' are registered by default |
-| (fileSelect) | EventEmitter<PreviewFile> | - | Event emitted when a file is selected |
-| (previewEvent) | EventEmitter<PreviewEvent> | - | Event emitted during preview actions |
+| (fileSelect) | EventEmitter<PreviewFile> | - | Event emitted when a file is selected                                          |
+| (previewEvent) | EventEmitter<PreviewEvent> | - | Event emitted during preview actions                                           |
 
 #### Template Context Variables
 
@@ -281,13 +282,14 @@ type PreviewType =
 
 ### PreviewDirective
 
-| Selector | Property | Type | Default | Description |
-|----------|----------|------|---------|-------------|
-| [ngxFilePreview] | ngxFilePreview | PreviewFile \| PreviewFile[] | - | File(s) to preview |
-| | themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | Theme mode for the preview |
-| | autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | Auto theme mode configuration |
-| | lang | string | 'zh' | Internationalization language setting, 'zh' and 'en' are registered by default |
-| | (previewEvent) | EventEmitter<PreviewEvent> | - | Event emitted during preview actions |
+| Selector | Property       | Type                                     | Default                         | Description                                                            |
+|----------|----------------|------------------------------------------|---------------------------------|------------------------------------------------------------------------|
+| [ngxFilePreview] | ngxFilePreview | PreviewFile \| PreviewFile[]             | -                               | File(s) to preview                                                     |
+| | doubleClick    | boolean                                  | false                           | Show a preview by double-clicking on an element                        |
+| | themeMode      | 'light' \| 'dark' \| 'auto'              | 'auto'                          | Theme mode for the preview                                             |
+| | autoConfig     | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | Auto theme mode configuration                                          |
+| | lang           | string                                   | 'zh'                            | Internationalization language setting, 'zh' and 'en' are registered by default |
+| | (previewEvent) | EventEmitter<PreviewEvent>               | -                               | Event emitted during preview actions                                   |
 
 ### PreviewEvent Types
 
