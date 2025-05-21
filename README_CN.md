@@ -158,7 +158,13 @@ import {PreviewDirective, PreviewEvent} from '@eternalheart/ngx-file-preview';
     <div [ngxFilePreview]="file" themeMode="light">点击预览单个文件</div>
     <div [ngxFilePreview]="file" themeMode="dark" (previewEvent)="handlePreviewEvent($event)">点击预览单个文件</div>
     <div [ngxFilePreview]="file" themeMode="auto" [autoConfig]="{dark: {start: 19, end: 7}}">点击预览单个文件</div>
-    <div [ngxFilePreview]="files">点击预览多个文件</div>
+    <!-- 不同的触发方式 -->
+    <div [ngxFilePreview]="files" trigger="contextmenu">右键点击预览文件</div>
+    <div [ngxFilePreview]="files" trigger="dblclick">双击预览文件</div>
+    <div [ngxFilePreview]="files" trigger="longpress:800">长按预览文件</div>
+    <div [ngxFilePreview]="files" trigger="hover:500">悬停预览文件</div>
+    <div [ngxFilePreview]="files" trigger="keydown:Enter" tabindex="0">按Enter键预览文件</div>
+    <div [ngxFilePreview]="files" trigger="click,contextmenu,hover:500">多种触发方式预览文件</div>
   `
 })
 export class YourComponent {

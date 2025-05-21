@@ -159,6 +159,13 @@ import {PreviewDirective, PreviewEvent} from '@eternalheart/ngx-file-preview';
     <div [ngxFilePreview]="file" themeMode="light">Click to preview a single file</div>
     <div [ngxFilePreview]="file" themeMode="dark" (previewEvent)="handlePreviewEvent($event)">Click to preview a single file</div>
     <div [ngxFilePreview]="file" themeMode="auto" [autoConfig]="{dark: {start: 19, end: 7}}">Click to preview a single file</div>
+    <!-- Different trigger methods -->
+    <div [ngxFilePreview]="files" trigger="contextmenu">Right click to preview files</div>
+    <div [ngxFilePreview]="files" trigger="dblclick">Double click to preview files</div>
+    <div [ngxFilePreview]="files" trigger="longpress:800">Long press to preview files</div>
+    <div [ngxFilePreview]="files" trigger="hover:500">Hover to preview files</div>
+    <div [ngxFilePreview]="files" trigger="keydown:Enter" tabindex="0">Press Enter to preview files</div>
+    <div [ngxFilePreview]="files" trigger="click,contextmenu,hover:500">Multiple trigger methods to preview files</div>
     <div [ngxFilePreview]="files">Click to preview multiple files</div>
   `
 })
@@ -287,6 +294,7 @@ type PreviewType =
 | | themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | Theme mode for the preview |
 | | autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | Auto theme mode configuration |
 | | lang | string | 'zh' | Internationalization language setting, 'zh' and 'en' are registered by default |
+| | trigger | string | 'click' | Preview trigger method, supports click, contextmenu, dblclick, longpress:duration (e.g., longpress:800), hover:delay (e.g., hover:500), keydown:key (e.g., keydown:Enter), multiple triggers can be separated by commas |
 | | (previewEvent) | EventEmitter<PreviewEvent> | - | Event emitted during preview actions |
 
 ### PreviewEvent Types
