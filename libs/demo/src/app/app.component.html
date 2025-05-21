@@ -51,6 +51,7 @@
               <span>{{i18nText[currentLang].i18nDemo}}</span>
               <ngx-theme-icon [themeMode]="directiveI18nTheme" (click)="changeDirectiveI18nTheme()"></ngx-theme-icon>
             </div>
+            <span class="source-code" (click)="showSourceCode('i18n')">{{i18nText[currentLang].viewSourceCode}}</span>
           </div>
           <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveI18nTheme" [lang]="'en'" (previewEvent)="handleError($event)">
             点击预览文件(English)
@@ -112,18 +113,103 @@
         </div>
       </div>
     </nz-tab>
+    <nz-tab [nzTitle]="i18nText[currentLang].triggerDemo">
+      <div class="preview-section">
+        <div class="title-container">
+          <div class="title">
+            <span>{{ i18nText[currentLang].clickTrigger }}</span>
+          </div>
+          <span class="source-code" (click)="showSourceCode('click')">{{i18nText[currentLang].viewSourceCode}}</span>
+        </div>
+        <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" trigger="click">
+          {{ i18nText[currentLang].clickPreview }}
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <span>{{ i18nText[currentLang].contextmenuTrigger }}</span>
+          </div>
+          <span class="source-code" (click)="showSourceCode('contextmenu')">{{i18nText[currentLang].viewSourceCode}}</span>
+        </div>
+        <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" trigger="contextmenu">
+          {{ i18nText[currentLang].contextmenuPreview }}
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <span>{{ i18nText[currentLang].dblclickTrigger }}</span>
+          </div>
+          <span class="source-code" (click)="showSourceCode('dblclick')">{{i18nText[currentLang].viewSourceCode}}</span>
+        </div>
+        <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" trigger="dblclick">
+          {{ i18nText[currentLang].dblclickPreview }}
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <span>{{ i18nText[currentLang].longpressTrigger }}</span>
+          </div>
+          <span class="source-code" (click)="showSourceCode('longpress')">{{i18nText[currentLang].viewSourceCode}}</span>
+        </div>
+        <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" trigger="longpress:800">
+          {{ i18nText[currentLang].longpressPreview }}
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <span>{{ i18nText[currentLang].hoverTrigger }}</span>
+          </div>
+          <span class="source-code" (click)="showSourceCode('hover')">{{i18nText[currentLang].viewSourceCode}}</span>
+        </div>
+        <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" trigger="hover:500">
+          {{ i18nText[currentLang].hoverPreview }}
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <span>{{ i18nText[currentLang].keydownTrigger }}</span>
+          </div>
+          <span class="source-code" (click)="showSourceCode('keydown')">{{i18nText[currentLang].viewSourceCode}}</span>
+        </div>
+        <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" trigger="keydown:Enter" tabindex="0">
+          {{ i18nText[currentLang].keydownPreview }}
+        </div>
+
+        <div class="title-container">
+          <div class="title">
+            <span>{{ i18nText[currentLang].combineTrigger }}</span>
+          </div>
+          <span class="source-code" (click)="showSourceCode('combine')">{{i18nText[currentLang].viewSourceCode}}</span>
+        </div>
+        <div class="directive" [ngxFilePreview]="files" [themeMode]="directiveTheme" trigger="click,contextmenu,hover:500">
+          {{ i18nText[currentLang].combinePreview }}
+        </div>
+      </div>
+    </nz-tab>
   </nz-tabset>
 
   <app-api-table [title]="currentLang === 'zh' ? '指令API' : 'Directive API'" [apiItems]="directiveApiItems[currentLang]" [lang]="currentLang"></app-api-table>
   <app-api-table [title]="currentLang === 'zh' ? '组件API' : 'Component API'" [apiItems]="componentApiItems[currentLang]" [lang]="currentLang"></app-api-table>
 </div>
 
-<div class="source-code-modal" *ngIf="sourceCodeVisible">
-  <div class="source-code-content">
-    <div class="source-code-title">
-      <span class="title">{{i18nText[currentLang].sourceCodeTitle}}</span>
+<div class="source-code-modal" *ngIf="sourceCodeVisible" (click)="closeSourceCode()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ i18nText[currentLang].sourceCodeTitle }}</h3>
       <i class="close NGX-FILE-PREVIEW nfp-close" (click)="closeSourceCode()"></i>
     </div>
-    <pre><code [highlight]="sourceCode" language="html" [lineNumbersEnabled]="true"></code></pre>
+    <div class="modal-body">
+      <div class="pre-wrapper">
+        <button class="copy-button" (click)="copySourceCode()">
+          <span class="anticon">
+            <svg viewBox="64 64 896 896" focusable="false" data-icon="copy" width="1em" height="1em" fill="currentColor">
+              <path d="M832 64H296c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h496v688c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V96c0-17.7-14.3-32-32-32zM704 192H192c-17.7 0-32 14.3-32 32v530.7c0 8.5 3.4 16.6 9.4 22.6l173.3 173.3c2.2 2.2 4.7 4 7.4 5.5v1.9h4.2c3.5 1.3 7.2 2 11 2H704c17.7 0 32-14.3 32-32V224c0-17.7-14.3-32-32-32zM350 856.2L263.9 770H350v86.2zM664 888H414V746c0-22.1-17.9-40-40-40H232V264h432v624z"></path>
+            </svg>
+          </span>
+          {{ i18nText[currentLang].copyCode }}
+        </button>
+        <pre><code [highlight]="sourceCode"></code></pre>
+      </div>
+    </div>
   </div>
 </div>

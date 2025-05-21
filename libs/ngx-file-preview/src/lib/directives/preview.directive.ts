@@ -3,29 +3,27 @@ import {
   ElementRef,
   EnvironmentInjector,
   EventEmitter,
-  HostListener,
   Injector,
   Input,
   OnDestroy,
+  OnInit,
   Output
 } from '@angular/core';
-import {FileReaderService, PreviewService, ThemeService} from '../services';
-import {AutoThemeConfig, PreviewEvent, PreviewFileInput, ThemeMode} from '../types';
-import {PreviewUtils} from '../utils';
+import { FileReaderService, PreviewService, ThemeService } from '../services';
+import { AutoThemeConfig, PreviewEvent, PreviewFileInput, ThemeMode } from '../types';
+import { PreviewUtils } from '../utils';
+import { fromEvent, merge, Subject, timer } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-
-/**
- * 所有依赖服务 都是指令级别的
- * directive -> modal -> preview
- */
 @Directive({
   selector: '[ngxFilePreview]',
   standalone: true,
   providers: [PreviewService, ThemeService, FileReaderService]
 })
-export class PreviewDirective implements OnDestroy {
+export class PreviewDirective implements OnInit, OnDestroy {
   @Input('ngxFilePreview') fileInput: PreviewFileInput;
   @Input() previewIndex = 0;
+  @Input() trigger = 'click'; // 默认触发方式
   private _themeMode: ThemeMode = 'auto';
   @Input()
   get themeMode(): ThemeMode {
@@ -56,14 +54,69 @@ export class PreviewDirective implements OnDestroy {
     return this.previewService?.getLangParser()?.t(key, ...args);
   }
 
-  constructor(private previewService: PreviewService,private themeService: ThemeService, private injector: Injector, private envInjector: EnvironmentInjector) {
+  private destroy$ = new Subject<void>();
+  private element: HTMLElement;
+  private longPressTimer: any;
+  private isLongPressing = false;
+
+  constructor(
+    private previewService: PreviewService,
+    private themeService: ThemeService,
+    private injector: Injector,
+    private envInjector: EnvironmentInjector,
+    private elementRef: ElementRef
+  ) {
     this.previewService.init(this.injector, this.envInjector);
+    this.element = this.elementRef.nativeElement;
   }
 
-  @HostListener('click',['$event'])
-  onClick(e:MouseEvent) {
-    e.preventDefault()
-    e.stopImmediatePropagation();
+  ngOnInit() {
+    this.setupTriggers();
+  }
+
+  private setupTriggers() {
+    const triggers = this.trigger.split(',').map(t => t.trim());
+    const observables = triggers.map(trigger => {
+      const [eventName, param] = trigger.split(':');
+      
+      switch(eventName) {
+        case 'click':
+          return fromEvent(this.element, 'click');
+        case 'contextmenu':
+          return fromEvent(this.element, 'contextmenu').pipe(
+            tap(e => e.preventDefault())
+          );
+        case 'dblclick':
+          return fromEvent(this.element, 'dblclick');
+        case 'longpress':
+          const duration = parseInt(param) || 800;
+          return fromEvent<MouseEvent>(this.element, 'mousedown').pipe(
+            switchMap(() => timer(duration).pipe(
+              takeUntil(fromEvent(document, 'mouseup'))
+            ))
+          );
+        case 'hover':
+          const delay = parseInt(param) || 500;
+          return fromEvent(this.element, 'mouseenter').pipe(
+            switchMap(() => timer(delay).pipe(
+              takeUntil(fromEvent(this.element, 'mouseleave'))
+            ))
+          );
+        case 'keydown':
+          return fromEvent<KeyboardEvent>(this.element, 'keydown').pipe(
+            filter(e => !param || e.key === param)
+          );
+        default:
+          return fromEvent(this.element, 'click');
+      }
+    });
+
+    merge(...observables)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.preview());
+  }
+
+  private preview() {
     if (!this.fileInput) return;
     const files = PreviewUtils.normalizeFiles(this.fileInput);
     if (files.length > 0) {
@@ -78,8 +131,9 @@ export class PreviewDirective implements OnDestroy {
     }
   }
 
-
   ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
     // 清理由 createObjectURL 创建的 URL
     if (this.fileInput instanceof File) {
       URL.revokeObjectURL(PreviewUtils.normalizeFile(this.fileInput).url);

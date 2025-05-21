@@ -9,10 +9,10 @@
   </div>
   <div class="ngx-preview-list__content">
     @for (file of files; let i = $index; track file.name) {
-      <!-- 使用自定义模板 -->
       <ng-container *ngIf="itemTemplate; else defaultTemplate">
-        <div style="display: none"  #previewTrigger
+        <div style="display: none" #previewTrigger
              [ngxFilePreview]="file"
+             [trigger]="trigger"
              [themeMode]="themeMode"
              [lang]="lang"></div>
         <ng-container
@@ -28,11 +28,11 @@
               }"
         ></ng-container>
       </ng-container>
-      <!-- 默认模板 -->
       <ng-template #defaultTemplate>
         <div class="item"
              (click)="triggerSelect(i)"
              [ngxFilePreview]="file"
+             [trigger]="trigger"
              [themeMode]="themeMode"
              [lang]="lang"
              [class.active]="i === index">

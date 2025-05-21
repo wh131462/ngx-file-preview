@@ -41,6 +41,7 @@ import {FileSizePipe} from "./file-size.pipe";
   encapsulation: ViewEncapsulation.None
 })
 export class PreviewListComponent {
+  @Input() trigger = 'click'; // 默认触发方式
   private _files: PreviewFile[] = [];
   @Input()
   get files(): PreviewFile[] {
