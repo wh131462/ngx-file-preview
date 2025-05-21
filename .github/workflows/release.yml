@@ -26,8 +26,8 @@ jobs:
           # 获取本次推送的所有提交消息
           COMMIT_MESSAGES=$(git log ${{ github.event.before }}..${{ github.event.after }} --pretty=format:"%s")
 
-          # 使用严格的正则匹配语义化版本号
-          VERSION=$(echo "$COMMIT_MESSAGES" | grep -oE 'v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)' | head -1)
+          # 使用严格的正则匹配语义化版本号，支持任意位数的版本号
+          VERSION=$(echo "$COMMIT_MESSAGES" | grep -oE 'v([0-9]+\.){2}[0-9]+' | head -1)
 
           if [ -z "$VERSION" ]; then
             echo "::warning::未在提交消息中找到版本号 (格式要求：vX.Y.Z)"
