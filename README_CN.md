@@ -292,6 +292,7 @@ type PreviewType =
 | | themeMode | 'light' \| 'dark' \| 'auto' | 'auto' | 预览主题模式 |
 | | autoConfig | { dark: { start: number, end: number } } | { dark: { start: 19, end: 7 } } | 自动主题模式配置 |
 | | lang | string | 'zh' | 国际化语言设置,默认注册了`zh`和`en` |
+| | trigger | string | 'click' | 触发预览的方式，支持click（点击）、contextmenu（右键菜单）、dblclick（双击）、longpress:duration（长按，如：longpress:800）、hover:delay（悬停，如：hover:500）、keydown:key（按键，如：keydown:Enter），多个触发方式可用逗号分隔 |
 | | (previewEvent) | EventEmitter<PreviewEvent> | - | 预览操作事件 |
 
 ### PreviewEvent 事件类型
